@@ -405,7 +405,7 @@ class DriverController extends Controller
         $user = User::where(
             function ($query) use ($identity) {
                 $query->where('phone', static::phone($identity));
-                $query->owWhere('email', $identity);
+                $query->orWhere('email', $identity);
             }
         )->whereHas('driver')->first();
 
