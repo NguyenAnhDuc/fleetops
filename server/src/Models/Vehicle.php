@@ -56,7 +56,7 @@ class Vehicle extends Model
      *
      * @var array
      */
-    protected $searchableColumns = ['make', 'model', 'year', 'plate_number', 'vin', 'public_id'];
+    protected $searchableColumns = ['make', 'model', 'year', 'plate_number', 'inspection_date', 'vin', 'public_id'];
 
     /**
      * Attributes that is filterable on this model.
