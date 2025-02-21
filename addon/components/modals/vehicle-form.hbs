@@ -31,6 +31,13 @@
 
                         <div class="input-group mb-2">
                             <label>
+                                {{t "fleet-ops.common.inspection-date"}}
+                            </label>
+                            <Input @value={{@options.vehicle.inspection_date}} @type="date" class="w-full form-input" placeholder={{t "fleet-ops.common.inspection-date"}} />
+                        </div>
+
+                        <div class="input-group mb-2">
+                            <label>
                                 {{t "fleet-ops.common.vin-number"}}
                             </label>
                             <Input @value={{@options.vehicle.vin}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.vin-number"}} />

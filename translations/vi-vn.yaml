@@ -55,6 +55,7 @@ fleet-ops:
     phone: Điện thoại
     photos: Ảnh
     plate-number: Biển số
+    inspection-date: Ngày đăng kiểm
     postal-code: Mã bưu điện
     priority: Ưu tiên
     reload: Tải lại
@@ -155,7 +156,7 @@ fleet-ops:
       code-help: Nhập một định danh duy nhất cụ thể cho hoạt động này.
       status-help: Xác định trạng thái hiển thị cho người dùng cuối khi hoạt động này được kích hoạt.
       details-help: Cung cấp mô tả chi tiết về hoạt động để người dùng cuối hiểu.
-    custom-entity-issue-form-panel: 
+    custom-entity-issue-form-panel:
         new-custom-entity: Thực thể Tùy chỉnh Mới
         name: Tên
         description: Mô tả
@@ -215,7 +216,7 @@ fleet-ops:
           modal-title: Xóa nhóm trường này?
           delete-body-message: Khi nhóm trường này bị xóa, nó sẽ không thể phục hồi và bạn sẽ mất tất cả các trường tùy chỉnh bên trong.
           confirm-delete: Xóa
-      entities: 
+      entities:
         new-custom-entity: Thực thể Tùy chỉnh Mới
         name: Tên
         description: Mô tả
@@ -848,7 +849,7 @@ fleet-ops:
       edit-button: Chỉnh sửa báo cáo nhiên liệu
       cancel-edit-fuel-report: Hủy chỉnh sửa báo cáo nhiên liệu
       cancel-new-fuel-report: Hủy báo cáo nhiên liệu mới
-      details: 
+      details:
         fuel: Nhiên liệu/ Khối lượng
     global-search:
       search: Tìm kiếm theo từ khóa...
@@ -1053,13 +1054,14 @@ fleet-ops:
       success-message: Xe ({vehicleName}) đã được lưu thành công.
       view-details: Xem chi tiết xe
       save-vehicle: Lưu Xe
-      create-vehicle: Tạo Xe      
+      create-vehicle: Tạo Xe
       cancel-edit-vehicle: Hủy chỉnh sửa xe
       cancel-new-vehicle: Hủy xe mới
       upload-photo: Tải lên ảnh mới
       new-vehicle: Xe Mới
       not-assigned: Chưa gán tài xế
       plate-number: Số Biển Số
+      inspection-date: Ngày Đăng Kiểm
       vin-number: Số VIN
       make: Hãng
       vehicle-make: Hãng xe
@@ -1120,7 +1122,7 @@ fleet-ops:
         select-address: Chọn Địa chỉ
       view-details: Xem chi tiết nhà cung cấp
       save-vendor: Lưu Nhà cung cấp
-      create-vendor: Tạo Nhà cung cấp      
+      create-vendor: Tạo Nhà cung cấp
       cancel-edit-vendor: Hủy chỉnh sửa nhà cung cấp
       cancel-new-vendor: Hủy nhà cung cấp mới
       upload-photo: Tải lên ảnh mới
@@ -1167,12 +1169,12 @@ fleet-ops:
           body: Các thay đổi chưa được lưu cho tài xế này sẽ bị mất. Nhấp vào tiếp tục để tiếp tục.
           button: Tiếp tục mà không lưu
         title: Tài Xế
-        delete-drivers: Xóa Tài Xế  
-        search-placeholder: Tìm kiếm Tài Xế 
+        delete-drivers: Xóa Tài Xế
+        search-placeholder: Tìm kiếm Tài Xế
       new:
          warning-message: Không có tệp nào trong hàng đợi để tải lên!
          import-success: Nhập khẩu hoàn tất.
-       
+
     fleets:
       index:
         view-fleet: Xem chi tiết đội xe...
@@ -1222,7 +1224,7 @@ fleet-ops:
     vehicles:
       index:
         view-vehicle: Xem chi tiết xe...
-        edit-vehicle: Chỉnh sửa chi tiết xe...        
+        edit-vehicle: Chỉnh sửa chi tiết xe...
         delete-vehicle: Xóa xe...
         delete-button: Xóa Xe
         locate-action-title: Xác định Vị trí Xe
@@ -1267,7 +1269,7 @@ fleet-ops:
         cancel-success: Đơn hàng {orderId} đã được hủy.
         dispatch-title: Bạn có chắc chắn muốn gửi đơn hàng này không?
         dispatch-body: Khi đơn hàng này được gửi, tài xế được gán sẽ nhận được thông báo.
-        dispatch-success: Đơn hàng {orderId} đã được gửi.          
+        dispatch-success: Đơn hàng {orderId} đã được gửi.
         map: Bản đồ
         table: Bảng
         cancel-orders: Hủy Đơn Hàng
@@ -1294,7 +1296,7 @@ fleet-ops:
           facilitator-placeholder: Chọn Người Điều Phối
           service-type: Loại Dịch Vụ
           service-type-placeholder: Chọn loại dịch vụ
-          service-type-help-text: Chọn loại dịch vụ mà bạn muốn sử dụng cho 
+          service-type-help-text: Chọn loại dịch vụ mà bạn muốn sử dụng cho
           assign-driver: Gán Tài Xế
           assign-driver-help-text: Gán tài xế mà đơn hàng này sẽ được gửi đến.
           assign-driver-placeholder: Chọn Tài Xế
@@ -1509,7 +1511,7 @@ fleet-ops:
           custom-algorithm-info-message: Tùy chọn này là để định nghĩa một phép tính tùy chỉnh cho phí của dịch vụ này với các biến.
           custom-algorithm-info-second-message: Lưu ý rằng các biến phải được bao bọc trong dấu ngoặc nhọn đơn.
           distance-message: khoảng cách
-          distance-continue-message: >- 
+          distance-continue-message: >-
             - khoảng cách tính bằng mét từ tuyến đường đơn hàng.
           time-message: thời gian
           time-continue-message: >-
