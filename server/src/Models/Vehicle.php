@@ -218,7 +218,7 @@ class Vehicle extends Model
         $nameSegments = [];
 
         // Populate the nameSegments array with the values of the attributes
-        $keys = ['year', 'make', 'model', 'trim', 'plate_number'];
+        $keys = ['year', 'make', 'model', 'trim', 'plate_number', 'inspection_date'];
         foreach ($keys as $key) {
             if (!empty($this->{$key})) {
                 $nameSegments[] = $this->{$key};
@@ -511,6 +511,7 @@ class Vehicle extends Model
             'year'                   => $year,
             'trim'                   => $trim,
             'plate_number'           => $plateNumber,
+//            'inspection_date'        => $inspectionDate,
             'vin'                    => $vin,
             'type'                   => $type,
             'status'                 => 'active',

@@ -42,6 +42,7 @@ class VehicleFilter extends Filter
         $this->builder->searchWhere('plate_number', $plateNumber);
     }
 
+
     public function vehicleMake(?string $vehicleMake)
     {
         $this->builder->searchWhere('make', $vehicleMake);
@@ -85,6 +86,10 @@ class VehicleFilter extends Filter
                 $query->where('uuid', $driverId);
             }
         );
+    }
+
+    public function inspectionDate($inspectionDate){
+
     }
 
     public function createdAt($createdAt)

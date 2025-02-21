@@ -36,6 +36,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
         'updated_by',
         'name',
         'plate_number',
+        'inspection_date',
         'year',
         'vehicle_make',
         'vehicle_model',
@@ -96,6 +97,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
      *
      * @var {String}
      */
+    @tracked inspection_date;
     @tracked plate_number;
 
     /**
