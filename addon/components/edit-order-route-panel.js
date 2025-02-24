@@ -7,7 +7,7 @@ import { task } from 'ember-concurrency-decorators';
 import contextComponentCallback from '@fleetbase/ember-core/utils/context-component-callback';
 import applyContextComponentArguments from '@fleetbase/ember-core/utils/apply-context-component-arguments';
 import getRoutingHost from '@fleetbase/ember-core/utils/get-routing-host';
-import Point from '@fleetbase/fleetops-data/utils/geojson/point';
+import Point from '@ducna01120/fleetops-data/utils/geojson/point';
 import findClosestWaypoint from '@fleetbase/ember-core/utils/find-closest-waypoint';
 
 export default class EditOrderRoutePanelComponent extends Component {

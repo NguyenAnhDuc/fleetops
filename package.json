@@ -44,7 +44,7 @@
         "@babel/core": "^7.23.2",
         "@fleetbase/ember-core": "latest",
         "@fleetbase/ember-ui": "latest",
-        "@fleetbase/fleetops-data": "latest",
+        "@ducna01120/fleetops-data": "latest",
         "@fleetbase/leaflet-routing-machine": "^3.2.16",
         "@fortawesome/ember-fontawesome": "^2.0.0",
         "@fortawesome/fontawesome-svg-core": "6.4.0",
