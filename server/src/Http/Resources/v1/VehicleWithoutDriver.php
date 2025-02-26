@@ -34,6 +34,7 @@ class VehicleWithoutDriver extends FleetbaseResource
             'trim'                   => $this->trim,
             'type'                   => $this->type,
             'plate_number'           => $this->plate_number,
+            'inspection_date'        => $this->inspection_date,
             'vin'                    => $this->vin,
             'vin_data'               => $this->vin_data,
             'status'                 => $this->status,
