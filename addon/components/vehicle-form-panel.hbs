@@ -116,6 +116,15 @@
                                 disabled={{unauthorized}}
                             />
                         </InputGroup>
+                         <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.inspection-date"}}>
+                            <Input
+                                @value={{this.vehicle.inspection_date}}
+                                @type="date"
+                                class="w-full form-input"
+                                placeholder={{t "fleet-ops.component.vehicle-form-panel.inspection-date"}}
+                                disabled={{unauthorized}}
+                            />
+                        </InputGroup>
 
                         <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.vin-number"}}>
                             <Input
