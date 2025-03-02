@@ -110,6 +110,7 @@ class Vehicle extends Model
         'trim',
         'type',
         'plate_number',
+        'inspection_date',
         'vin',
         'vin_data',
         'meta',

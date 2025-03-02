@@ -57,6 +57,7 @@ return new class extends Migration {
             $table->string('model_width_mm')->nullable();
             $table->string('type')->nullable();
             $table->string('plate_number')->nullable();
+            $table->timestamp('inspection_date')->nullable();
             $table->string('vin')->nullable();
             $table->mediumText('vin_data')->nullable();
             $table->json('meta')->nullable();
