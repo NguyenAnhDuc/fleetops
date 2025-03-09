@@ -68,7 +68,7 @@ class VehicleWithoutDriver extends FleetbaseResource
             'trim'         => data_get($this, 'trim'),
             'type'         => data_get($this, 'type'),
             'plate_number' => data_get($this, 'plate_number'),
-            'inspection_date' => d
+            'inspection_date' => data_get($this, 'inspection_date'),
             'vin_data'     => $this->vin_data,
             'status'       => $this->status,
             'online'       => $this->online,
