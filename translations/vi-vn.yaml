@@ -1315,6 +1315,9 @@ fleet-ops:
           require-proof-help-text: Bật tùy chọn này sẽ yêu cầu tài xế hoàn thành bằng chứng giao hàng.
           additional-details: Chi tiết thêm
           metadata: Metadata
+          title: Đơn hàng mới
+          button-submit: Tạo mới
+          detail: Chi tiết
           route: Tuyến đường
           route-label: Nhiều Điểm Giao
           optimize-route: Tối ưu hóa Tuyến Đường

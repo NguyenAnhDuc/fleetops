@@ -1364,6 +1364,9 @@ fleet-ops:
           require-proof-help-text: Toggling this will require driver to complete a proof of delivery.
           additional-details: Additional Details
           metadata: Metadata
+          title: Create New Order
+          detail: Details
+          button-submit: Submit
           route: Route
           route-label: Multiple Dropoff's
           optimize-route: Optimize Route

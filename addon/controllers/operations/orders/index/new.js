@@ -163,7 +163,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     @tracked metadataButtons = [
         {
             type: 'default',
-            text: 'Edit metadata',
+            text: this.intl.t('fleet-ops.operations.orders.index.new.edit-metadata'),
             icon: 'edit',
             onClick: this.editMetaData,
         },
