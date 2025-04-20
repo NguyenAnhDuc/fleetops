@@ -29,6 +29,7 @@ export default class ManagementContactsCustomersController extends ManagementCon
             resizable: true,
             sortable: true,
             filterable: true,
+            hidden: true,
             filterComponent: 'filter/string',
         },
         {
@@ -39,6 +40,7 @@ export default class ManagementContactsCustomersController extends ManagementCon
             resizable: true,
             sortable: true,
             filterable: true,
+            hidden: true,
             filterComponent: 'filter/string',
         },
         {
