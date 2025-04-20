@@ -72,12 +72,6 @@
                     />
                 </div>
 
-                <InputGroup
-                    @name={{t "fleet-ops.operations.orders.index.new.internal-id"}}
-                    @value={{this.order.internal_id}}
-                    @helpText={{t "fleet-ops.operations.orders.index.new.internal-id-help-text"}}
-                    @disabled={{cannot "fleet-ops create order"}}
-                />
 
                 <InputGroup>
                     <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.schedule"}} @helpText={{t "fleet-ops.operations.orders.index.new.schedule-help-text"}} />
@@ -116,7 +110,7 @@
                     </ModelSelect>
                 </InputGroup>
 
-                <InputGroup @name={{t "fleet-ops.operations.orders.index.new.facilitator"}} @helpText={{t "fleet-ops.operations.orders.index.new.facilitator-help-text"}}>
+                {{!-- <InputGroup @name={{t "fleet-ops.operations.orders.index.new.facilitator"}} @helpText={{t "fleet-ops.operations.orders.index.new.facilitator-help-text"}}>
                     <ModelSelect
                         @modelName="facilitator"
                         @selectedModel={{this.order.facilitator}}
@@ -142,7 +136,7 @@
                             </span>
                         </div>
                     </ModelSelect>
-                </InputGroup>
+                </InputGroup> --}}
 
                 {{#if (and this.order.facilitator.isIntegratedVendor this.order.facilitator.service_types.length)}}
                     <InputGroup
@@ -255,7 +249,7 @@
                     </div>
                 {{/if}}
 
-                <div class="lg:col-span-2">
+                {{!-- <div class="lg:col-span-2">
                     <InputGroup @wrapperClass="pt-2">
                         <Toggle
                             @label={{t "fleet-ops.operations.orders.index.new.ad-hoc"}}
@@ -292,7 +286,7 @@
                             @helpText={{t "fleet-ops.operations.orders.index.new.require-proof-help-text"}}
                         />
                     </InputGroup>
-                </div>
+                </div> --}}
             </div>
         </ContentPanel>
 
@@ -309,7 +303,7 @@
         {{/if}}
 
         <ContentPanel @title={{t "fleet-ops.operations.orders.index.new.route"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-            <div class="flex flex-row justify-between mb-4">
+            {{!-- <div class="flex flex-row justify-between mb-4">
                 <div class="flex">
                     <Toggle @isToggled={{this.isMultipleDropoffOrder}} @onToggle={{this.toggleMultiDropOrder}} @label={{t "fleet-ops.operations.orders.index.new.route-label"}} />
                 </div>
@@ -336,7 +330,7 @@
                         />
                     {{/if}}
                 </div>
-            </div>
+            </div> --}}
 
             {{#if this.isMultipleDropoffOrder}}
                 <DragSortList class="multi-drop-select-container overflow-visible" @items={{this.waypoints}} @dragEndAction={{this.sortWaypoints}} as |waypoint index|>
@@ -512,7 +506,7 @@
                         {{/if}}
                     </InputGroup>
 
-                    <InputGroup>
+                    {{!-- <InputGroup>
                         <div class="flex items-center justify-between">
                             <label>{{t "fleet-ops.operations.orders.index.new.return"}}</label>
 
@@ -551,7 +545,7 @@
                                 {{t "fleet-ops.operations.orders.index.new.invalid-coordinates"}}
                             </div>
                         {{/if}}
-                    </InputGroup>
+                    </InputGroup> --}}
                 </div>
             {{/if}}
         </ContentPanel>
@@ -709,7 +703,7 @@
             {{/if}}
         </ContentPanel>
 
-        <ContentPanel @title={{t "fleet-ops.common.service"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+        {{!-- <ContentPanel @title={{t "fleet-ops.common.service"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
             <Toggle
                 @label={{t "fleet-ops.operations.orders.index.new.apply-service-rate"}}
                 @wrapperClass="justify-start-i mb-4"
@@ -824,7 +818,7 @@
                     {{/if}}
                 </ContentPanel>
             {{/if}}
-        </ContentPanel>
+        </ContentPanel> --}}
 
         <ContentPanel @title={{t "fleet-ops.operations.orders.index.new.notes-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
             <Textarea
@@ -836,7 +830,7 @@
             />
         </ContentPanel>
 
-        <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.documents-panel-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+        {{!-- <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.documents-panel-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
             <div class="space-y-4">
                 {{#if this.isUploading}}
                     <div
@@ -911,9 +905,9 @@
                     </div>
                 {{/if}}
             </div>
-        </ContentPanel>
+        </ContentPanel> --}}
 
-        <ContentPanel
+        {{!-- <ContentPanel
             @title={{t "fleet-ops.operations.orders.index.new.metadata"}}
             @open={{this.order.meta.length}}
             @pad={{true}}
@@ -934,7 +928,7 @@
                     </InputGroup>
                 {{/each}}
             </div>
-        </ContentPanel>
+        </ContentPanel> --}}
 
         <Spacer @height="300px" />
     </Overlay::Body>
