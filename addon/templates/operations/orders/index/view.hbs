@@ -98,12 +98,12 @@
                         {{/let}}
                     {{/unless}}
                     <div class="next-dd-menu-seperator"></div>
-                    <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.listenToSocket @model)}}>
+                    {{!-- <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.listenToSocket @model)}}>
                         <div class="w-6">
                             <FaIcon @icon="headphones" />
                         </div>
                         <span>{{t "fleet-ops.operations.orders.index.view.listen-socket-channel"}}</span>
-                    </a>
+                    </a> --}}
                     {{#let (cannot "fleet-ops view order") as |unauthorized|}}
                         <div>
                             <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.viewOrderMeta @model)}} disabled={{unauthorized}}>
@@ -191,7 +191,7 @@
             {{/if}}
         </ContentPanel>
 
-        <ContentPanel @title="Details" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800" @actionButtons={{this.detailPanelButtons}}>
+        <ContentPanel @title="{{t "fleet-ops.common.details"}}" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800" @actionButtons={{this.detailPanelButtons}}>
             <div class="flex mb-4 space-x-2">
                 {{#if @model.dispatched}}
                     <Badge @hideStatusDot={{false}} @status="Dispatched" />
@@ -350,14 +350,14 @@
 
                     </div>
                 </div>
-                <div class="field-info-container space-y-2">
+                {{!-- <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.common.internal-id"}}</div>
                     <ClickToCopy @value={{@model.tracking_number.internal_id}} class="field-value">{{n-a @model.tracking_number.internal_id}}</ClickToCopy>
                 </div>
                 <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.operations.orders.index.view.tracking-number"}}</div>
                     <ClickToCopy @value={{@model.tracking_number.tracking_number}} class="field-value">{{n-a @model.tracking_number.tracking_number}}</ClickToCopy>
-                </div>
+                </div> --}}
                 <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.operations.orders.index.view.date-scheduled"}}</div>
                     <div class="field-value">{{n-a @model.scheduledAt}}</div>
@@ -495,7 +495,7 @@
             </ContentPanel>
         {{/if}}
 
-        <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.proof-of-delivery"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+        {{!-- <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.proof-of-delivery"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
             {{#if this.proofs}}
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
                     {{#each this.proofs as |proof|}}
@@ -524,7 +524,7 @@
             {{else}}
                 <p class="text-gray-700 dark:text-gray-300 leading-5 text-sm">{{t "fleet-ops.operations.orders.index.view.no-proof-of-delivery"}}</p>
             {{/if}}
-        </ContentPanel>
+        </ContentPanel> --}}
 
         <ContentPanel
             @title={{t "fleet-ops.operations.orders.index.view.notes-title"}}

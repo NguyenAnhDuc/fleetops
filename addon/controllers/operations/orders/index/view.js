@@ -63,7 +63,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
     @tracked detailPanelButtons = [
         {
             type: 'default',
-            text: 'Edit',
+            text: this.intl.t('fleet-ops.common.edit'),
             icon: 'pencil',
             iconPrefix: 'fas',
             permission: 'fleet-ops update order',
@@ -77,7 +77,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
     @tracked routePanelButtons = [
         {
             type: 'default',
-            text: 'Edit',
+            text: this.intl.t('fleet-ops.common.edit'),
             icon: 'pencil',
             iconPrefix: 'fas',
             permission: 'fleet-ops update-route-for order',
@@ -91,7 +91,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
     @tracked notesPanelButtons = [
         {
             type: 'default',
-            text: 'Edit',
+            text: this.intl.t('fleet-ops.common.edit'),
             icon: 'pencil',
             iconPrefix: 'fas',
             permission: 'fleet-ops update order',
