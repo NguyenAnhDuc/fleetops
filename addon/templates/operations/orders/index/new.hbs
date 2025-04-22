@@ -39,7 +39,7 @@
         <Button
             @icon="upload"
             @type="magic"
-            @text={{if (media "isMobile") "" "Import"}}
+            @text={{if (media "isMobile") "" (t "fleet-ops.common.import")}}
             @onClick={{this.importOrder}}
             @disabled={{this.isCreatingOrder}}
             @permission="fleet-ops import order"
@@ -48,7 +48,7 @@
         <Button
             @icon="check"
             @type="primary"
-            @text={{if (media "isMobile") "" "Submit"}}
+            @text={{if (media "isMobile") "" (t "fleet-ops.operations.orders.index.new.button-submit")}}
             @onClick={{this.createOrder}}
             @isLoading={{this.isCreatingOrder}}
             @permission="fleet-ops create order"
@@ -632,12 +632,24 @@
                                                     <Input @value={{entity.name}} @type="text" class="w-full form-input form-input-sm" placeholder={{t "fleet-ops.common.name"}} />
                                                 </div>
                                                 <div>
-                                                    <Input
+                                                    {{!-- <Input
                                                         @value={{entity.sku}}
                                                         @type="text"
                                                         class="w-full form-input form-input-sm"
                                                         placeholder={{t "fleet-ops.operations.orders.index.new.sku"}}
-                                                    />
+                                                    /> --}}
+                                                    <div class="input-group">
+                                                        <InputGroup @name={{t "fleet-ops.component.modals.entity-form.weight"}} @helpText={{t "fleet-ops.component.modals.entity-form.weight-text"}} @wrapperClass="mb-2">
+                                                            <UnitInput
+                                                                class="w-full"
+                                                                @value={{entity.weight}}
+                                                                @measurement="weight"
+                                                                @unit={{entity.weight_unit}}
+                                                                @canSelectUnit={{true}}
+                                                                @onUnitChange={{fn (mut entity.weight_unit)}}
+                                                            />
+                                                        </InputGroup>
+                                                    </div>
                                                 </div>
                                                 <Button @icon="pencil" @text={{t "fleet-ops.operations.orders.index.new.edit-item"}} @size="sm" @onClick={{fn this.editEntity entity}} />
                                             </div>
@@ -671,7 +683,17 @@
                                         <Input @value={{entity.name}} @type="text" class="w-full form-input form-input-sm" placeholder={{t "fleet-ops.common.name"}} />
                                     </div>
                                     <div>
-                                        <Input @value={{entity.sku}} @type="text" class="w-full form-input form-input-sm" placeholder={{t "fleet-ops.operations.orders.index.new.sku"}} />
+                                        {{!-- <Input @value={{entity.sku}} @type="text" class="w-full form-input form-input-sm" placeholder={{t "fleet-ops.operations.orders.index.new.sku"}} /> --}}
+                                        <InputGroup @name={{t "fleet-ops.component.modals.entity-form.weight"}} @helpText={{t "fleet-ops.component.modals.entity-form.weight-text"}} @wrapperClass="mb-2">
+                                            <UnitInput
+                                                class="w-full"
+                                                @value={{entity.weight}}
+                                                @measurement="weight"
+                                                @unit={{entity.weight_unit}}
+                                                @canSelectUnit={{true}}
+                                                @onUnitChange={{fn (mut entity.weight_unit)}}
+                                            />
+                                        </InputGroup>
                                     </div>
                                     {{#if this.waypoints.length}}
                                         <Select

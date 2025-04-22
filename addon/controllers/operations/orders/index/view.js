@@ -452,7 +452,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
 
         this.modalsManager.show('modals/order-form', {
             title: this.intl.t('fleet-ops.operations.orders.index.view.edit-order-title'),
-            acceptButtonText: 'Save Changes',
+            acceptButtonText: this.intl.t('fleet-ops.common.save-changes'),
             acceptButtonIcon: 'save',
             setOrderFacilitator: (model) => {
                 order.set('facilitator', model);
@@ -739,7 +739,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
 
         this.modalsManager.show(`modals/order-assign-driver`, {
             title: order.driver_uuid ? this.intl.t('fleet-ops.operations.orders.index.view.change-order') : this.intl.t('fleet-ops.operations.orders.index.view.assign-order'),
-            acceptButtonText: 'Save Changes',
+            acceptButtonText: this.intl.t('fleet-ops.common.save-changes'),
             order,
             confirm: async (modal) => {
                 modal.startLoading();
@@ -886,8 +886,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
 
     @action editEntity(entity) {
         this.modalsManager.show('modals/entity-form', {
-            title: 'Edit Item',
-            acceptButtonText: 'Save Changes',
+            title: this.intl.t('fleet-ops.operations.orders.index.new.common.edit-item'),
+            acceptButtonText: this.intl.t('fleet-ops.common.save-changes'),
             entity,
             uploadNewPhoto: (file) => {
                 const fileUrl = URL.createObjectURL(file.blob);
