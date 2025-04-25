@@ -13,6 +13,12 @@ export default class LayoutFleetOpsSidebarDriverListingComponent extends Compone
     @service hostRouter;
     @service abilities;
     @service notifications;
+     /**
+     * Inject the `intl` service
+     *
+     * @var {Service}
+     */
+     @service intl;
     @tracked drivers = [];
 
     constructor() {
@@ -26,7 +32,7 @@ export default class LayoutFleetOpsSidebarDriverListingComponent extends Compone
     displayPanelDropdown = true;
     panelDropdownButtonActions = [
         {
-            label: 'Create new driver...',
+            label: this.intl.t('fleet-ops.management.drivers.index.create-driver'),
             disabled: this.abilities.cannot('fleet-ops create driver'),
             onClick: () => {
                 const driver = this.store.createRecord('driver');
@@ -37,14 +43,14 @@ export default class LayoutFleetOpsSidebarDriverListingComponent extends Compone
 
     dropdownButtonActions = [
         {
-            label: 'View driver details...',
+            label: this.intl.t('fleet-ops.management.drivers.index.view-details'),
             disabled: this.abilities.cannot('fleet-ops view driver'),
             onClick: (driver) => {
                 this.contextPanel.focus(driver);
             },
         },
         {
-            label: 'Edit driver details...',
+            label: this.intl.t('fleet-ops.management.drivers.index.edit-details'),
             disabled: this.abilities.cannot('fleet-ops update driver'),
             onClick: (driver) => {
                 this.contextPanel.focus(driver, 'editing');
@@ -54,21 +60,21 @@ export default class LayoutFleetOpsSidebarDriverListingComponent extends Compone
             separator: true,
         },
         {
-            label: 'Assign order to driver...',
+            label: this.intl.t('fleet-ops.management.drivers.index.assign-order-driver'),
             disabled: this.abilities.cannot('fleet-ops assign-order-for driver'),
             onClick: (driver) => {
                 this.driverActions.assignOrder(driver);
             },
         },
         {
-            label: 'Assign vehicle to driver...',
+            label: this.intl.t('fleet-ops.management.drivers.index.assign-vehicle-driver'),
             disabled: this.abilities.cannot('fleet-ops assign-vehicle-for driver'),
             onClick: (driver) => {
                 this.driverActions.assignVehicle(driver);
             },
         },
         {
-            label: 'Locate driver on map...',
+            label: this.intl.t('fleet-ops.management.drivers.index.locate-driver-map'),
             disabled: this.abilities.cannot('fleet-ops view driver'),
             onClick: (driver) => {
                 // If currently on the operations dashboard focus driver on the map
@@ -83,7 +89,7 @@ export default class LayoutFleetOpsSidebarDriverListingComponent extends Compone
             separator: true,
         },
         {
-            label: 'Delete driver...',
+            label: this.intl.t('fleet-ops.management.drivers.index.delete-driver'),
             disabled: this.abilities.cannot('fleet-ops delete driver'),
             onClick: (driver) => {
                 this.driverActions.delete(driver);

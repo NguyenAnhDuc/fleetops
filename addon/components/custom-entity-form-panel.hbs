@@ -15,7 +15,7 @@
         @titleWrapperClass="leading-5"
     >
         <div class="flex flex-1 justify-end">
-            <Button @icon={{if this.customEntity.id "save" "check"}} @type="primary" @text="Save Changes" @onClick={{this.save}} @wrapperClass="mr-2" />
+            <Button @icon={{if this.customEntity.id "save" "check"}} @type="primary" @text="{{t "fleet-ops.common.save-changes"}}" @onClick={{this.save}} @wrapperClass="mr-2" />
             <Button @type="default" @icon="times" @onClick={{this.onPressCancel}} />
         </div>
     </Overlay::Header>

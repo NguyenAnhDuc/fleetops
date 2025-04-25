@@ -1260,7 +1260,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         this.modalsManager.show('modals/meta-field-form', {
             title: this.intl.t('fleet-ops.operations.orders.index.new.edit-field-title'),
             acceptButtonIcon: 'save',
-            acceptButtonText: 'Save Changes',
+            acceptButtonText: this.intl.t('fleet-ops.common.save-changes'),
             label,
             value,
             confirm: (modal) => {
@@ -1453,7 +1453,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     @action editEntity(entity) {
         this.modalsManager.show('modals/entity-form', {
             title: this.intl.t('fleet-ops.operations.orders.index.new.edit-item'),
-            acceptButtonText: 'Save Changes',
+            acceptButtonText: this.intl.t('fleet-ops.common.save-changes'),
             entity,
             uploadNewPhoto: (file) => {
                 const fileUrl = URL.createObjectURL(file.file);
