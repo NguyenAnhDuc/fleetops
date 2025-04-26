@@ -14,7 +14,7 @@ class AddEstimateDateToOrdersTable extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dateTime('estimate_date')->nullable()->after('some_existing_column');
+            $table->dateTime('estimate_date')->nullable()->after('updated_at');
         });
     }
 
