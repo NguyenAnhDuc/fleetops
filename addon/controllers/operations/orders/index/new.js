@@ -659,6 +659,11 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         this.order.scheduled_at = dateInstance;
     }
 
+    //2025-04-30 QuyenPN
+    @action estimateDateOrder(dateInstance) {
+        this.order.estimate_date = dateInstance;
+    }
+
     @action setupInterface() {
         if (this.leafletMap && this.leafletMap.liveMap) {
             this.leafletMap.liveMap.hideAll();

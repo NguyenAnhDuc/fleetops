@@ -1286,7 +1286,9 @@ fleet-ops:
           internal-id: ID Nội Bộ
           internal-id-help-text: Sử dụng trường này để tùy chọn thiết lập một mã nhận diện hoặc mã nội bộ cho đơn hàng.
           schedule: Lên lịch
+          estimate: Hoàn thành dự kiến
           schedule-help-text: Ngày và giờ mà đơn hàng sẽ được gửi. Nếu không có tài xế được gán tại thời điểm gửi, việc gửi sẽ thất bại. Nếu đơn hàng là Ad-Hoc, đơn hàng sẽ được gửi tới các tài xế trong khu vực nhận hàng.
+          estimate-date-help-text: Ngày và giờ mà đơn hàng dự kiến hoàn thành.
           customer: Khách hàng
           customer-help-text: Tùy chọn gán khách hàng cho đơn hàng này. Nếu đây là khách hàng mới, hãy sử dụng nút 'Khách hàng mới' ở trên.
           customer-placeholder: Chọn Khách Hàng

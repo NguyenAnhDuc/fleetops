@@ -72,19 +72,6 @@
                     />
                 </div>
 
-
-                <InputGroup>
-                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.schedule"}} @helpText={{t "fleet-ops.operations.orders.index.new.schedule-help-text"}} />
-                    <DateTimeInput
-                        class="form-input"
-                        @value={{this.order.scheduled_at}}
-                        @minDate={{format-date (now) "yyyy-MM-dd"}}
-                        @minTime={{format-date (now) "HH:mm"}}
-                        @onUpdate={{this.scheduleOrder}}
-                        @disabled={{or this.order.dispatched (cannot "fleet-ops create order")}}
-                    />
-                </InputGroup>
-
                 <InputGroup @name={{t "fleet-ops.operations.orders.index.new.customer"}} @helpText={{t "fleet-ops.operations.orders.index.new.customer-help-text"}}>
                     <ModelSelect
                         @modelName="customer"
@@ -108,6 +95,31 @@
                             </span>
                         </div>
                     </ModelSelect>
+                </InputGroup>
+
+                <InputGroup>
+                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.schedule"}} @helpText={{t "fleet-ops.operations.orders.index.new.schedule-help-text"}} />
+                    <DateTimeInput
+                        class="form-input"
+                        @value={{this.order.scheduled_at}}
+                        @minDate={{format-date (now) "yyyy-MM-dd"}}
+                        @minTime={{format-date (now) "HH:mm"}}
+                        @onUpdate={{this.scheduleOrder}}
+                        @disabled={{or this.order.dispatched (cannot "fleet-ops create order")}}
+                    />
+                </InputGroup>
+                
+                {{!-- 2025-04-30 QuyenPN --}}
+                <InputGroup>
+                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.estimate"}} @helpText={{t "fleet-ops.operations.orders.index.new.estimate-date-help-text"}} />
+                    <DateTimeInput
+                        class="form-input"
+                        @value={{this.order.estimate_date}}
+                        @minDate={{format-date (now) "yyyy-MM-dd"}}
+                        @minTime={{format-date (now) "HH:mm"}}  
+                        @onUpdate={{this.estimateDateOrder}}
+                        @disabled={{or this.order.dispatched (cannot "fleet-ops create order")}}
+                    />
                 </InputGroup>
 
                 {{!-- <InputGroup @name={{t "fleet-ops.operations.orders.index.new.facilitator"}} @helpText={{t "fleet-ops.operations.orders.index.new.facilitator-help-text"}}>
