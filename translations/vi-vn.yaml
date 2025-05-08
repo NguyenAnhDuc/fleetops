@@ -1400,6 +1400,7 @@ fleet-ops:
           date-scheduled: Ngày Lên Lịch
           date-dispatched: Ngày Gửi
           date-started: Ngày Bắt Đầu
+          date-estimate-done: Dự Kiến Hoàn Thành
           order-details-title: Chi tiết Đơn Hàng
           additional-details-title: Chi tiết thêm
           route: Tuyến Đường

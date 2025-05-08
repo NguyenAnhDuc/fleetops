@@ -370,6 +370,11 @@
                     <div class="field-name">{{t "fleet-ops.operations.orders.index.view.date-started"}}</div>
                     <div class="field-value">{{n-a @model.startedAt}}</div>
                 </div>
+                {{!-- QuyenPN 2025-05-08 Thêm hiển thị cho trường estimate_date --}}
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.date-estimate-done"}}</div>
+                    <div class="field-value">{{n-a @model.estimateDate}}</div>
+                </div>
                 <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.common.type"}}</div>
                     <div class="field-value">

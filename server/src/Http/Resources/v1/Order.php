@@ -76,6 +76,7 @@ class Order extends FleetbaseResource
             'scheduled_at'          => $this->scheduled_at,
             'updated_at'            => $this->updated_at,
             'created_at'            => $this->created_at,
+            'estimate_date'         => $this->estimate_date, //2025-05-08 QuyenPN
         ];
     }
 
@@ -143,6 +144,7 @@ class Order extends FleetbaseResource
             'scheduled_at'    => $this->scheduled_at,
             'updated_at'      => $this->updated_at,
             'created_at'      => $this->created_at,
+            'estimate_date'   => $this->estimate_date, //2025-05-08 QuyenPN
         ];
     }
 }

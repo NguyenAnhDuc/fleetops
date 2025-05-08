@@ -15,6 +15,19 @@
                     @disabled={{@options.order.isIntegratedVendorOrder}}
                 />
             </div>
+            
+            {{!-- 2025-05-08 QuyenPN Add new field estimate_date --}}
+            <div class="input-group">
+                <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.estimate"}} @helpText={{t "fleet-ops.operations.orders.index.new.estimate-date-help-text"}} />
+                <DateTimeInput
+                    class="form-input"
+                    @value={{@options.order.estimate_date}}
+                    @minDate={{format-date (now) "yyyy-MM-d"}}
+                    @minTime={{format-date (now) "HH:mm"}}
+                    @onUpdate={{@options.estimateDateOrder}}
+                    @disabled={{@options.order.isIntegratedVendorOrder}}
+                />
+            </div>
 
             <InputGroup @name={{t "fleet-ops.component.modals.order-form.customer"}} @helpText={{t "fleet-ops.component.modals.order-form.customer-text"}}>
                 <ModelSelect

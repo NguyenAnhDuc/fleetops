@@ -488,6 +488,12 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             scheduleOrder: (dateInstance) => {
                 order.scheduled_at = dateInstance;
             },
+
+            //2025-05-08 QuyenPN Add for estimate_date
+            estimateDateOrder: (dateInstance) => {
+                order.estimate_date = dateInstance;
+            },
+
             driversQuery: {},
             order,
             confirm: async (modal) => {

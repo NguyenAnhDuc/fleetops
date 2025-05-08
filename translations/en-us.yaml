@@ -1458,6 +1458,7 @@ fleet-ops:
           date-scheduled: Date Scheduled
           date-dispatched: Date Dispatched
           date-started: Date Started
+          date-estimate-done: Date Estimate Done
           order-details-title: Order Details
           additional-details-title: Additional Details
           route: Route
