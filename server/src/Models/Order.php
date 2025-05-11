@@ -118,6 +118,7 @@ class Order extends Model
         'status',
         'fees',
         'is_collected_fees',
+        'currency',
     ];
 
     /**
@@ -200,6 +201,7 @@ class Order extends Model
         'started'           => 'boolean',
         'pod_required'      => 'boolean',
         'is_collected_fees' => 'boolean',
+        'currency'          => 'string',
         'fees'              => 'double',
         'scheduled_at'      => 'datetime',
         'dispatched_at'     => 'datetime',

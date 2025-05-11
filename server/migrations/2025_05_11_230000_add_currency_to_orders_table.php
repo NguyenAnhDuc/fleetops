@@ -14,7 +14,7 @@ class AddFeesAndIsCollectedFeesToOrdersTable extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->integer('currency')->default(0)->after('fees');
+            $table->string('currency')->default(0)->after('fees');
         });
     }
 
