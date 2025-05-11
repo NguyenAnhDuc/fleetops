@@ -4,14 +4,14 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFeesAndIsCollectedFeesToOrdersTableV2 extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
+    public function up() : void
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->integer('fees')->default(0)->after('estimate_date');
@@ -24,11 +24,11 @@ class AddFeesAndIsCollectedFeesToOrdersTableV2 extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down() : void 
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->dropColumn('fees');
             $table->dropColumn('is_collected_fees');
         });
     }
-}
+};
