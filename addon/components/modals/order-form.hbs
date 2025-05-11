@@ -29,6 +29,29 @@
                 />
             </div>
 
+            <div class="input-group">
+                <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.fees"}} @helpText={{t "fleet-ops.operations.orders.index.new.fees-help-text"}} />
+                <Input
+                    type="number"
+                    class="form-input"
+                    value={{@options.order.fees}}
+                    min="0"
+                    {{on "input" (fn (mut @options.order.fees) (get-target-value))}}
+                    disabled={{@options.order.isIntegratedVendorOrder}}
+                />
+            </div>
+
+            <div class="input-group">
+                <Toggle
+                    @label={{t "fleet-ops.operations.orders.index.new.is-collected-fees"}}
+                    @wrapperClass="justify-start-i"
+                    @isToggled={{@options.order.is_collected_fees}}
+                    @onToggle={{fn (mut @options.order.is_collected_fees)}}
+                    @disabled={{@options.order.isIntegratedVendorOrder}}
+                    @helpText={{t "fleet-ops.operations.orders.index.new.is-collected-fees-help-text"}}
+                />
+            </div>
+
             <InputGroup @name={{t "fleet-ops.component.modals.order-form.customer"}} @helpText={{t "fleet-ops.component.modals.order-form.customer-text"}}>
                 <ModelSelect
                     @modelName="customer"

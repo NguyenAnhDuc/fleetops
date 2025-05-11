@@ -71,6 +71,8 @@ class Order extends FleetbaseResource
             'tracker_data'          => $this->when($request->has('with_tracker_data') || !empty($this->resource->tracker_data), fn () => $this->resource->tracker_data ?? $this->resource->tracker()->toArray()),
             'eta'                   => $this->when($request->has('with_eta') || !empty($this->resource->eta), fn () => $this->resource->eta ?? $this->resource->tracker()->eta()),
             'meta'                  => data_get($this, 'meta', []),
+            'fees'                  => (int) $this->fees,
+            'is_collected_fees'     => (bool) $this->is_collected_fees,
             'dispatched_at'         => $this->dispatched_at,
             'started_at'            => $this->started_at,
             'scheduled_at'          => $this->scheduled_at,
@@ -135,16 +137,18 @@ class Order extends FleetbaseResource
             'tracking_number' => new TrackingNumber($this->trackingNumber),
             'purchase_rate'   => new PurchaseRate($this->purchaseRate),
             'notes'           => $this->notes ?? '',
-            'type'            => $this->type ?? null,
-            'status'          => $this->status,
-            'adhoc'           => $this->adhoc,
-            'meta'            => $this->meta ?? [],
-            'dispatched_at'   => $this->dispatched_at,
-            'started_at'      => $this->started_at,
-            'scheduled_at'    => $this->scheduled_at,
-            'updated_at'      => $this->updated_at,
-            'created_at'      => $this->created_at,
-            'estimate_date'   => $this->estimate_date, //2025-05-08 QuyenPN
+            'type'              => $this->type ?? null,
+            'status'            => $this->status,
+            'adhoc'             => $this->adhoc,
+            'meta'              => $this->meta ?? [],
+            'fees'              => (float) $this->fees,
+            'is_collected_fees' => (bool) $this->is_collected_fees,
+            'dispatched_at'     => $this->dispatched_at,
+            'started_at'        => $this->started_at,
+            'scheduled_at'      => $this->scheduled_at,
+            'updated_at'        => $this->updated_at,
+            'created_at'        => $this->created_at,
+            'estimate_date'     => $this->estimate_date, //2025-05-08 QuyenPN
         ];
     }
 }

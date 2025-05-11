@@ -1352,7 +1352,11 @@ fleet-ops:
           facilitator-placeholder: Select Facilitator
           service-type: Service Type
           service-type-placeholder: Select service Type
-          service-type-help-text: Select the service type you wish to use for 
+          service-type-help-text: Select the service type you wish to use for the order
+          fees: Charge Fee
+          fees-help-text: Enter the charge fee amount for this order.
+          is-collected-fees: Fee Collected
+          is-collected-fees-help-text: Check this if the fee has already been collected from the customer.
           assign-driver: Assign Driver
           assign-driver-help-text: Assign the driver this order will be dispatched to.
           assign-driver-placeholder: Select Driver

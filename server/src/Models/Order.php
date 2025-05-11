@@ -116,6 +116,8 @@ class Order extends Model
         'notes',
         'type',
         'status',
+        'fees',
+        'is_collected_fees',
     ];
 
     /**
@@ -189,17 +191,19 @@ class Order extends Model
      * @var array
      */
     protected $casts = [
-        'meta'             => Json::class,
-        'options'          => Json::class,
-        'customer_type'    => PolymorphicType::class,
-        'facilitator_type' => PolymorphicType::class,
-        'dispatched'       => 'boolean',
-        'adhoc'            => 'boolean',
-        'started'          => 'boolean',
-        'pod_required'     => 'boolean',
-        'scheduled_at'     => 'datetime',
-        'dispatched_at'    => 'datetime',
-        'started_at'       => 'datetime',
+        'meta'              => Json::class,
+        'options'           => Json::class,
+        'customer_type'     => PolymorphicType::class,
+        'facilitator_type'  => PolymorphicType::class,
+        'dispatched'        => 'boolean',
+        'adhoc'             => 'boolean',
+        'started'           => 'boolean',
+        'pod_required'      => 'boolean',
+        'is_collected_fees' => 'boolean',
+        'fees'              => 'double',
+        'scheduled_at'      => 'datetime',
+        'dispatched_at'     => 'datetime',
+        'started_at'        => 'datetime',
     ];
 
     /**
@@ -1790,5 +1794,25 @@ class Order extends Model
         }
 
         return false;
+    }
+
+    /**
+     * Get the fees amount for the order.
+     *
+     * @return float
+     */
+    public function getFeesAttribute()
+    {
+        return $this->attributes['fees'] ?? 0;
+    }
+
+    /**
+     * Get the is_collected_fees status for the order.
+     *
+     * @return bool
+     */
+    public function getIsCollectedFeesAttribute()
+    {
+        return (bool) ($this->attributes['is_collected_fees'] ?? false);
     }
 }

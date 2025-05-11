@@ -122,6 +122,29 @@
                     />
                 </InputGroup>
 
+                <InputGroup>
+                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.fees"}} @helpText={{t "fleet-ops.operations.orders.index.new.fees-help-text"}} />
+                    <MoneyInput
+                        class="w-full"
+                        @value={{this.order.fees}}
+                        @currency={{this.order.currency}}
+                        @canSelectCurrency={{true}}
+                        @onCurrencyChange={{fn (mut this.order.currency)}}
+                        @disabled={{or this.order.dispatched (cannot "fleet-ops create order")}}
+                    />
+                </InputGroup>
+
+                <InputGroup @label={{t "fleet-ops.operations.orders.index.new.is-collected-fees"}} @helpText={{t "fleet-ops.operations.orders.index.new.is-collected-fees-help-text"}}>
+                    <Toggle
+                        @label={{t "fleet-ops.operations.orders.index.new.is-collected-fees"}}
+                        @wrapperClass="justify-start-i"
+                        @isToggled={{this.order.is_collected_fees}}
+                        @onToggle={{fn (mut this.order.is_collected_fees)}}
+                        @disabled={{or this.order.dispatched (cannot "fleet-ops create order")}}
+                        @helpText={{t "fleet-ops.operations.orders.index.new.is-collected-fees-help-text"}}
+                    />
+                </InputGroup>
+
                 {{!-- <InputGroup @name={{t "fleet-ops.operations.orders.index.new.facilitator"}} @helpText={{t "fleet-ops.operations.orders.index.new.facilitator-help-text"}}>
                     <ModelSelect
                         @modelName="facilitator"

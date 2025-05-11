@@ -1297,7 +1297,11 @@ fleet-ops:
           facilitator-placeholder: Chọn Người Điều Phối
           service-type: Loại Dịch Vụ
           service-type-placeholder: Chọn loại dịch vụ
-          service-type-help-text: Chọn loại dịch vụ mà bạn muốn sử dụng cho 
+          service-type-help-text: Chọn loại dịch vụ mà bạn muốn sử dụng cho
+          fees: Thu cước
+          fees-help-text: Nhập số tiền thu cước cho đơn hàng này.
+          is-collected-fees: Đã thu cước
+          is-collected-fees-help-text: Đánh dấu nếu cước phí đã được thu từ khách hàng.
           assign-driver: Gán Tài Xế
           assign-driver-help-text: Gán tài xế mà đơn hàng này sẽ được gửi đến.
           assign-driver-placeholder: Chọn Tài Xế
