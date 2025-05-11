@@ -26,7 +26,7 @@ class AddFeesAndIsCollectedFeesToOrdersTable extends Migration
     public function down()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('currency')
+            $table->dropColumn('currency');
         });
     }
 }
