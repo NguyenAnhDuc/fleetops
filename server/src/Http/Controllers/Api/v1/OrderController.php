@@ -51,7 +51,7 @@ class OrderController extends Controller
         set_time_limit(180);
 
         // get request input
-        $input = $request->only(['internal_id', 'payload', 'service_quote', 'purchase_rate', 'adhoc', 'adhoc_distance', 'pod_method', 'pod_required', 'scheduled_at', 'status', 'meta', 'notes', 'estimate_date']);
+        $input = $request->only(['internal_id', 'payload', 'service_quote', 'purchase_rate', 'adhoc', 'adhoc_distance', 'pod_method', 'pod_required', 'scheduled_at', 'status', 'meta', 'notes', 'estimate_date', 'fees', 'currency', 'is_collected_fees']);
 
         // Get order config
         $orderConfig = OrderConfig::resolveFromIdentifier($request->only(['type', 'order_config']));
@@ -62,7 +62,7 @@ class OrderController extends Controller
         // Set order config to input
         $input['order_config_uuid'] = $orderConfig->uuid;
         $input['type']              = $orderConfig->key;
-
+        $input['fees'] = Utils::numbersOnly($input['fees']); //2025-05-12 QuyenPN
         // make sure company is set
         $input['company_uuid'] = session('company');
 
@@ -342,8 +342,9 @@ class OrderController extends Controller
         }
 
         // get request input
-        $input = $request->only(['internal_id', 'payload', 'adhoc', 'adhoc_distance', 'pod_method', 'pod_required', 'scheduled_at', 'meta', 'type', 'status', 'notes', 'estimate_date']);
-
+        $input = $request->only(['internal_id', 'payload', 'adhoc', 'adhoc_distance', 'pod_method', 'pod_required', 'scheduled_at', 'meta', 'type', 'status', 'notes', 'estimate_date', 'fees', 'currency', 'is_collected_fees']);
+        $input['fees'] = Utils::numbersOnly($input['fees']); //2025-05-12 QuyenPN
+        log($input['fees']);
         // update payload if new input or change payload by id
         if ($request->isArray('payload')) {
             $payload      = data_get($order, 'payload', new Payload());

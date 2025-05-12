@@ -375,6 +375,18 @@
                     <div class="field-name">{{t "fleet-ops.operations.orders.index.view.date-estimate-done"}}</div>
                     <div class="field-value">{{n-a @model.estimateDate}}</div>
                 </div>
+
+                {{!-- QuyenPN 2025-05-12 Thêm hiển thị cho trường fees --}}
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.fees"}}</div>
+                    <div class="field-value">{{format-currency @model.fees @model.currency}}</div>
+                </div>
+
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.status-fees"}}</div>
+                    <div class="field-value">{{if @model.is_collected_fees (t "fleet-ops.operations.orders.index.view.status-fees-done") (t "fleet-ops.operations.orders.index.view.status-fees-not-done")}}</div>
+                </div>
+
                 <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.common.type"}}</div>
                     <div class="field-value">

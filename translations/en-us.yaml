@@ -1463,6 +1463,10 @@ fleet-ops:
           date-dispatched: Date Dispatched
           date-started: Date Started
           date-estimate-done: Date Estimate Done
+          fees: Fees
+          status-fees: Status Fees
+          status-fees-done: Done
+          status-fees-not-done: Not Done
           order-details-title: Order Details
           additional-details-title: Additional Details
           route: Route
