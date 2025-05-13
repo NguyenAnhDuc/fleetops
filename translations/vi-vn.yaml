@@ -1,6 +1,9 @@
 fleet-ops:
   extension-name: Fleet-Ops
   common:
+    image: Hình ảnh
+    car_repair_date: Ngày sửa xe
+    total_money: Tổng tiền
     active-manpower: Nhân lực hoạt động
     address: Địa chỉ
     amount: Số lượng
@@ -293,6 +296,7 @@ fleet-ops:
         loading-vehicle: Đang tải phương tiện đội xe...
     layout:
       fleet-ops-sidebar:
+        car_repair_supplies: Sửa xe & Vật tư
         navigator-app: Ứng dụng Navigator
         resources: Tài nguyên
         operations: Hoạt động
@@ -860,8 +864,16 @@ fleet-ops:
       price-breakdown: Chi tiết Giá
       metadata: Siêu dữ liệu
     issue-form-panel:
-      success-message: >-
-        Vấn đề ({publicId}) đã được lưu thành công.
+      new-car-repair-supplies: Tạo mới Sửa xe & Vật tư
+      car-repair-supplies: Sửa xe & Vật tư
+      save-car-repair-supplies: Lưu
+      create-car-repair-supplies: Tạo mới
+      detail-car-repair-supplies: Xem chi tiết Sửa xe & Vật tư
+      cancel-car-repair-supplies: Huỷ bỏ
+      report-car-repair-supplies: Báo cáo Sửa xe & Vật tư
+      note-car-repair-supplies: Ghi Chú
+      upload-image-help: Tải lên hình ảnh liên quan đến vấn đề này
+      success-message: Vấn đề ({publicId}) đã được lưu thành công.
       issue: Vấn đề Mới
       save-issue: Lưu Vấn đề
       create-issue: Tạo Vấn đề

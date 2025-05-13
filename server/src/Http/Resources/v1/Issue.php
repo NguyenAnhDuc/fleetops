@@ -48,6 +48,10 @@ class Issue extends FleetbaseResource
             'resolved_at'                => $this->resolved_at,
             'updated_at'                 => $this->updated_at,
             'created_at'                 => $this->created_at,
+            'currency'                   => $this->currency,
+            'total_money'                => (float)$this->total_money,   
+            'car_repair_date'            => $this->car_repair_date,
+            'image_uuid'                 => $this->image_uuid
         ];
     }
 

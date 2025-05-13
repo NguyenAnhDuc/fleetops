@@ -2,6 +2,7 @@
 
 namespace Fleetbase\FleetOps\Http\Controllers\Api\v1;
 
+use Dflydev\DotAccessData\Util;
 use Fleetbase\FleetOps\Http\Requests\CreateIssueRequest;
 use Fleetbase\FleetOps\Http\Requests\UpdateIssueRequest;
 use Fleetbase\FleetOps\Http\Resources\v1\Issue as DeletedIssue;
@@ -10,6 +11,7 @@ use Fleetbase\FleetOps\Models\Driver;
 use Fleetbase\FleetOps\Models\Issue;
 use Fleetbase\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Fleetbase\FleetOps\Support\Utils;
 
 class IssueController extends Controller
 {
@@ -31,7 +33,13 @@ class IssueController extends Controller
             'report',
             'priority',
             'status',
+            'currency',
+            'total_money',
+            'car_repair_date',
+            'image_uuid',
         ]);
+
+        $input['total_money'] = Utils::numbersOnly($input['total_money']); 
 
         // Find driver who is reporting
         try {
@@ -86,8 +94,12 @@ class IssueController extends Controller
             'report',
             'priority',
             'status',
+            'currency',
+            'total_money',
+            'car_repair_date',
+            'image_uuid',
         ]);
-
+        $input['total_money'] = Utils::numbersOnly($input['total_money']); 
         // update the issue
         $issue->update($input);
 

@@ -12,8 +12,8 @@
     <Overlay::Header
         @title={{if
             this.issue.public_id
-            (concat (t "fleet-ops.component.issue-form-panel.issue") " on: " (format-date this.issue.created_at "MMM dd, yyyy HH:mm"))
-            (t "fleet-ops.component.issue-form-panel.new-issue")
+            (concat (t "fleet-ops.component.issue-form-panel.car-repair-supplies") " on: " (format-date this.issue.created_at "MMM dd, yyyy HH:mm"))
+            (t "fleet-ops.component.issue-form-panel.new-car-repair-supplies")
         }}
         @status={{this.issue.status}}
         @hideStatusDot={{true}}
@@ -23,7 +23,7 @@
             <Button
                 @icon={{if this.issue.id "save" "check"}}
                 @type="primary"
-                @text={{if this.issue.id (t "fleet-ops.component.issue-form-panel.save-issue") (t "fleet-ops.component.issue-form-panel.create-issue")}}
+                @text={{if this.issue.id (t "fleet-ops.component.issue-form-panel.save-car-repair-supplies") (t "fleet-ops.component.issue-form-panel.create-car-repair-supplies")}}
                 @onClick={{perform this.save}}
                 @isLoading={{this.save.isRunning}}
                 @permission={{this.savePermission}}
@@ -33,7 +33,7 @@
                 <Button
                     @type="default"
                     @icon="circle-exclamation"
-                    @helpText={{t "fleet-ops.component.issue-form-panel.view-details"}}
+                    @helpText={{t "fleet-ops.component.issue-form-panel.detail-car-repair-supplies"}}
                     @onClick={{this.onViewDetails}}
                     @wrapperClass="mr-2"
                     @permission="fleet-ops view issue"
@@ -42,7 +42,7 @@
             <Button
                 @type="default"
                 @icon="times"
-                @helpText={{if this.issue.id (t "fleet-ops.component.issue-form-panel.cancel-edit-issue") (t "fleet-ops.component.issue-form-panel.cancel-new-issue")}}
+                @helpText={{if this.issue.id (t "fleet-ops.component.issue-form-panel.cancel-car-repair-supplies") (t "fleet-ops.component.issue-form-panel.cancel-car-repair-supplies")}}
                 @onClick={{this.onPressCancel}}
             />
         </div>
@@ -50,9 +50,9 @@
 
     <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 pt-4">
         {{#let (cannot this.savePermission) as |unauthorized|}}
-            <ContentPanel @title={{t "fleet-ops.component.issue-form-panel.issue-report"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <ContentPanel @title={{t "fleet-ops.component.issue-form-panel.report-car-repair-supplies"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-2 no-input-group-padding text-xs">
-                    <InputGroup @name={{t "fleet-ops.component.issue-form-panel.reported-by"}}>
+                    {{!-- <InputGroup @name={{t "fleet-ops.component.issue-form-panel.reported-by"}}>
                         <ModelSelect
                             @modelName="user"
                             @selectedModel={{this.issue.reporter}}
@@ -66,9 +66,9 @@
                         >
                             {{model.name}}
                         </ModelSelect>
-                    </InputGroup>
+                    </InputGroup> --}}
 
-                    <InputGroup @name={{t "fleet-ops.component.issue-form-panel.assigned"}}>
+                    {{!-- <InputGroup @name={{t "fleet-ops.component.issue-form-panel.assigned"}}>
                         <ModelSelect
                             @modelName="user"
                             @selectedModel={{this.issue.assignee}}
@@ -83,7 +83,7 @@
                         >
                             {{model.name}}
                         </ModelSelect>
-                    </InputGroup>
+                    </InputGroup> --}}
 
                     <InputGroup @name={{t "fleet-ops.common.driver"}}>
                         <ModelSelect
@@ -117,7 +117,7 @@
                         </ModelSelect>
                     </InputGroup>
 
-                    <InputGroup @name={{t "fleet-ops.component.issue-form-panel.type"}}>
+                    {{!-- <InputGroup @name={{t "fleet-ops.component.issue-form-panel.type"}}>
                         <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                             <PowerSelect
                                 @options={{this.issueTypes}}
@@ -131,9 +131,9 @@
                                 {{smart-humanize type}}
                             </PowerSelect>
                         </div>
-                    </InputGroup>
+                    </InputGroup> --}}
 
-                    <InputGroup @name={{t "fleet-ops.component.issue-form-panel.category"}}>
+                    {{!-- <InputGroup @name={{t "fleet-ops.component.issue-form-panel.category"}}>
                         <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                             <PowerSelect
                                 @options={{this.issueCategories}}
@@ -147,20 +147,40 @@
                                 {{smart-humanize category}}
                             </PowerSelect>
                         </div>
+                    </InputGroup> --}}
+
+                    <InputGroup @name={{t "fleet-ops.common.car_repair_date"}} @wrapperClass="col-span-1">
+                        <DateTimeInput
+                            class="form-input"
+                            @value={{this.issue.car_repair_date}}
+                            @onUpdate={{fn (mut this.issue.car_repair_date)}}
+                            @disabled={{unauthorized}}
+                        />
+                    </InputGroup>
+                    
+                    <InputGroup @name={{t "fleet-ops.common.total_money"}} @wrapperClass="col-span-1">
+                        <MoneyInput
+                            class="w-full"
+                            @value={{this.issue.total_money}}
+                            @currency={{this.issue.currency}}
+                            @canSelectCurrency={{true}}
+                            @onCurrencyChange={{fn (mut this.issue.currency)}}
+                            disabled={{unauthorized}}
+                        />
                     </InputGroup>
 
-                    <InputGroup @name={{t "fleet-ops.component.issue-form-panel.report"}} @wrapperClass="col-span-2">
+                    <InputGroup @name={{t "fleet-ops.component.issue-form-panel.note-car-repair-supplies"}} @wrapperClass="col-span-2">
                         <Textarea
                             @value={{this.issue.report}}
                             aria-label="Issue Report"
                             class="w-full form-input"
                             disabled={{unauthorized}}
-                            placeholder={{t "fleet-ops.component.issue-form-panel.report"}}
+                            placeholder={{t "fleet-ops.component.issue-form-panel.note-car-repair-supplies"}}
                             rows={{5}}
                         />
                     </InputGroup>
 
-                    <InputGroup @name={{t "fleet-ops.component.issue-form-panel.tags"}} @wrapperClass="col-span-2">
+                    {{!-- <InputGroup @name={{t "fleet-ops.component.issue-form-panel.tags"}} @wrapperClass="col-span-2">
                         <TagInput
                             class="form-input"
                             @placeholder={{t "fleet-ops.component.issue-form-panel.add-tags"}}
@@ -173,9 +193,9 @@
                         >
                             {{tag}}
                         </TagInput>
-                    </InputGroup>
+                    </InputGroup> --}}
 
-                    <InputGroup @name={{t "fleet-ops.component.issue-form-panel.priority"}}>
+                    {{!-- <InputGroup @name={{t "fleet-ops.component.issue-form-panel.priority"}}>
                         <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                             <PowerSelect
                                 @options={{this.issuePriorityOptions}}
@@ -189,9 +209,9 @@
                                 {{smart-humanize priority}}
                             </PowerSelect>
                         </div>
-                    </InputGroup>
+                    </InputGroup> --}}
 
-                    <InputGroup @name={{t "fleet-ops.common.status"}}>
+                    {{!-- <InputGroup @name={{t "fleet-ops.common.status"}}>
                         <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                             <PowerSelect
                                 @options={{this.issueStatusOptions}}
@@ -205,10 +225,38 @@
                                 {{smart-humanize status}}
                             </PowerSelect>
                         </div>
-                    </InputGroup>
+                    </InputGroup> --}}
 
-                    <InputGroup @name={{t "fleet-ops.common.coordinates"}} @wrapperClass="col-span-2">
+                    {{!-- <InputGroup @name={{t "fleet-ops.common.coordinates"}} @wrapperClass="col-span-2">
                         <CoordinatesInput @value={{this.issue.location}} @onChange={{fn (mut this.issue.location)}} @disabled={{unauthorized}} />
+                    </InputGroup> --}}
+
+                    <InputGroup @name={{t "fleet-ops.common.image"}} @helpText={{t "fleet-ops.component.issue-form-panel.upload-image-help"}} @wrapperClass="col-span-2">
+                        <div class="flex items-center">
+                            <FileUpload
+                                @name="issue-image"
+                                @for="issue-image"
+                                @accept={{join "," this.acceptedImageTypes}}
+                                @multiple={{false}}
+                                @onFileAdded={{this.onImageFileAdded}}
+                                @disabled={{unauthorized}}
+                            >
+                                <a tabindex={{0}} class="btn btn-default btn-xs cursor-pointer">
+                                    <FaIcon @icon="upload" @size="sm" class="mr-2" />{{t "common.select-file"}}
+                                </a>
+                            </FileUpload>
+                            {{#if this.file}}
+                                <div class="ml-2 flex items-center text-sm">
+                                    <Spinner class="dark:text-blue-400 text-blue-900" />
+                                    <span class="ml-2 text-xs dark:text-blue-400 text-blue-900">{{round this.file.progress}}%</span>
+                                </div>
+                            {{/if}}
+                        </div>
+                        {{#if this.issue.image}}
+                            <div class="mt-2">
+                                <File @file={{this.issue.image}} @onDelete={{this.removeImage}} class="custom-field-file" />
+                            </div>
+                        {{/if}}
                     </InputGroup>
 
                     <RegistryYield @registry="fleet-ops:component:issue-form-panel:details" as |RegistryComponent|>

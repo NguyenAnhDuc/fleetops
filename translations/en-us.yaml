@@ -1,6 +1,9 @@
 fleet-ops:
   extension-name: Fleet-Ops
   common:
+    image: Image
+    car_repair_date: Car Repair Date
+    total_money: Total Money
     active-manpower: Active Manpower
     address: Address 
     amount: Amount
@@ -296,6 +299,7 @@ fleet-ops:
         loading-vehicle: Loading fleet vehicles...
     layout:
       fleet-ops-sidebar:
+        car_repair_supplies: Car Repair & Supplies
         payments: Payments
         navigator-app: Navigator App
         resources: Resources
@@ -894,6 +898,15 @@ fleet-ops:
       price-breakdown: Price Breakdown
       metadata: Metadata
     issue-form-panel:
+      new-car-repair-supplies: New Car Repair & Supplies
+      car-repair-supplies: Car Repair & Supplies
+      save-car-repair-supplies: Save
+      create-car-repair-supplies: Create
+      detail-car-repair-supplies: View Car Repair & Supplies details
+      cancel-car-repair-supplies: Cancel
+      report-car-repair-supplies: Car Repair & Supplies Report
+      note-car-repair-supplies: Car Repair & Supplies Note
+      upload-image-help: Upload an image related to this issue
       success-message: Issue ({publicId}) saved successfully.
       new-issue: New Issue
       save-issue: Save Issue

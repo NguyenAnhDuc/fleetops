@@ -296,6 +296,7 @@ fleet-ops:
         loading-vehicle: جارٍ تحميل المركبات في الأسطول...
     layout:
       fleet-ops-sidebar:
+        car_repair_supplies: Car Repair & Supplies
         navigator-app: تطبيق Navigator
         resources: الموارد
         operations: العمليات

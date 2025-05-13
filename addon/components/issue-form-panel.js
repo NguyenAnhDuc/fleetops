@@ -17,6 +17,17 @@ export default class IssueFormPanelComponent extends Component {
     @service notifications;
     @service hostRouter;
     @service contextPanel;
+    
+    /**
+     * Accepted file types for image upload
+     * @type {Array}
+     */
+    @tracked acceptedImageTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/webp'
+    ];
 
     /**
      * Overlay context.
@@ -178,5 +189,58 @@ export default class IssueFormPanelComponent extends Component {
     @action setReporter(user) {
         this.issue.set('reporter', user);
         this.issue.set('reported_by_uuid', user.id);
+    }
+    
+    /**
+     * Handles file upload for issue image
+     *
+     * @param {File} file
+     * @action
+     */
+    @action onImageFileAdded(file) {
+        // Validate file state
+        if (['queued', 'failed', 'timed_out', 'aborted'].indexOf(file.state) === -1) {
+            return;
+        }
+        
+        // Set file for progress state
+        this.file = file;
+        
+        // Queue and upload immediately
+        this.fetch.uploadFile.perform(
+            file,
+            {
+                path: 'uploads/fleet-ops/issue-images',
+                type: 'issue_image',
+            },
+            (uploadedFile) => {
+                this.file = undefined;
+                this.issue.set('image', uploadedFile);
+                this.issue.set('image_uuid', uploadedFile.id);
+            },
+            () => {
+                // remove file from queue
+                if (file.queue && typeof file.queue.remove === 'function') {
+                    file.queue.remove(file);
+                }
+                this.file = undefined;
+            }
+        );
+    }
+    
+    /**
+     * Removes the uploaded image
+     *
+     * @action
+     */
+    @action removeImage() {
+        const image = this.issue.image;
+        
+        if (isModel(image)) {
+            image.destroyRecord();
+        }
+        
+        this.issue.set('image', null);
+        this.issue.set('image_uuid', null);
     }
 }

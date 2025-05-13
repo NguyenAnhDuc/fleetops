@@ -127,14 +127,14 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
                 permission: 'fleet-ops list fuel-report',
                 visible: this.abilities.can('fleet-ops see fuel-report'),
             },
-            // {
-            //     intl: 'fleet-ops.component.layout.fleet-ops-sidebar.issues',
-            //     title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.issues'),
-            //     icon: 'triangle-exclamation',
-            //     route: 'management.issues',
-            //     permission: 'fleet-ops list issue',
-            //     visible: this.abilities.can('fleet-ops see issue'),
-            // },
+            {
+                intl: 'fleet-ops.component.layout.fleet-ops-sidebar.car_repair_supplies',
+                title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.car_repair_supplies'),
+                icon: 'triangle-exclamation',
+                route: 'management.issues',
+                permission: 'fleet-ops list issue',
+                visible: this.abilities.can('fleet-ops see issue'),
+            },
         ];
 
         const settingsItems = [
