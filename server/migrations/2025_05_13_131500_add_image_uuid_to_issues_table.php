@@ -14,8 +14,8 @@ class AddImageUuidToIssuesTable extends Migration
     public function up()
     {
         Schema::table('issues', function (Blueprint $table) {
-            $table->uuid('image_uuid')->nullable()->after('location');
-            $table->foreign('image_uuid')->references('id')->on('files')->onDelete('set null');
+            $table->string('image_uuid', 36)->nullable()->after('location');
+            $table->foreign('image_uuid')->references('uuid')->on('files')->onUpdate('CASCADE')->onDelete('CASCADE');
         });
     }
 
