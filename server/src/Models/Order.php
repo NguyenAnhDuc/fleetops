@@ -119,6 +119,7 @@ class Order extends Model
         'fees',
         'is_collected_fees',
         'currency',
+        'estimate_date',
     ];
 
     /**
@@ -206,6 +207,7 @@ class Order extends Model
         'scheduled_at'      => 'datetime',
         'dispatched_at'     => 'datetime',
         'started_at'        => 'datetime',
+        'estimate_date'     => 'datetime',
     ];
 
     /**
@@ -224,6 +226,16 @@ class Order extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logOnly(['*'])->logOnlyDirty();
+    }
+
+      /**
+     * Set the fees as only numbers.
+     *
+     * @void
+     */
+    public function setFeesAttribute($value)
+    {
+        $this->attributes['fees'] = Utils::numbersOnly($value);
     }
 
     /**

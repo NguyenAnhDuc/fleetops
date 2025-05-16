@@ -65,6 +65,10 @@ class Issue extends Model
         'meta',
         'resolved_at',
         'status',
+        'image_uuid',
+        'car_repair_date',
+        'total_money',
+        'currency',
     ];
 
     /**
@@ -83,7 +87,18 @@ class Issue extends Model
         'location'        => Point::class,
         'meta'            => Json::class,
         'resolved_at'     => 'date',
+        'car_repair_date' => 'date',
     ];
+
+    /**
+     * Set the total_money as only numbers.
+     *
+     * @void
+     */
+    public function setTotalMoneyAttribute($value)
+    {
+        $this->attributes['total_money'] = Utils::numbersOnly($value);
+    }
 
     /**
      * Filterable attributes/parameters.

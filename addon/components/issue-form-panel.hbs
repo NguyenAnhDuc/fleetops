@@ -12,10 +12,10 @@
     <Overlay::Header
         @title={{if
             this.issue.public_id
-            (concat (t "fleet-ops.component.issue-form-panel.car-repair-supplies") " on: " (format-date this.issue.created_at "MMM dd, yyyy HH:mm"))
+            (concat (t "fleet-ops.component.issue-form-panel.car-repair-supplies") " : " (format-date this.issue.created_at "MMM dd, yyyy HH:mm"))
             (t "fleet-ops.component.issue-form-panel.new-car-repair-supplies")
         }}
-        @status={{this.issue.status}}
+        {{!-- @status={{this.issue.status}} --}}
         @hideStatusDot={{true}}
         @titleWrapperClass="leading-5"
     >

@@ -39,6 +39,8 @@ export default class ManagementIssuesIndexController extends BaseController {
         'priority',
         'cateogry',
         'type',
+        'car_repair_date',
+        'total_money'
     ];
 
     /**
@@ -131,91 +133,91 @@ export default class ManagementIssuesIndexController extends BaseController {
      * @var {Array}
      */
     @tracked columns = [
-        {
-            label: this.intl.t('fleet-ops.common.id'),
-            valuePath: 'public_id',
-            cellComponent: 'table/cell/anchor',
-            action: this.viewIssue,
-            permission: 'fleet-ops view issue',
-            width: '110px',
-            resizable: true,
-            sortable: true,
-        },
-        {
-            label: this.intl.t('fleet-ops.common.priority'),
-            valuePath: 'priority',
-            cellComponent: 'table/cell/status',
-            width: '100px',
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/multi-option',
-            filterOptions: ['low', 'medium', 'high', 'critical', 'scheduled-maintenance', 'operational-suggestion'],
-        },
-        {
-            label: this.intl.t('fleet-ops.common.type'),
-            valuePath: 'type',
-            width: '100px',
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/select',
-            filterOptions: getIssueTypes(),
-            placeholder: 'Select issue type',
-        },
-        {
-            label: this.intl.t('fleet-ops.common.category'),
-            valuePath: 'category',
-            width: '120px',
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/select',
-            filterOptions: getIssueCategories(),
-            placeholder: 'Select issue category',
-        },
-        {
-            label: this.intl.t('fleet-ops.common.reporter'),
-            valuePath: 'reporter_name',
-            width: '100px',
-            cellComponent: 'table/cell/anchor',
-            permission: 'iam view user',
-            onClick: async (issue) => {
-                let reporter = await this.store.findRecord('user', issue.reported_by_uuid);
+        // {
+        //     label: this.intl.t('fleet-ops.common.id'),
+        //     valuePath: 'public_id',
+        //     cellComponent: 'table/cell/anchor',
+        //     action: this.viewIssue,
+        //     permission: 'fleet-ops view issue',
+        //     width: '110px',
+        //     resizable: true,
+        //     sortable: true,
+        // },
+        // {
+        //     label: this.intl.t('fleet-ops.common.priority'),
+        //     valuePath: 'priority',
+        //     cellComponent: 'table/cell/status',
+        //     width: '100px',
+        //     resizable: true,
+        //     sortable: true,
+        //     filterable: true,
+        //     filterComponent: 'filter/multi-option',
+        //     filterOptions: ['low', 'medium', 'high', 'critical', 'scheduled-maintenance', 'operational-suggestion'],
+        // },
+        // {
+        //     label: this.intl.t('fleet-ops.common.type'),
+        //     valuePath: 'type',
+        //     width: '100px',
+        //     resizable: true,
+        //     sortable: true,
+        //     filterable: true,
+        //     filterComponent: 'filter/select',
+        //     filterOptions: getIssueTypes(),
+        //     placeholder: 'Select issue type',
+        // },
+        // {
+        //     label: this.intl.t('fleet-ops.common.category'),
+        //     valuePath: 'category',
+        //     width: '120px',
+        //     resizable: true,
+        //     sortable: true,
+        //     filterable: true,
+        //     filterComponent: 'filter/select',
+        //     filterOptions: getIssueCategories(),
+        //     placeholder: 'Select issue category',
+        // },
+        // {
+        //     label: this.intl.t('fleet-ops.common.reporter'),
+        //     valuePath: 'reporter_name',
+        //     width: '100px',
+        //     cellComponent: 'table/cell/anchor',
+        //     permission: 'iam view user',
+        //     onClick: async (issue) => {
+        //         let reporter = await this.store.findRecord('user', issue.reported_by_uuid);
 
-                if (reporter) {
-                    this.contextPanel.focus(reporter);
-                }
-            },
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select reporter',
-            filterParam: 'reporter',
-            model: 'user',
-        },
-        {
-            label: this.intl.t('fleet-ops.common.assignee'),
-            valuePath: 'assignee_name',
-            width: '100px',
-            cellComponent: 'table/cell/anchor',
-            permission: 'iam view user',
-            onClick: async (issue) => {
-                let assignee = await this.store.findRecord('user', issue.assigned_to_uuid);
+        //         if (reporter) {
+        //             this.contextPanel.focus(reporter);
+        //         }
+        //     },
+        //     resizable: true,
+        //     sortable: true,
+        //     filterable: true,
+        //     filterComponent: 'filter/model',
+        //     filterComponentPlaceholder: 'Select reporter',
+        //     filterParam: 'reporter',
+        //     model: 'user',
+        // },
+        // {
+        //     label: this.intl.t('fleet-ops.common.assignee'),
+        //     valuePath: 'assignee_name',
+        //     width: '100px',
+        //     cellComponent: 'table/cell/anchor',
+        //     permission: 'iam view user',
+        //     onClick: async (issue) => {
+        //         let assignee = await this.store.findRecord('user', issue.assigned_to_uuid);
 
-                if (assignee) {
-                    this.contextPanel.focus(assignee);
-                }
-            },
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select assignee',
-            filterParam: 'assignee',
-            model: 'user',
-        },
+        //         if (assignee) {
+        //             this.contextPanel.focus(assignee);
+        //         }
+        //     },
+        //     resizable: true,
+        //     sortable: true,
+        //     filterable: true,
+        //     filterComponent: 'filter/model',
+        //     filterComponentPlaceholder: 'Select assignee',
+        //     filterParam: 'assignee',
+        //     model: 'user',
+        // },
         {
             label: this.intl.t('fleet-ops.common.driver'),
             valuePath: 'driver_name',
@@ -259,16 +261,36 @@ export default class ManagementIssuesIndexController extends BaseController {
             model: 'vehicle',
             modelNamePath: 'displayName',
         },
+        // {
+        //     label: this.intl.t('fleet-ops.common.status'),
+        //     valuePath: 'status',
+        //     cellComponent: 'table/cell/status',
+        //     width: '120px',
+        //     resizable: true,
+        //     sortable: true,
+        //     filterable: true,
+        //     filterComponent: 'filter/multi-option',
+        //     filterOptions: ['pending', 'in-progress', 'backlogged', 'requires-update', 'in-review', 're-opened', 'duplicate', 'pending-review', 'escalated', 'completed', 'canceled'],
+        // },
         {
-            label: this.intl.t('fleet-ops.common.status'),
-            valuePath: 'status',
-            cellComponent: 'table/cell/status',
+            label: this.intl.t('fleet-ops.common.car_repair_date'),
+            valuePath: 'carRepairDate',
+            sortParam: 'car_repair_date',
             width: '120px',
             resizable: true,
             sortable: true,
             filterable: true,
-            filterComponent: 'filter/multi-option',
-            filterOptions: ['pending', 'in-progress', 'backlogged', 'requires-update', 'in-review', 're-opened', 'duplicate', 'pending-review', 'escalated', 'completed', 'canceled'],
+            filterComponent: 'filter/date',
+        },
+        {
+            label: this.intl.t('fleet-ops.common.total_money'),
+            valuePath: 'displayTotalMoney',
+            sortParam: 'total_money',
+            width: '120px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/date',
         },
         {
             label: this.intl.t('fleet-ops.common.created-at'),
@@ -297,7 +319,7 @@ export default class ManagementIssuesIndexController extends BaseController {
             ddButtonText: false,
             ddButtonIcon: 'ellipsis-h',
             ddButtonIconPrefix: 'fas',
-            ddMenuLabel: 'Issue Actions',
+            ddMenuLabel: this.intl.t('fleet-ops.common.action-car-repair-supplies'),
             cellClassNames: 'overflow-visible',
             wrapperClass: 'flex items-center justify-end mx-2',
             width: '10%',

@@ -3,6 +3,7 @@ fleet-ops:
   common:
     image: Image
     car_repair_date: Car Repair Date
+    action-car-repair-supplies: Action
     total_money: Total Money
     active-manpower: Active Manpower
     address: Address 
@@ -1271,6 +1272,9 @@ fleet-ops:
           body: Unsaved changes to this issue will be lost. Click continue to proceed.
         title: Issues
         delete-issues: Delete Issues
+    car-repair-supplies:
+      index:
+        title: Car Repair & Supplies
     places:
       index:
         view-details: View Place Details
