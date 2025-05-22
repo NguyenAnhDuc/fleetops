@@ -232,7 +232,7 @@
                     </InputGroup> --}}
 
                     <InputGroup @name={{t "fleet-ops.common.image"}} @helpText={{t "fleet-ops.component.issue-form-panel.upload-image-help"}} @wrapperClass="col-span-2">
-                        <div class="flex items-center">
+                        {{!-- <div class="flex items-center">
                             <FileUpload
                                 @name="issue-image"
                                 @for="issue-image"
@@ -256,8 +256,11 @@
                             <div class="mt-2">
                                 <File @file={{this.issue.image}} @onDelete={{this.removeImage}} class="custom-field-file" />
                             </div>
-                        {{/if}}
+                        {{/if}} --}}
+                        <Image src={{this.issue.photo_url}} alt="Image" height="128" width="128" class="h-32 w-32 rounded-md" />
+                        <UploadButton @name={{t "fleet-ops.common.photos"}} @accept="image/*" @onFileAdded={{this.onImageFileAdded}} class="w-32" />
                     </InputGroup>
+                    
 
                     <RegistryYield @registry="fleet-ops:component:issue-form-panel:details" as |RegistryComponent|>
                         <RegistryComponent @issue={{this.issue}} @controller={{this.controller}} @permission={{this.savePermission}} />

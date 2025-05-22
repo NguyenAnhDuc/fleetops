@@ -13,6 +13,7 @@ use Fleetbase\Traits\HasPublicId;
 use Fleetbase\Traits\HasUuid;
 use Fleetbase\Traits\TracksApiCredential;
 use Illuminate\Support\Str;
+use Fleetbase\Models\File;
 
 class Issue extends Model
 {
@@ -89,6 +90,7 @@ class Issue extends Model
         'resolved_at'     => 'date',
         'car_repair_date' => 'date',
     ];
+    
 
     /**
      * Set the total_money as only numbers.
@@ -112,7 +114,7 @@ class Issue extends Model
      *
      * @var array
      */
-    protected $appends = ['driver_name', 'vehicle_name', 'assignee_name', 'reporter_name'];
+    protected $appends = ['driver_name', 'vehicle_name', 'assignee_name', 'reporter_name','photo_url'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -193,6 +195,20 @@ class Issue extends Model
     public function getDriverNameAttribute()
     {
         return data_get($this, 'driver.name');
+    }
+
+    /**
+     * Get the photo URL from image_uuid.
+     *
+     * @return string|null
+     */
+    public function getPhotoUrlAttribute()
+    {
+         $file = File::where('uuid', $this->image_uuid)->first();
+         if ($file) {
+             return $file -> url;
+         }
+        return 'https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/image-file-icon.png';;
     }
 
     /**

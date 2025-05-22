@@ -330,7 +330,7 @@ export default class ManagementIssuesIndexController extends BaseController {
                     permission: 'fleet-ops view issue',
                 },
                 {
-                    label: this.intl.t('fleet-ops.management.issues.index.edit-issues'),
+                    label: this.intl.t('fleet-ops.management.car-repair-supplies.index.edit'),
                     fn: this.editIssue,
                     permission: 'fleet-ops update issue',
                 },
@@ -338,7 +338,7 @@ export default class ManagementIssuesIndexController extends BaseController {
                     separator: true,
                 },
                 {
-                    label: this.intl.t('fleet-ops.management.issues.index.delete'),
+                    label: this.intl.t('fleet-ops.management.car-repair-supplies.index.delete'),
                     fn: this.deleteIssue,
                     permission: 'fleet-ops delete issue',
                 },

@@ -1275,6 +1275,8 @@ fleet-ops:
     car-repair-supplies:
       index:
         title: Car Repair & Supplies
+        edit: Edit Car Repair & Supplies
+        delete: Delete Car Repair & Supplies
     places:
       index:
         view-details: View Place Details

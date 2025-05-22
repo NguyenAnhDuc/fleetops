@@ -51,7 +51,8 @@ class Issue extends FleetbaseResource
             'currency'                   => $this->currency,
             'total_money'                => (float)$this->total_money,   
             'car_repair_date'            => $this->car_repair_date,
-            'image_uuid'                 => $this->image_uuid
+            'image_uuid'                 => $this->image_uuid,
+            'photo_url'                  => $this->photo_url
         ];
     }
 

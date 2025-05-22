@@ -1221,6 +1221,8 @@ fleet-ops:
     car-repair-supplies:
       index:
         title: Sửa xe & Vật tư
+        edit: Chỉnh sửa
+        delete: Xoá
     places:
       index:
         view-details: Xem Chi tiết Địa điểm

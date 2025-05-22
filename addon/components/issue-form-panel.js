@@ -205,7 +205,7 @@ export default class IssueFormPanelComponent extends Component {
         
         // Set file for progress state
         this.file = file;
-        
+        const fileUrl = URL.createObjectURL(file.file);
         // Queue and upload immediately
         this.fetch.uploadFile.perform(
             file,
@@ -217,6 +217,7 @@ export default class IssueFormPanelComponent extends Component {
                 this.file = undefined;
                 this.issue.set('image', uploadedFile);
                 this.issue.set('image_uuid', uploadedFile.id);
+                this.issue.set('photo_url', fileUrl);
             },
             () => {
                 // remove file from queue
