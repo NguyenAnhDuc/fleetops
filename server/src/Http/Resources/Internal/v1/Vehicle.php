@@ -24,6 +24,7 @@ class Vehicle extends VehicleWithoutDriver
                 'public_id'    => $this->public_id,
                 'display_name' => $this->display_name,
                 'driver_name'  => $this->driver_name,
+                'driver_location' => $this->driver_location,
             ],
             'id'
         );

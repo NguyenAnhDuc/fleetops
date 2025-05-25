@@ -37,6 +37,7 @@ fleet-ops:
     host: Host
     id: ID
     internal-id: Internal ID
+    assign-driver: Driver Assigned
     item: Item
     key: Key
     label: Label

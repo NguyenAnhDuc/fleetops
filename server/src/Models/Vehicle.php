@@ -133,7 +133,7 @@ class Vehicle extends Model
      *
      * @var array
      */
-    protected $appends = ['display_name', 'photo_url', 'driver_name', 'vendor_name'];
+    protected $appends = ['display_name', 'photo_url', 'driver_name', 'vendor_name', 'driver_location'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -241,6 +241,11 @@ class Vehicle extends Model
     public function getDriverNameAttribute()
     {
         return data_get($this, 'driver.name');
+    }
+
+    public function getDriverLocationAttribute()
+    {
+        return data_get($this, 'driver.city');
     }
 
     /**

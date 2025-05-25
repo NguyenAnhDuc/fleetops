@@ -37,6 +37,8 @@ fleet-ops:
     host: Chủ nhà
     id: ID
     internal-id: Mã nội bộ
+    assign-driver: Lái xe
+    coordinates-location: Vị trí
     item: Mục
     key: Khóa
     label: Nhãn

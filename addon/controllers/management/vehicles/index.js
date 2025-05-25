@@ -213,7 +213,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
             filterParam: 'internal_id',
         },
         {
-            label: 'Driver Assigned',
+            label: this.intl.t('fleet-ops.common.assign-driver'),
             cellComponent: 'table/cell/anchor',
             permission: 'fleet-ops view driver',
             action: async (vehicle) => {
@@ -233,6 +233,17 @@ export default class ManagementVehiclesIndexController extends BaseController {
         {
             label: this.intl.t('fleet-ops.common.id'),
             valuePath: 'public_id',
+            cellComponent: 'click-to-copy',
+            width: '120px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            hidden: true,
+            filterComponent: 'filter/string',
+        },
+        {
+            label: this.intl.t('fleet-ops.common.coordinates-location'),
+            valuePath: 'driver_location',
             cellComponent: 'click-to-copy',
             width: '120px',
             resizable: true,
