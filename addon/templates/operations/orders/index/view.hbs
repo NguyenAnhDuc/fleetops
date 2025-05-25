@@ -790,7 +790,7 @@
             {{/if}}
         </ContentPanel>
 
-        <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.documents-panel-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+        {{!-- <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.documents-panel-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
             <div class="space-y-4">
                 {{#if this.isUploading}}
                     <div
@@ -865,7 +865,7 @@
                     </div>
                 {{/if}}
             </div>
-        </ContentPanel>
+        </ContentPanel> --}}
 
         <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.comments-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800" @wrapperClass="mb-20">
             <CommentThread @subject={{@model}} @subjectType="fleet-ops:order" />
