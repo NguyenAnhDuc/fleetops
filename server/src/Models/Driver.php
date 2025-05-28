@@ -432,11 +432,13 @@ class Driver extends Model
         $odometer = 0;
         $odometer_1 = 0;
         $odometer_2 = 0;
+        $metric_unit = "";
         if($this -> fuelReports()){
             $lastest_data = $this -> fuelReports() 
             -> orderBy('created_at', 'desc') ->first();
             if($lastest_data){
                 $volume = (int) $lastest_data->value('volume');
+                $metric_unit = $lastest_data->value('metric_unit');
             }
             #return (string) $volume;
             #lấy 2 giá trị gần nhất
@@ -454,7 +456,12 @@ class Driver extends Model
             if ($volume > 0) {
                 $result = $odometer / $volume;
                 $trimmed = floor($result * 100) / 100;
-                return number_format($trimmed, 2, '.', '');
+                #return number_format($trimmed, 2, '.', '');
+                $plus_icon = '';
+                if( $trimmed > 0.3) {
+                    $plus_icon = '⚠️ ';
+                }
+                return $plus_icon . $volume .$metric_unit . '/'. $odometer .'Km';
             } else {
                 return "";
             }
