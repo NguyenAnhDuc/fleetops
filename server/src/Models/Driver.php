@@ -142,6 +142,7 @@ class Driver extends Model
         'current_job_id',
         'current_job_name',
         'current_job_status',
+        'fuel_report_status',
         'vehicle_id',
         'vendor_id',
         'photo_url',
@@ -294,6 +295,11 @@ class Driver extends Model
         return $this->hasMany(\Fleetbase\Models\UserDevice::class, 'user_uuid', 'user_uuid');
     }
 
+    public function fuelReports(): HasMany
+    {
+        return $this->hasMany(FuelReport::class, 'vehicle_uuid','vehicle_uuid');
+    }
+
     /**
      * Get avatar url.
      */
@@ -418,6 +424,42 @@ class Driver extends Model
     public function getCurrentJobIdAttribute(): ?string
     {
         return $this->currentJob()->value('public_id');
+    }
+
+    public function getFuelReportStatusAttribute(): ?string
+    {
+        $volume = 0;
+        $odometer = 0;
+        $odometer_1 = 0;
+        $odometer_2 = 0;
+        if($this -> fuelReports()){
+            $lastest_data = $this -> fuelReports() 
+            -> orderBy('created_at', 'desc') ->first();
+            if($lastest_data){
+                $volume = (int) $lastest_data->value('volume');
+            }
+            #return (string) $volume;
+            #lấy 2 giá trị gần nhất
+            $arr_data = $this -> fuelReports() 
+            -> orderBy('created_at', 'desc')-> get();
+            if ($arr_data->count() >= 2) {
+                $odometer_1 = (int) $arr_data[0]->odometer;
+                $odometer_2 = (int) $arr_data[1]->odometer;
+            } elseif ($arr_data->count() === 1) {
+                $odometer_1 = (int) $arr_data[0]->odometer;
+            } else {
+                $odometer_1 = 0;
+            }
+            $odometer = abs($odometer_1 - $odometer_2);
+            if ($volume > 0) {
+                $result = $odometer / $volume;
+                $trimmed = floor($result * 100) / 100;
+                return number_format($trimmed, 2, '.', '');
+            } else {
+                return "";
+            }
+        }
+        return "";
     }
 
     public function getCurrentJobNameAttribute(): ?string

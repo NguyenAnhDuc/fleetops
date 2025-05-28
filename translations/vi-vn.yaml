@@ -39,6 +39,7 @@ fleet-ops:
     internal-id: Mã nội bộ
     order-internal-id: Mã đơn hàng
     order-status: Trạng thái đơn hàng
+    fuel-driver-status: Trạng thái Nhiêu liệu
     assign-driver: Lái xe
     coordinates-location: Vị trí
     item: Mục
