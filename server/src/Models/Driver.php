@@ -461,7 +461,7 @@ class Driver extends Model
                 if( $trimmed > 0.3) {
                     $plus_icon = '⚠️ ';
                 }
-                return $plus_icon . $volume .$metric_unit . '/'. $odometer .'Km';
+                return $plus_icon . $trimmed .$metric_unit . '/km';
             } else {
                 return "";
             }
