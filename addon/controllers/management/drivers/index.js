@@ -183,7 +183,7 @@ export default class ManagementDriversIndexController extends BaseController {
             resizable: true,
             sortable: true,
             filterable: true,
-            hidden: false,
+            hidden: true,
             filterComponent: 'filter/string',
         },
         {
@@ -194,28 +194,8 @@ export default class ManagementDriversIndexController extends BaseController {
             resizable: true,
             sortable: true,
             filterable: true,
+            hidden: true,
             filterComponent: 'filter/string',
-        },
-        {
-            label: this.intl.t('fleet-ops.common.vendor'),
-            cellComponent: 'table/cell/anchor',
-            permission: 'fleet-ops view vendor',
-            onClick: async (driver) => {
-                const vendor = await driver.loadVendor();
-
-                if (vendor) {
-                    this.contextPanel.focus(vendor);
-                }
-            },
-            valuePath: 'vendor.name',
-            modelNamePath: 'name',
-            width: '180px',
-            resizable: true,
-            filterable: true,
-            filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select vendor to filter by',
-            filterParam: 'vendor',
-            model: 'vendor',
         },
         {
             label: this.intl.t('fleet-ops.common.vehicle'),
@@ -259,6 +239,28 @@ export default class ManagementDriversIndexController extends BaseController {
             model: 'fleet',
         },
         {
+            label: this.intl.t('fleet-ops.common.vendor'),
+            cellComponent: 'table/cell/anchor',
+            permission: 'fleet-ops view vendor',
+            onClick: async (driver) => {
+                const vendor = await driver.loadVendor();
+
+                if (vendor) {
+                    this.contextPanel.focus(vendor);
+                }
+            },
+            valuePath: 'vendor.name',
+            modelNamePath: 'name',
+            width: '180px',
+            resizable: true,
+            filterable: true,
+            hidden: true,
+            filterComponent: 'filter/model',
+            filterComponentPlaceholder: 'Select vendor to filter by',
+            filterParam: 'vendor',
+            model: 'vendor',
+        },
+        {
             label: this.intl.t('fleet-ops.common.license'),
             valuePath: 'drivers_license_number',
             cellComponent: 'table/cell/base',
@@ -266,6 +268,29 @@ export default class ManagementDriversIndexController extends BaseController {
             resizable: true,
             sortable: true,
             filterable: true,
+            hidden: true,
+            filterComponent: 'filter/string',
+        },
+        {
+            label: this.intl.t('fleet-ops.common.order-internal-id'),
+            valuePath: 'current_job_name',
+            cellComponent: 'table/cell/base',
+            width: '150px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterParam: 'phone',
+            filterComponent: 'filter/string',
+        },
+        {
+            label: this.intl.t('fleet-ops.common.order-status'),
+            valuePath: 'current_job_status',
+            cellComponent: 'table/cell/base',
+            width: '150px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterParam: 'phone',
             filterComponent: 'filter/string',
         },
         {
@@ -298,6 +323,16 @@ export default class ManagementDriversIndexController extends BaseController {
             multiOptionSearchPlaceholder: 'Search countries...',
         },
         {
+            label: this.intl.t('fleet-ops.common.coordinates-location'),
+            valuePath: 'city',
+            cellComponent: 'click-to-copy',
+            width: '200px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/string',
+        },
+        {
             label: this.intl.t('fleet-ops.common.status'),
             valuePath: 'status',
             cellComponent: 'table/cell/status',
@@ -317,6 +352,7 @@ export default class ManagementDriversIndexController extends BaseController {
             resizable: true,
             sortable: true,
             filterable: true,
+            hidden: true,
             filterComponent: 'filter/date',
         },
         {
@@ -337,7 +373,7 @@ export default class ManagementDriversIndexController extends BaseController {
             ddButtonText: false,
             ddButtonIcon: 'ellipsis-h',
             ddButtonIconPrefix: 'fas',
-            ddMenuLabel: 'Driver Actions',
+            ddMenuLabel: this.intl.t('fleet-ops.management.vehicles.index.action'),
             cellClassNames: 'overflow-visible',
             wrapperClass: 'flex items-center justify-end mx-2',
             width: '10%',

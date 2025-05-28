@@ -316,7 +316,6 @@ export default class OperationsOrdersIndexController extends BaseController {
             valuePath: 'internal_id',
             cellComponent: 'click-to-copy',
             width: '125px',
-            hidden: true,
             resizable: true,
             sortable: true,
             filterable: true,

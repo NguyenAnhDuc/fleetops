@@ -37,6 +37,8 @@ fleet-ops:
     host: Chủ nhà
     id: ID
     internal-id: Mã nội bộ
+    order-internal-id: Mã đơn hàng
+    order-status: Trạng thái đơn hàng
     assign-driver: Lái xe
     coordinates-location: Vị trí
     item: Mục
@@ -1242,6 +1244,7 @@ fleet-ops:
         delete-places: Xóa Địa điểm
     vehicles:
       index:
+        action: Thao tác
         view-vehicle: Xem chi tiết xe...
         edit-vehicle: Chỉnh sửa chi tiết xe...        
         delete-vehicle: Xóa xe...

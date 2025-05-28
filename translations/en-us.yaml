@@ -29,6 +29,7 @@ fleet-ops:
     distance: Distance
     driver-license: Driver License
     driver: Driver
+    detail: Detail
     edit: Edit
     email: Email
     export: Export
@@ -37,7 +38,10 @@ fleet-ops:
     host: Host
     id: ID
     internal-id: Internal ID
+    order-internal-id: Order Internal ID
+    order-status: Order Status
     assign-driver: Driver Assigned
+    s: Location
     item: Item
     key: Key
     label: Label
@@ -1295,6 +1299,7 @@ fleet-ops:
         delete-places: Delete Places
     vehicles:
       index:
+        action: Vehicle Actions
         view-vehicle: View vehicle details...
         edit-vehicle: Edit vehicle details...        
         delete-vehicle: Delete vehicle...

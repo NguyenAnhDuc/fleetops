@@ -323,6 +323,7 @@ class DriverController extends Controller
      */
     public function track(string $id, Request $request)
     {
+        \Log::info(''. $id);
         $latitude  = $request->input('latitude');
         $longitude = $request->input('longitude');
         $altitude  = $request->input('altitude');
@@ -369,7 +370,8 @@ class DriverController extends Controller
 
             if ($geocoded) {
                 $driver->update([
-                    'city'    => $geocoded->getLocality(),
+                    #'city'    => $geocoded->getLocality(),
+                    'city'    => $geocoded->getSubLocality() + ' ' + $geocoded->getLocality(),
                     'country' => $geocoded->getCountry()->getCode(),
                 ]);
             }

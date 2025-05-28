@@ -98,7 +98,7 @@ class Driver extends Model
         'current_status',
         'slug',
         'status',
-        'meta,',
+        'meta',
     ];
 
     /**
@@ -140,6 +140,8 @@ class Driver extends Model
      */
     protected $appends = [
         'current_job_id',
+        'current_job_name',
+        'current_job_status',
         'vehicle_id',
         'vendor_id',
         'photo_url',
@@ -158,6 +160,7 @@ class Driver extends Model
      * @var array
      */
     protected $hidden = ['currentJob', 'vendor', 'vehicle', 'user', 'latitude', 'longitude', 'auth_token'];
+
 
     /**
      * Attributes that is filterable on this model.
@@ -253,7 +256,7 @@ class Driver extends Model
 
     public function currentJob(): BelongsTo|Builder
     {
-        return $this->belongsTo(Order::class)->select(['id', 'uuid', 'public_id', 'payload_uuid', 'driver_assigned_uuid'])->without(['driver']);
+        return $this->belongsTo(Order::class)->select(['id', 'uuid', 'public_id', 'payload_uuid', 'driver_assigned_uuid', 'internal_id'])->without(['driver']);
     }
 
     public function currentOrder(): BelongsTo|Builder
@@ -417,6 +420,34 @@ class Driver extends Model
         return $this->currentJob()->value('public_id');
     }
 
+    public function getCurrentJobNameAttribute(): ?string
+    {
+        #return $this->currentJob()->value('internal_id');
+        if($this->orders()){
+            $data = $this->orders()->where('status', '!=','canceled')
+            ->first();
+            if($data){
+                return $data->value('internal_id');;
+            }else{
+                return "";
+            }
+        }
+        return "";
+    }
+    public function getCurrentJobStatusAttribute(): ?string
+    {
+        if($this->orders()){
+            $data = $this->orders()->where('status', '!=','canceled')
+            ->first();
+            if($data){
+                return $data->value('status');;
+            }else{
+                return "";
+            }
+        }
+        return "";
+    }
+    
     /**
      * Get assigned vehicle assigned name.
      */
