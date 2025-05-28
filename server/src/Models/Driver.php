@@ -424,10 +424,11 @@ class Driver extends Model
     {
         #return $this->currentJob()->value('internal_id');
         if($this->orders()){
-            $data = $this->orders()->where('status', '!=','canceled')
+            $data = $this->orders()->whereIn('status', ['started', 'loaded', 'moved'])
+            ->orderBy('created_at', 'desc')
             ->first();
             if($data){
-                return $data->value('internal_id');;
+                return $data->value('internal_id');
             }else{
                 return "";
             }
@@ -437,10 +438,11 @@ class Driver extends Model
     public function getCurrentJobStatusAttribute(): ?string
     {
         if($this->orders()){
-            $data = $this->orders()->where('status', '!=','canceled')
+            $data = $this->orders()->whereIn('status', ['started', 'loaded', 'moved'])
+            ->orderBy('created_at', 'desc')
             ->first();
             if($data){
-                return $data->value('status');;
+                return $data->value('status');
             }else{
                 return "";
             }
