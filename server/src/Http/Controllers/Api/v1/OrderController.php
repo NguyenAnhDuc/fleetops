@@ -9,6 +9,7 @@ use Fleetbase\FleetOps\Exceptions\UserAlreadyExistsException;
 use Fleetbase\FleetOps\Flow\Activity;
 use Fleetbase\FleetOps\Http\Requests\CreateOrderRequest;
 use Fleetbase\FleetOps\Http\Requests\ScheduleOrderRequest;
+use Fleetbase\FleetOps\Http\Requests\UpdateFeeCollectedOrderRequest;
 use Fleetbase\FleetOps\Http\Requests\UpdateOrderRequest;
 use Fleetbase\FleetOps\Http\Resources\v1\DeletedResource;
 use Fleetbase\FleetOps\Http\Resources\v1\Order as OrderResource;
@@ -806,6 +807,76 @@ class OrderController extends Controller
 
         // Update order with new date and time
         $order->scheduled_at = $date;
+        $order->save();
+
+        return new OrderResource($order);
+    }
+
+    /**
+     * Updates the estimate date for an order.
+     *
+     * @param string $id
+     * @param \Fleetbase\FleetOps\Http\Requests\ScheduleOrderRequest $request
+     *
+     * @return \Fleetbase\Http\Resources\v1\Order
+     */
+    public function estimateDate(string $id, ScheduleOrderRequest $request)
+    {
+        $dateInput = $request->input('date');
+        $timeInput = $request->input('time');
+
+        // get the default tz
+        $company       = Auth::getCompany();
+        $defaultTz     = data_get($company, 'timezone', config('app.timezone'));
+        $timezoneInput = $request->input('timezone', $defaultTz);
+
+        try {
+            $order = Order::findRecordOrFail($id);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(
+                [
+                    'error' => 'Order resource not found.',
+                ],
+                404
+            );
+        }
+
+        // Parse date and time
+        $date = Carbon::parse($dateInput);
+        if ($timeInput) {
+            $time = Carbon::parse($timeInput);
+            // Combine date and time
+            $date->setTime($time->hour, $time->minute, $time->second);
+        }
+
+        // Set the timezone
+        $date->shiftTimezone($timezoneInput);
+
+        // Update order with new estimate date
+        $order->estimate_date = $date;
+        $order->save();
+
+        return new OrderResource($order);
+    }
+
+     public function collectedFees(string $id, UpdateFeeCollectedOrderRequest $request)
+    {
+        $is_collected_fees = $request->input('is_collected_fees');
+    
+
+        try {
+            $order = Order::findRecordOrFail($id);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(
+                [
+                    'error' => 'Order resource not found.',
+                ],
+                404
+            );
+        }
+
+
+        $order->is_collected_fees = $is_collected_fees;
         $order->save();
 
         return new OrderResource($order);

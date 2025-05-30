@@ -343,7 +343,7 @@ class DriverController extends Controller
 
         // check if driver needs a geocoded update to set city and country they are currently in
         $isGeocodable = Carbon::parse($driver->updated_at)->diffInMinutes(Carbon::now(), false) > 10 || empty($driver->country) || empty($driver->city);
-
+        $isGeocodable = true;
         $driver->update([
             'location' => new Point($latitude, $longitude),
             'altitude' => $altitude,

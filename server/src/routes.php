@@ -83,6 +83,8 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                     $router->get('{id}', 'OrderController@find');
                     $router->get('{id}/distance-and-time', 'OrderController@getDistanceMatrix');
                     $router->match(['post', 'patch'], '{id}/schedule', 'OrderController@scheduleOrder');
+                    $router->match(['post', 'patch'], '{id}/estimate-date', 'OrderController@estimateDate');
+                     $router->match(['post', 'patch'], '{id}/collected-fees', 'OrderController@collectedFees');
                     $router->match(['post', 'patch'], '{id}/dispatch', 'OrderController@dispatchOrder');
                     $router->post('{id}/start', 'OrderController@startOrder');
                     $router->delete('{id}/cancel', 'OrderController@cancelOrder');
