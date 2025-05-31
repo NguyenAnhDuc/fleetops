@@ -473,7 +473,7 @@ class Driver extends Model
     {
         #return $this->currentJob()->value('internal_id');
         if($this->orders()){
-            $data = $this->orders()->whereIn('status', ['started', 'loaded', 'moved'])
+            $data = $this->orders()->whereIn(\DB::raw('LOWER(status)'), ['started', 'loaded', 'moved'])
             ->orderBy('created_at', 'desc')
             ->first();
             if($data){
@@ -487,7 +487,7 @@ class Driver extends Model
     public function getCurrentJobStatusAttribute(): ?string
     {
         if($this->orders()){
-            $data = $this->orders()->whereIn('status', ['started', 'loaded', 'moved'])
+            $data = $this->orders()->whereIn(\DB::raw('LOWER(status)'), ['started', 'loaded', 'moved'])
             ->orderBy('created_at', 'desc')
             ->first();
             if($data){
