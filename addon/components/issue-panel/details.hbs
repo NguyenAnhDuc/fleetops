@@ -46,11 +46,7 @@
             <div class="field-info-container space-y-2">
                 <div class="field-name">{{t "fleet-ops.common.image"}}</div>
                 <div class="field-value">
-                    {{#if @issue.image_uuid}}
-                        <Image src={{@issue.photo_url}} alt="Image" height="128" width="128" class="h-32 w-32 rounded-md" />
-                    {{else}}
-                        {{!-- {{t "common.none"}} --}}
-                    {{/if}}
+                    <Image src={{@issue.photo_url}} alt="Image" height="128" width="128" class="h-32 w-32 rounded-md" />
                 </div>
             </div>
             {{!-- <div class="field-info-container space-y-2">

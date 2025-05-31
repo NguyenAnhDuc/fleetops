@@ -208,7 +208,7 @@ class Issue extends Model
          if ($file) {
              return $file -> url;
          }
-        return 'https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/image-file-icon.png';;
+        return 'https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/image-file-icon.png';
     }
 
     /**
