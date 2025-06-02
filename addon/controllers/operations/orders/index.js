@@ -489,9 +489,9 @@ export default class OperationsOrdersIndexController extends BaseController {
         },
         {
             label: this.intl.t('fleet-ops.common.status'),
-            valuePath: 'status',
+            valuePath: 'DisplayStatus',
             cellComponent: 'table/cell/status',
-            width: '120px',
+            width: '180px',
             resizable: true,
             sortable: true,
             filterable: true,

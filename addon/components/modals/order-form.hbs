@@ -31,14 +31,6 @@
 
             <div class="input-group">
                 <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.fees"}} @helpText={{t "fleet-ops.operations.orders.index.new.fees-help-text"}} />
-                {{!-- <Input
-                    type="number"
-                    class="form-input"
-                    value={{@options.order.fees}}
-                    min="0"
-                    {{on "input" (fn (mut @options.order.fees) (get-target-value))}}
-                    disabled={{@options.order.isIntegratedVendorOrder}}
-                /> --}}
                 <MoneyInput
                     class="w-full"
                     @value={{@options.order.fees}}

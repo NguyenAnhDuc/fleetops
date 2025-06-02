@@ -110,7 +110,7 @@
                 </InputGroup>
                 
                 {{!-- 2025-04-30 QuyenPN --}}
-                <InputGroup>
+                {{!-- <InputGroup>
                     <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.estimate"}} @helpText={{t "fleet-ops.operations.orders.index.new.estimate-date-help-text"}} />
                     <DateTimeInput
                         class="form-input"
@@ -120,7 +120,7 @@
                         @onUpdate={{this.estimateDateOrder}}
                         @disabled={{or this.order.dispatched (cannot "fleet-ops create order")}}
                     />
-                </InputGroup>
+                </InputGroup> --}}
 
                 <InputGroup>
                     <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.fees"}} @helpText={{t "fleet-ops.operations.orders.index.new.fees-help-text"}} />
@@ -134,7 +134,7 @@
                     />
                 </InputGroup>
 
-                <InputGroup @label={{t "fleet-ops.operations.orders.index.new.is-collected-fees"}} @helpText={{t "fleet-ops.operations.orders.index.new.is-collected-fees-help-text"}}>
+                {{!-- <InputGroup @label={{t "fleet-ops.operations.orders.index.new.is-collected-fees"}} @helpText={{t "fleet-ops.operations.orders.index.new.is-collected-fees-help-text"}}>
                     <Toggle
                         @label={{t "fleet-ops.operations.orders.index.new.is-collected-fees"}}
                         @wrapperClass="justify-start-i"
@@ -143,7 +143,7 @@
                         @disabled={{or this.order.dispatched (cannot "fleet-ops create order")}}
                         @helpText={{t "fleet-ops.operations.orders.index.new.is-collected-fees-help-text"}}
                     />
-                </InputGroup>
+                </InputGroup> --}}
 
                 {{!-- <InputGroup @name={{t "fleet-ops.operations.orders.index.new.facilitator"}} @helpText={{t "fleet-ops.operations.orders.index.new.facilitator-help-text"}}>
                     <ModelSelect
