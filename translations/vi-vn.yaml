@@ -303,6 +303,7 @@ fleet-ops:
     layout:
       fleet-ops-sidebar:
         car_repair_supplies: Sửa xe & Vật tư
+        finance: 	Báo cáo thu chi
         navigator-app: Ứng dụng Navigator
         resources: Tài nguyên
         operations: Hoạt động

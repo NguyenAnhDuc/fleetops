@@ -103,6 +103,16 @@ export default class ContextPanelService extends Service {
                 componentArguments: [{ isResizable: true }, { width: '500px' }],
             },
         },
+        finance: {
+            viewing: {
+                component: 'finance-panel',
+                componentArguments: [{ isResizable: true }, { width: '500px' }],
+            },
+            editing: {
+                component: 'finance-form-panel',
+                componentArguments: [{ isResizable: true }, { width: '500px' }],
+            },
+        },
         order: {
             editingRoute: {
                 component: 'edit-order-route-panel',

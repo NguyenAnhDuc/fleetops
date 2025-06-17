@@ -49,6 +49,14 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
                 visible: this.abilities.can('fleet-ops see service-rate'),
             },
             {
+                intl: 'fleet-ops.component.layout.fleet-ops-sidebar.finance',
+                title: this.intl.t('Quản lý Thu Chi'),
+                icon: 'money-bill',
+                route: 'management.finance',
+                permission: 'fleet-ops view finance',
+                visible: this.abilities.can('fleet-ops view finance'),
+            },
+            {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.scheduler',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.scheduler'),
                 icon: 'calendar-day',
@@ -130,8 +138,16 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
             {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.car_repair_supplies',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.car_repair_supplies'),
-                icon: 'triangle-exclamation',
+                icon: 'screwdriver-wrench',
                 route: 'management.issues',
+                permission: 'fleet-ops list issue',
+                visible: this.abilities.can('fleet-ops see issue'),
+            },
+            {
+                intl: 'fleet-ops.component.layout.fleet-ops-sidebar.finance',
+                title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.finance'),
+                icon: 'money-bill-wave',
+                route: 'management.finances',
                 permission: 'fleet-ops list issue',
                 visible: this.abilities.can('fleet-ops see issue'),
             },
