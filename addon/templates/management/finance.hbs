@@ -1,0 +1,106 @@
+<div class="finance-management w-full flex flex-col items-center mt-6">
+  <div class="w-full max-w-md space-y-3">
+    <h2 class="text-xl font-semibold text-center">Quản lý Thu Chi</h2>
+
+    <form {{on "submit" this.search}} class="space-y-3">
+      {{!-- Dòng 1: StartDate - EndDate --}}
+      <div class="grid grid-cols-2 gap-3">
+        <div class="input-group">
+          <InputLabel @labelText="Ngày bắt đầu" />
+          <input
+            type="date"
+            class="form-input w-full"
+            value={{this.startDate}}
+            {{on "change" this.updateStartDate}}
+          />
+        </div>
+
+        <div class="input-group">
+          <InputLabel @labelText="Ngày kết thúc" />
+          <input
+            type="date"
+            class="form-input w-full"
+            value={{this.endDate}}
+            {{on "change" this.updateEndDate}}
+          />
+        </div>
+      </div>
+
+      {{!-- Dòng 2: Chọn xe --}}
+      <div class="input-group">
+        {{!-- <InputLabel @labelText="Xe" /> --}}
+        <ModelSelect
+          @modelName="vehicle"
+          @selectedModel={{this.selectedVehicleId}}
+          @placeholder="-- Chọn xe --"
+          @triggerClass="form-select form-input"
+          @allowClear={{true}}
+          @renderInPlace={{true}}
+          @onChange={{this.updateSelectedVehicle}}
+          as |model|
+        >
+          <div class="flex items-center space-x-2">
+            {{!-- <div class="w-6">
+              <Image @src={{model.avatar_url}} class="w-5 h-5 rounded shadow" />
+            </div> --}}
+            <span class="uppercase">{{model.display_name}}</span>
+          </div>
+        </ModelSelect>
+      </div>
+
+      {{!-- Dòng 3: Nút tìm kiếm - căn giữa --}}
+      <div class="flex justify-center">
+        <button
+          type="submit"
+          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Tìm kiếm
+        </button>
+      </div>
+    </form>
+  </div>
+
+  {{!-- Dòng 4: Kết quả thu chi - full màn hình --}}
+  <div class="results w-full px-4 mt-6 overflow-auto">
+  {{#if this.results.length}}
+    <!-- Tổng hợp thu chi -->
+    <div class="flex justify-end mb-2 text-sm text-gray-700 dark:text-gray-200 px-4">
+        <div class="text-right">
+            <div  class="text-green-400">Tổng thu: <span class="font-semibold"> {{this.totalIncome}}</span></div>
+            <div class="text-red-400">Tổng chi: <span class="font-semibold"> {{this.totalExpense}}</span></div>
+        </div>
+    </div>
+
+    <table class="w-full table-auto text-sm">
+      <thead>
+        <tr class="text-gray-400 text-xs uppercase border-b border-gray-700">
+          <th class="text-left py-2 pl-4">Ngày</th>
+          <th class="text-left py-2 pl-4">Phương tiện</th>
+          <th class="text-left py-2 pl-4">Loại</th>
+          <th class="text-left py-2 pl-4">Mô tả</th>
+          <th class="text-left py-2 pl-4">Giá trị</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each this.results as |item|}}
+          <tr class="border-b border-gray-700 hover:bg-gray-800 transition">
+            <td class="py-2 pl-4 text-white">{{item.date}}</td>
+            <td class="py-2 pl-4 text-white">{{item.plate_number}}</td>
+            <td class="py-2">
+              {{#if (eq item.type "Thu")}}
+                <span class="text-green-400 pl-4 font-medium">Thu</span>
+              {{else}}
+                <span class="text-red-400 pl-4 font-medium">Chi</span>
+              {{/if}}
+            </td>
+            <td class="py-2 pl-4 text-white">{{item.description}}</td>
+            <td class="py-2 pl-4 text-white">{{item.amount_display}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <p class="text-gray-500 italic text-center">Không có dữ liệu thu chi.</p>
+  {{/if}}
+</div>
+</div>

@@ -93,6 +93,9 @@ export default buildRoutes(function () {
             });
         });
         this.route('settings', function () {});
+        this.route('finance', function () {
+            this.route('index', { path: '/' });
+        });
     });
     this.route('comms', function () {
         this.route('chat');
