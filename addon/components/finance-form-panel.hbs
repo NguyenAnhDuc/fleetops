@@ -1,0 +1,113 @@
+<Overlay
+    @onLoad={{this.setOverlayContext}}
+    @onOpen={{this.onOpen}}
+    @onClose={{this.onClose}}
+    @onToggle={{this.onToggle}}
+    @position="right"
+    @noBackdrop={{true}}
+    @fullHeight={{true}}
+    @isResizable={{or this.isResizable @isResizable}}
+    @width={{or this.width @width "570px"}}
+>
+    <Overlay::Header
+        @title={{if
+            this.finance.public_id
+            (concat (t "fleet-ops.component.issue-form-panel.car-repair-supplies") " : " (format-date this.issue.created_at "MMM dd, yyyy HH:mm"))
+            (t "fleet-ops.component.issue-form-panel.new-car-repair-supplies")
+        }}
+        @hideStatusDot={{true}}
+        @titleWrapperClass="leading-5"
+    >
+        <div class="flex flex-1 justify-end">
+            <Button
+                @icon={{if this.issue.id "save" "check"}}
+                @type="primary"
+                @text={{if this.issue.id (t "fleet-ops.component.issue-form-panel.save-car-repair-supplies") (t "fleet-ops.component.issue-form-panel.create-car-repair-supplies")}}
+                @onClick={{perform this.save}}
+                @isLoading={{this.save.isRunning}}
+                @permission={{this.savePermission}}
+                @wrapperClass="mr-2"
+            />
+            {{#if this.issue.id}}
+                <Button
+                    @type="default"
+                    @icon="circle-exclamation"
+                    @helpText={{t "fleet-ops.component.issue-form-panel.detail-car-repair-supplies"}}
+                    @onClick={{this.onViewDetails}}
+                    @wrapperClass="mr-2"
+                    @permission="fleet-ops view issue"
+                />
+            {{/if}}
+            <Button
+                @type="default"
+                @icon="times"
+                @helpText={{if this.finance.id (t "fleet-ops.component.issue-form-panel.cancel-car-repair-supplies") (t "fleet-ops.component.issue-form-panel.cancel-car-repair-supplies")}}
+                @onClick={{this.onPressCancel}}
+            />
+        </div>
+    </Overlay::Header>
+
+    <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 pt-4">
+        {{#let (cannot this.savePermission) as |unauthorized|}}
+            <ContentPanel @title={{t "fleet-ops.component.issue-form-panel.report-car-repair-supplies"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-2 no-input-group-padding text-xs">
+                    <InputGroup @name={{t "fleet-ops.common.vehicle"}}>
+                        <ModelSelect
+                            @modelName="vehicle"
+                            @selectedModel={{this.finance.vehicle}}
+                            @placeholder={{t "fleet-ops.component.issue-form-panel.select-vehicle"}}
+                            @triggerClass="form-select form-input"
+                            @infiniteScroll={{false}}
+                            @renderInPlace={{true}}
+                            @onChange={{fn (mut this.finance.vehicle)}}
+                            @disabled={{unauthorized}}
+                            as |model|
+                        >
+                            {{model.displayName}}
+                        </ModelSelect>
+                    </InputGroup>
+
+                    <InputGroup @name={{t "fleet-ops.common.car_repair_date"}} @wrapperClass="col-span-1">
+                        <DateTimeInput
+                            class="form-input"
+                            @value={{this.finance.car_repair_date}}
+                            @onUpdate={{fn (mut this.finance.car_repair_date)}}
+                            @disabled={{unauthorized}}
+                        />
+                    </InputGroup>
+                    
+                    <InputGroup @name={{t "fleet-ops.common.total_money"}} @wrapperClass="col-span-1">
+                        <MoneyInput
+                            class="w-full"
+                            @value={{this.finance.total_money}}
+                            @currency={{this.finance.currency}}
+                            @canSelectCurrency={{true}}
+                            @onCurrencyChange={{fn (mut this.finance.currency)}}
+                            disabled={{unauthorized}}
+                        />
+                    </InputGroup>
+
+                    <InputGroup @name={{t "fleet-ops.component.issue-form-panel.note-car-repair-supplies"}} @wrapperClass="col-span-2">
+                        <Textarea
+                            @value={{this.finance.note}}
+                            aria-label="Note"
+                            class="w-full form-input"
+                            disabled={{unauthorized}}
+                            placeholder={{t "fleet-ops.component.issue-form-panel.note-car-repair-supplies"}}
+                            rows={{5}}
+                        />
+                    </InputGroup>
+
+                    <RegistryYield @registry="fleet-ops:component:issue-form-panel:details" as |RegistryComponent|>
+                        <RegistryComponent @finance={{this.finance}} @controller={{this.controller}} @permission={{this.savePermission}} />
+                    </RegistryYield>
+                </div>
+            </ContentPanel>
+
+            <RegistryYield @registry="fleet-ops:component:issue-form-panel" as |RegistryComponent|>
+                <RegistryComponent @finance={{this.finance}} @controller={{this.controller}} @permission={{this.savePermission}} />
+            </RegistryYield>
+        {{/let}}
+        <Spacer @height="300px" />
+    </Overlay::Body>
+</Overlay>

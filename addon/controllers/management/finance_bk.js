@@ -67,6 +67,14 @@ export default class ManagementFinanceController extends BaseController {
     }
 
     @action
+    openCreateOverlay() {
+        this.contextualOverlay.open('finance-form-panel', {
+            title: 'Tạo mới Thu Chi',
+            // finance: this.store.createRecord('finance'),
+        });
+    }
+
+    @action
     async search(event) {
         event.preventDefault();
 

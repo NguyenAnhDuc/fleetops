@@ -1,0 +1,116 @@
+<Layout::Section::Header @title="Báo cáo Thu Chi">
+    <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "fleet-ops.common.reload-data"}} class="mr-2" />
+    <Button @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createIssue}} @permission="fleet-ops create issue" />
+    
+</Layout::Section::Header>
+
+{{!-- <Layout::Section::Body>
+    <Table
+        @rows={{@model}}
+        @columns={{this.columns}}
+        @selectable={{true}}
+        @canSelectAll={{true}}
+        @onSetup={{fn (mut this.table)}}
+        @pagination={{true}}
+        @paginationMeta={{@model.meta}}
+        @page={{this.page}}
+        @onPageChange={{fn (mut this.page)}}
+    />
+</Layout::Section::Body> --}}
+<div class="finance-management w-full flex flex-col items-center mt-6">
+  <div class="w-full space-y-3">
+    <h2 class="text-xl font-semibold text-center">Quản lý Thu Chi</h2>
+
+    <form {{on "submit" this.search}} class="w-full px-4 mb-4 mx-auto">
+        <div class="flex flex-wrap gap-4 items-center">
+            {{!-- Ngày bắt đầu --}}
+            <input
+                type="date"
+                class="form-input h-9 w-[160px]"
+                value={{this.startDate}}
+                {{on "change" this.updateStartDate}}
+            />
+
+            {{!-- Ngày kết thúc --}}
+            <input
+                type="date"
+                class="form-input h-9 w-[160px]"
+                value={{this.endDate}}
+                {{on "change" this.updateEndDate}}
+            />
+
+            {{!-- Chọn xe --}}
+            <div class="w-[320px]">
+                <ModelSelect
+                    @modelName="vehicle"
+                    @selectedModel={{this.selectedVehicleId}}
+                    @placeholder="-- Chọn xe --"
+                    @triggerClass="form-select form-input h-9 w-full !align-middle"
+                    @allowClear={{true}}
+                    @renderInPlace={{true}}
+                    @onChange={{this.updateSelectedVehicle}}
+                    as |model|
+                >
+                    <div class="flex items-center space-x-2">
+                    <span class="uppercase">{{model.display_name}}</span>
+                    </div>
+                </ModelSelect>
+            </div>
+
+            {{!-- Nút tìm kiếm --}}
+            <button
+            type="submit"
+            class="h-9 px-4 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+            Tìm kiếm
+            </button>
+        </div>
+    </form>
+  </div>
+
+  {{!-- Dòng 4: Kết quả thu chi - full màn hình --}}
+  <div class="results w-full px-4 mt-6 overflow-auto">
+  {{#if this.results.length}}
+    <!-- Tổng hợp thu chi -->
+    <div class="flex justify-end mb-2 text-sm text-gray-700 dark:text-gray-200 px-4">
+        <div class="text-right">
+            <div  class="text-green-400">Tổng thu: <span class="font-semibold"> {{this.totalIncome}}</span></div>
+            <div class="text-red-400">Tổng chi: <span class="font-semibold"> {{this.totalExpense}}</span></div>
+        </div>
+    </div>
+
+    <table class="w-full table-auto text-sm">
+      <thead>
+        <tr class="text-gray-400 text-xs uppercase border-b border-gray-700">
+          <th class="text-left py-2 pl-4">Ngày</th>
+          <th class="text-left py-2 pl-4">Phương tiện</th>
+          <th class="text-left py-2 pl-4">Loại</th>
+          <th class="text-left py-2 pl-4">Mô tả</th>
+          <th class="text-left py-2 pl-4">Giá trị</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each this.results as |item|}}
+          <tr class="border-b border-gray-700 hover:bg-gray-800 transition">
+            <td class="py-2 pl-4 text-white">{{item.date}}</td>
+            <td class="py-2 pl-4 text-white">{{item.plate_number}}</td>
+            <td class="py-2">
+              {{#if (eq item.type "Thu")}}
+                <span class="text-green-400 pl-4 font-medium">Thu</span>
+              {{else}}
+                <span class="text-red-400 pl-4 font-medium">Chi</span>
+              {{/if}}
+            </td>
+            <td class="py-2 pl-4 text-white">{{item.description}}</td>
+            <td class="py-2 pl-4 text-white">{{item.amount_display}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <p class="text-gray-500 italic text-center">Không có dữ liệu thu chi.</p>
+  {{/if}}
+</div>
+</div>
+
+{{outlet}}

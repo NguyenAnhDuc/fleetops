@@ -1,65 +1,60 @@
-<<<<<<< HEAD
-{{outlet}}
-=======
 <div class="finance-management w-full flex flex-col items-center mt-6">
-  <div class="w-full max-w-md space-y-3">
+  <div class="w-full space-y-3">
     <h2 class="text-xl font-semibold text-center">Quản lý Thu Chi</h2>
 
-    <form {{on "submit" this.search}} class="space-y-3">
-      {{!-- Dòng 1: StartDate - EndDate --}}
-      <div class="grid grid-cols-2 gap-3">
-        <div class="input-group">
-          <InputLabel @labelText="Ngày bắt đầu" />
-          <input
-            type="date"
-            class="form-input w-full"
-            value={{this.startDate}}
-            {{on "change" this.updateStartDate}}
-          />
+    <form {{on "submit" this.search}} class="w-full px-4 mb-4 mx-auto">
+        <div class="flex flex-wrap gap-4 items-center">
+            {{!-- Ngày bắt đầu --}}
+            <input
+                type="date"
+                class="form-input h-9 w-[160px]"
+                value={{this.startDate}}
+                {{on "change" this.updateStartDate}}
+            />
+
+            {{!-- Ngày kết thúc --}}
+            <input
+                type="date"
+                class="form-input h-9 w-[160px]"
+                value={{this.endDate}}
+                {{on "change" this.updateEndDate}}
+            />
+
+            {{!-- Chọn xe --}}
+            <div class="w-[320px]">
+                <ModelSelect
+                    @modelName="vehicle"
+                    @selectedModel={{this.selectedVehicleId}}
+                    @placeholder="-- Chọn xe --"
+                    @triggerClass="form-select form-input h-9 w-full !align-middle"
+                    @allowClear={{true}}
+                    @renderInPlace={{true}}
+                    @onChange={{this.updateSelectedVehicle}}
+                    as |model|
+                >
+                    <div class="flex items-center space-x-2">
+                    <span class="uppercase">{{model.display_name}}</span>
+                    </div>
+                </ModelSelect>
+            </div>
+
+            {{!-- Nút tìm kiếm --}}
+            <button
+            type="submit"
+            class="h-9 px-4 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+            Tìm kiếm
+            </button>
+
+            {{!-- Nút tạo mới --}}
+            <button
+            type="button"
+            class="h-9 px-4 bg-green-600 text-white rounded hover:bg-green-700"
+            {{on "click" this.openCreateOverlay}}
+            >
+            + Tạo mới
+            </button>
         </div>
-
-        <div class="input-group">
-          <InputLabel @labelText="Ngày kết thúc" />
-          <input
-            type="date"
-            class="form-input w-full"
-            value={{this.endDate}}
-            {{on "change" this.updateEndDate}}
-          />
-        </div>
-      </div>
-
-      {{!-- Dòng 2: Chọn xe --}}
-      <div class="input-group">
-        {{!-- <InputLabel @labelText="Xe" /> --}}
-        <ModelSelect
-          @modelName="vehicle"
-          @selectedModel={{this.selectedVehicleId}}
-          @placeholder="-- Chọn xe --"
-          @triggerClass="form-select form-input"
-          @allowClear={{true}}
-          @renderInPlace={{true}}
-          @onChange={{this.updateSelectedVehicle}}
-          as |model|
-        >
-          <div class="flex items-center space-x-2">
-            {{!-- <div class="w-6">
-              <Image @src={{model.avatar_url}} class="w-5 h-5 rounded shadow" />
-            </div> --}}
-            <span class="uppercase">{{model.display_name}}</span>
-          </div>
-        </ModelSelect>
-      </div>
-
-      {{!-- Dòng 3: Nút tìm kiếm - căn giữa --}}
-      <div class="flex justify-center">
-        <button
-          type="submit"
-          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          Tìm kiếm
-        </button>
-      </div>
     </form>
   </div>
 
@@ -107,4 +102,3 @@
   {{/if}}
 </div>
 </div>
->>>>>>> f290622116bf7a23b22d647637ab5d2f2c21176b

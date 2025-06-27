@@ -93,7 +93,11 @@ export default buildRoutes(function () {
             });
         });
         this.route('settings', function () {});
+<<<<<<< HEAD
         this.route('finances', function () {
+=======
+        this.route('finance', function () {
+>>>>>>> f290622116bf7a23b22d647637ab5d2f2c21176b
             this.route('index', { path: '/' });
         });
     });
