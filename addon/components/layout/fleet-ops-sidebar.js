@@ -147,11 +147,7 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.finance',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.finance'),
                 icon: 'money-bill-wave',
-<<<<<<< HEAD
                 route: 'management.finances',
-=======
-                route: 'management.finance',
->>>>>>> f290622116bf7a23b22d647637ab5d2f2c21176b
                 permission: 'fleet-ops list issue',
                 visible: this.abilities.can('fleet-ops see issue'),
             },
