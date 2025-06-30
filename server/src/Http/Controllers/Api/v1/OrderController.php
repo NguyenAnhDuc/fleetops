@@ -12,6 +12,7 @@ use Fleetbase\FleetOps\Http\Requests\ScheduleOrderRequest;
 use Fleetbase\FleetOps\Http\Requests\UpdateFeeCollectedOrderRequest;
 use Fleetbase\FleetOps\Http\Requests\UpdateOrderRequest;
 use Fleetbase\FleetOps\Http\Resources\v1\DeletedResource;
+use Fleetbase\FleetOps\Http\Requests\UpdateDriverRequest;
 use Fleetbase\FleetOps\Http\Resources\v1\Order as OrderResource;
 use Fleetbase\FleetOps\Http\Resources\v1\Proof as ProofResource;
 use Fleetbase\FleetOps\Models\Contact;
@@ -859,7 +860,7 @@ class OrderController extends Controller
         return new OrderResource($order);
     }
 
-     public function collectedFees(string $id, UpdateFeeCollectedOrderRequest $request)
+    public function collectedFees(string $id, UpdateFeeCollectedOrderRequest $request)
     {
         $is_collected_fees = $request->input('is_collected_fees');
     
@@ -877,6 +878,26 @@ class OrderController extends Controller
 
 
         $order->is_collected_fees = $is_collected_fees;
+        $order->save();
+
+        return new OrderResource($order);
+    }
+
+    public function assignDriver(string $id, UpdateDriverRequest $request)
+    {
+        $driver_id = $request->input('driver_assigned_uuid');
+        try {
+            $order = Order::findRecordOrFail($id);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(
+                [
+                    'error' => 'Order resource not found.',
+                ],
+                404
+            );
+        }
+
+        $order->driver_assigned_uuid = $driver_id;
         $order->save();
 
         return new OrderResource($order);
