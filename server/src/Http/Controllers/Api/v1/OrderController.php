@@ -885,7 +885,6 @@ class OrderController extends Controller
 
     public function assignDriver(string $id, UpdateDriverRequest $request)
     {
-        $driver_id = $request->input('driver_assigned_uuid');
         try {
             $order = Order::findRecordOrFail($id);
         } catch (ModelNotFoundException $exception) {
@@ -897,8 +896,18 @@ class OrderController extends Controller
             );
         }
 
-        $order->driver_assigned_uuid = $driver_id;
-        $order->save();
+        $driver = Driver::where(['public_id' => $request->input('driver_id')])->first();
+        if ($driver) {
+            $order->driver_assigned_uuid = $driver->uuid;
+            $order->save();
+        }else{
+            return response()->json(
+                [
+                    'error' => 'Driver resource not found.',
+                ],
+                404
+            );
+        }
 
         return new OrderResource($order);
     }
