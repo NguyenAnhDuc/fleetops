@@ -68,10 +68,11 @@ export default class ManagementFinanceController extends BaseController {
 
     @action
     openCreateOverlay() {
-        this.contextualOverlay.open('finance-form-panel', {
-            title: 'Tạo mới Thu Chi',
-            // finance: this.store.createRecord('finance'),
-        });
+        // this.contextualOverlay.open('finance-form-panel', {
+        //     title: 'Tạo mới Thu Chi',
+        //     // finance: this.store.createRecord('finance'),
+        // });
+        return this.transitionToRoute('management.finances.index.new');
     }
 
     @action

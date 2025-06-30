@@ -307,6 +307,7 @@ fleet-ops:
     layout:
       fleet-ops-sidebar:
         car_repair_supplies: Car Repair & Supplies
+        finance: 	Income & Expense Report
         payments: Payments
         navigator-app: Navigator App
         resources: Resources
