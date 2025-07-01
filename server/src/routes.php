@@ -243,6 +243,7 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                         $router->get('{id}', 'Api\v1\OrderController@find');
                         $router->get('{id}/distance-and-time', 'Api\v1\OrderController@getDistanceMatrix');
                         $router->post('{id}/dispatch', 'Api\v1\OrderController@dispatchOrder');
+                        $router->post('{id}/assign-driver', 'Api\v1\OrderController@assignDriver');
                         $router->post('{id}/start', 'Api\v1\OrderController@startOrder');
                         $router->delete('{id}/cancel', 'Api\v1\OrderController@cancelOrder');
                         $router->post('{id}/update-activity', 'Api\v1\OrderController@updateActivity');
@@ -384,6 +385,7 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                                 $router->post('bulk-dispatch', $controller('bulkDispatch'));
                                 $router->patch('cancel', $controller('cancel'));
                                 $router->patch('dispatch', $controller('dispatchOrder'));
+                                $router->patch('{id}/assign-driver', $controller('assignDriver'));
                                 $router->patch('start', $controller('start'));
                                 $router->delete('bulk-delete', $controller('bulkDelete'));
                                 $router->match(['get', 'post'], 'export', $controller('export'))->middleware([Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]);

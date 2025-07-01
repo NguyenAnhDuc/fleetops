@@ -12,7 +12,7 @@ use Fleetbase\FleetOps\Http\Requests\ScheduleOrderRequest;
 use Fleetbase\FleetOps\Http\Requests\UpdateFeeCollectedOrderRequest;
 use Fleetbase\FleetOps\Http\Requests\UpdateOrderRequest;
 use Fleetbase\FleetOps\Http\Resources\v1\DeletedResource;
-use Fleetbase\FleetOps\Http\Requests\UpdateDriverRequest;
+use Fleetbase\FleetOps\Http\Requests\UpdateAssignDriverOrderRequest;
 use Fleetbase\FleetOps\Http\Resources\v1\Order as OrderResource;
 use Fleetbase\FleetOps\Http\Resources\v1\Proof as ProofResource;
 use Fleetbase\FleetOps\Models\Contact;
@@ -883,7 +883,7 @@ class OrderController extends Controller
         return new OrderResource($order);
     }
 
-    public function assignDriver(string $id, UpdateDriverRequest $request)
+    public function assignDriver(string $id, UpdateAssignDriverOrderRequest $request)
     {
         try {
             $order = Order::findRecordOrFail($id);
@@ -905,7 +905,7 @@ class OrderController extends Controller
                 [
                     'error' => 'Driver resource not found.',
                 ],
-                404
+                status: 404
             );
         }
 
