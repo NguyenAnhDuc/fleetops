@@ -86,6 +86,7 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                     $router->match(['post', 'patch'], '{id}/estimate-date', 'OrderController@estimateDate');
                     $router->match(['post', 'patch'], '{id}/collected-fees', 'OrderController@collectedFees');
                     $router->match(['post', 'patch'], '{id}/assign-driver', 'OrderController@assignDriver');
+                    $router->match(['post', 'patch'], '{id}/billing-image', 'OrderController@updateBillingImages');
                     $router->match(['post', 'patch'], '{id}/dispatch', 'OrderController@dispatchOrder');
                     $router->post('{id}/start', 'OrderController@startOrder');
                     $router->delete('{id}/cancel', 'OrderController@cancelOrder');
@@ -243,7 +244,6 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                         $router->get('{id}', 'Api\v1\OrderController@find');
                         $router->get('{id}/distance-and-time', 'Api\v1\OrderController@getDistanceMatrix');
                         $router->post('{id}/dispatch', 'Api\v1\OrderController@dispatchOrder');
-                        $router->post('{id}/assign-driver', 'Api\v1\OrderController@assignDriver');
                         $router->post('{id}/start', 'Api\v1\OrderController@startOrder');
                         $router->delete('{id}/cancel', 'Api\v1\OrderController@cancelOrder');
                         $router->post('{id}/update-activity', 'Api\v1\OrderController@updateActivity');

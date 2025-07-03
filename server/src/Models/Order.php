@@ -36,6 +36,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Fleetbase\Models\File;
 
 class Order extends Model
 {
@@ -120,6 +121,7 @@ class Order extends Model
         'is_collected_fees',
         'currency',
         'estimate_date',
+        'image_billing_uuid'
     ];
 
     /**
@@ -208,6 +210,7 @@ class Order extends Model
         'dispatched_at'     => 'datetime',
         'started_at'        => 'datetime',
         'estimate_date'     => 'datetime',
+        'image_billing_uuid'=> 'array',
     ];
 
     /**
@@ -228,7 +231,12 @@ class Order extends Model
         return LogOptions::defaults()->logOnly(['*'])->logOnlyDirty();
     }
 
-      /**
+    public function getImageBillingUrlsAttribute()
+    {
+        return File::whereIn('uuid', $this->image_billing_uuid ?? [])->pluck('url')->toArray();
+    }
+
+    /**
      * Set the fees as only numbers.
      *
      * @void

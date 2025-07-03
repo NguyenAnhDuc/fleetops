@@ -912,6 +912,26 @@ class OrderController extends Controller
         return new OrderResource($order);
     }
 
+    public function updateBillingImages($id, Request $request)
+    {
+        try {
+            $order = Order::findRecordOrFail($id);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(
+                [
+                    'error' => 'Order resource not found.',
+                ],
+                404
+            );
+        }
+
+        $uuids = $request->input('image_billing_uuid', []);
+
+        $order->image_billing_uuid = $uuids;
+        $order->save();
+        return new OrderResource($order);
+    }
+
     /**
      * Request to start order, this assumes order is dispatched.
      * Unless there is a param to skip dispatch throw a order not dispatched error.

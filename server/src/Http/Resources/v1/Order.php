@@ -79,6 +79,8 @@ class Order extends FleetbaseResource
             'updated_at'            => $this->updated_at,
             'created_at'            => $this->created_at,
             'estimate_date'         => $this->estimate_date, //2025-05-08 QuyenPN
+            'image_billing_uuid'    => $this->image_billing_uuid ?? [],
+            'image_billing_urls'    => $this->image_billing_urls ?? []
         ];
     }
 
@@ -149,6 +151,8 @@ class Order extends FleetbaseResource
             'updated_at'        => $this->updated_at,
             'created_at'        => $this->created_at,
             'estimate_date'     => $this->estimate_date, //2025-05-08 QuyenPN
+            'image_billing_uuid'    => $this->image_billing_uuid ?? [],
+            'image_billing_urls'    => $this->image_billing_urls ?? []
         ];
     }
 }
