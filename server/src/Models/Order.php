@@ -233,7 +233,7 @@ class Order extends Model
 
     public function getImageBillingUrlsAttribute()
     {
-        return File::whereIn('uuid', $this->image_billing_uuid ?? [])->pluck('path')->toArray();
+        return File::whereIn('public_id', $this->image_billing_uuid ?? [])->pluck('path')->toArray();
     }
 
     /**
