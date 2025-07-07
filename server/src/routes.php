@@ -86,7 +86,7 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                     $router->match(['post', 'patch'], '{id}/estimate-date', 'OrderController@estimateDate');
                     $router->match(['post', 'patch'], '{id}/collected-fees', 'OrderController@collectedFees');
                     $router->match(['post', 'patch'], '{id}/assign-driver', 'OrderController@assignDriver');
-                    $router->match(['post', 'patch'], '{id}/billing-image', 'OrderController@updateBillingImages');
+                    $router->match(['post', 'patch'], '{id}/billing-images', 'OrderController@updateBillingImages');
                     $router->match(['post', 'patch'], '{id}/dispatch', 'OrderController@dispatchOrder');
                     $router->post('{id}/start', 'OrderController@startOrder');
                     $router->delete('{id}/cancel', 'OrderController@cancelOrder');
@@ -385,7 +385,6 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                                 $router->post('bulk-dispatch', $controller('bulkDispatch'));
                                 $router->patch('cancel', $controller('cancel'));
                                 $router->patch('dispatch', $controller('dispatchOrder'));
-                                $router->patch('{id}/assign-driver', $controller('assignDriver'));
                                 $router->patch('start', $controller('start'));
                                 $router->delete('bulk-delete', $controller('bulkDelete'));
                                 $router->match(['get', 'post'], 'export', $controller('export'))->middleware([Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]);
