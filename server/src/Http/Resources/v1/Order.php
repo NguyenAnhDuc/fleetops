@@ -80,7 +80,8 @@ class Order extends FleetbaseResource
             'created_at'            => $this->created_at,
             'estimate_date'         => $this->estimate_date, //2025-05-08 QuyenPN
             'image_billing_uuid'    => $this->image_billing_uuid ?? [],
-            'image_billing_urls'    => $this->image_billing_urls ?? []
+            'image_billing_urls'    => $this->image_billing_urls ?? [],
+            'fees_driver'           => data_get($this, 'fees_driver', []),
         ];
     }
 
@@ -152,7 +153,8 @@ class Order extends FleetbaseResource
             'created_at'        => $this->created_at,
             'estimate_date'     => $this->estimate_date, //2025-05-08 QuyenPN
             'image_billing_uuid'    => $this->image_billing_uuid ?? [],
-            'image_billing_urls'    => $this->image_billing_urls ?? []
+            'image_billing_urls'    => $this->image_billing_urls ?? [],
+            'fees_driver'       => $this->fees_driver ?? []
         ];
     }
 }

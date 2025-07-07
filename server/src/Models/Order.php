@@ -121,7 +121,8 @@ class Order extends Model
         'is_collected_fees',
         'currency',
         'estimate_date',
-        'image_billing_uuid'
+        'image_billing_uuid',
+        'fees_driver'
     ];
 
     /**
@@ -211,6 +212,7 @@ class Order extends Model
         'started_at'        => 'datetime',
         'estimate_date'     => 'datetime',
         'image_billing_uuid'=> 'array',
+        'fees_driver'       => Json::class
     ];
 
     /**
