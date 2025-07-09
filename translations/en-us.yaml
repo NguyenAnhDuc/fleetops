@@ -1384,6 +1384,15 @@ fleet-ops:
           fees-help-text: Enter the charge fee amount for this order.
           is-collected-fees: Fee Collected
           is-collected-fees-help-text: Check this if the fee has already been collected from the customer.
+          unit-price-fees: Unit Price
+          unit-price-fees-help-text: Unit price per order or Unit price by weight/load.
+          quantity-fees: Order or Weight/load Quantity 
+          quantity-fees-help-text: Order or Weight/load Quantity
+          cash-or-debt: Payment will be collected immediately
+          cash-or-debt-help-text: Payment will be collected immediately or recorded as customer credit (accounts receivable).
+          fees-type-by-order: Charge per order
+          fees-type-by-order-help-text: Charge per order or by weight/load.
+          title-setting-fees-info: Setting Fees Info
           assign-driver: Assign Driver
           assign-driver-help-text: Assign the driver this order will be dispatched to.
           assign-driver-placeholder: Select Driver

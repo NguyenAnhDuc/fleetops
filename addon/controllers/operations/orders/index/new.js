@@ -13,6 +13,7 @@ import { OSRMv1, Control as RoutingControl } from '@fleetbase/leaflet-routing-ma
 import polyline from '@fleetbase/ember-core/utils/polyline';
 import findClosestWaypoint from '@fleetbase/ember-core/utils/find-closest-waypoint';
 import isNotEmpty from '@fleetbase/ember-core/utils/is-not-empty';
+import { isEmpty } from '@ember/utils';
 import getRoutingHost from '@fleetbase/ember-core/utils/get-routing-host';
 import getWithDefault from '@fleetbase/ember-core/utils/get-with-default';
 import isModel from '@fleetbase/ember-core/utils/is-model';
@@ -207,7 +208,16 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     @alias('ordersController.leafletMap') leafletMap;
     @equal('isCsvImportedOrder', false) isNotCsvImportedOrder;
 
-    @computed('isCustomFieldsValid', 'entities.length', 'isMultipleDropoffOrder', 'isFetchingQuotes', 'isSubscriptionValid', 'order.type', 'payload.{dropoff,pickup}', 'waypoints.length')
+    @computed('isCustomFieldsValid', 
+        'entities.length', 
+        'isMultipleDropoffOrder', 
+        'isFetchingQuotes', 
+        'isSubscriptionValid', 
+        'order.type', 
+        'payload.{dropoff,pickup}', 
+        'waypoints.length',
+        'order.unit_price_fees', 
+        )
     get isValid() {
         const { isMultipleDropoffOrder, isSubscriptionValid, isFetchingQuotes } = this;
         const isOrderTypeSet = isNotEmpty(this.order?.type);
@@ -215,6 +225,14 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         const isPickupSet = isNotEmpty(this.payload?.pickup);
         const isDropoffSet = isNotEmpty(this.payload?.dropoff);
         // const isPayloadSet = this.entities?.length > 0;
+        if(isEmpty(this.order.unit_price_fees)){
+            return false;
+        }
+
+        const converted_unit_price_fees = this.order.unit_price_fees.toString().replace(/[^\d]/g, '');
+        if(isEmpty(converted_unit_price_fees) || converted_unit_price_fees === "0"){
+            return false;
+        }
 
         if (isFetchingQuotes) {
             return false;
@@ -292,6 +310,25 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             const customFieldValue = this.customFieldValues[customField.id];
             return customFieldValue && !isBlank(customFieldValue.value);
         });
+    }
+
+    @action
+    async loadOrderConfigs() {
+        const configs = await this.store.findAll('order-config');
+        this.orderConfigs = configs;
+
+        // Chọn phần tử đầu tiên nếu chưa chọn
+        if (!this.orderConfig && configs.length > 0) {
+            this.orderConfig = configs[0];
+        }
+    }
+
+    @action
+    onToggleFeesTypeByOrder(value) {
+        this.order.is_fees_type_by_order = value;
+        if (value === true) {
+            this.order.quantity_fees = 1;
+        }
     }
 
     @action createOrder() {
@@ -1120,6 +1157,16 @@ export default class OperationsOrdersIndexNewController extends BaseController {
 
         // load custom fields
         this.loadCustomFields.perform(orderConfig);
+    }
+
+    // Khi orderConfigs thay đổi, tự chọn phần tử đầu tiên
+    // 2025-07-09
+    @action handleOrderConfigs() {
+        // console.log("aa:" + this.orderConfigs);
+        // if (this.orderConfigs?.length && !this.orderConfig) {
+        //     this.setConfig(this.orderConfigs[0]);
+        // }
+        return this.orderConfigs;
     }
 
     /**

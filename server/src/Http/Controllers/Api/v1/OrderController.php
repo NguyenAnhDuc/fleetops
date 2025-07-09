@@ -53,7 +53,30 @@ class OrderController extends Controller
         set_time_limit(180);
 
         // get request input
-        $input = $request->only(['internal_id', 'payload', 'service_quote', 'purchase_rate', 'adhoc', 'adhoc_distance', 'pod_method', 'pod_required', 'scheduled_at', 'status', 'meta', 'notes', 'estimate_date', 'fees', 'currency', 'is_collected_fees']);
+        $input = $request
+            ->only([
+                'internal_id', 
+                'payload', 
+                'service_quote', 
+                'purchase_rate', 
+                'adhoc', 
+                'adhoc_distance', 
+                'pod_method', 
+                'pod_required', 
+                'scheduled_at', 
+                'status', 
+                'meta', 
+                'notes', 
+                'estimate_date', 
+                'currency', 
+                'is_collected_fees',
+                'is_receive_cash_fees',
+                'quantity_fees',
+                'is_fees_type_by_order'
+            ]);
+        $input['fees'] = Utils::numbersOnly($input['fees']); //2025-05-12 QuyenPN
+        $input['unit_price_fees'] = Utils::numbersOnly($input['unit_price_fees']); 
+        $input['approval_fees'] = Utils::numbersOnly($input['approval_fees']);
 
         // Get order config
         $orderConfig = OrderConfig::resolveFromIdentifier($request->only(['type', 'order_config']));
@@ -344,9 +367,31 @@ class OrderController extends Controller
         }
 
         // get request input
-        $input = $request->only(['internal_id', 'payload', 'adhoc', 'adhoc_distance', 'pod_method', 'pod_required', 'scheduled_at', 'meta', 'type', 'status', 'notes', 'estimate_date', 'fees', 'currency', 'is_collected_fees']);
+        $input = $request
+            ->only([
+                'internal_id', 
+                'payload', 
+                'adhoc', 
+                'adhoc_distance', 
+                'pod_method', 
+                'pod_required', 
+                'scheduled_at', 
+                'meta', 
+                'type', 
+                'status', 
+                'notes', 
+                'estimate_date', 
+                'fees', 
+                'currency', 
+                'is_collected_fees',
+                'is_receive_cash_fees',
+                'quantity_fees',
+                'is_fees_type_by_order'
+            ]);
         $input['fees'] = Utils::numbersOnly($input['fees']); //2025-05-12 QuyenPN
-        log($input['fees']);
+        $input['unit_price_fees'] = Utils::numbersOnly($input['unit_price_fees']);
+        $input['approval_fees'] = Utils::numbersOnly($input['approval_fees']);
+
         // update payload if new input or change payload by id
         if ($request->isArray('payload')) {
             $payload      = data_get($order, 'payload', new Payload());

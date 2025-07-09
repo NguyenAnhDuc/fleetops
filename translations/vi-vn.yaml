@@ -1325,8 +1325,17 @@ fleet-ops:
           service-type-help-text: Chọn loại dịch vụ mà bạn muốn sử dụng cho
           fees: Thu cước
           fees-help-text: Nhập số tiền thu cước cho đơn hàng này.
+          title-setting-fees-info: Cước phí
           is-collected-fees: Đã thu cước
+          cash-or-debt: Sẽ thu tiền luôn
+          unit-price-fees: Đơn giá
+          unit-price-fees-help-text: Đơn giá cho đơn hàng hoặc Đơn giá cho mỗi trọng tải.
+          quantity-fees: Số lượng 
+          quantity-fees-help-text: Số lương trọng tải (Nếu thu phí cố định theo đơn hàng thì giá trị là 1).
+          cash-or-debt-help-text: Sẽ thu tiền luôn hoặc là công nợ cho khách hàng.
           is-collected-fees-help-text: Đánh dấu nếu cước phí đã được thu từ khách hàng.
+          fees-type-by-order: Thu phí cố định theo đơn hàng
+          fees-type-by-order-help-text: Thu phí cố định theo đơn hàng hoặc theo trọng tải.
           assign-driver: Gán Tài Xế
           assign-driver-help-text: Gán tài xế mà đơn hàng này sẽ được gửi đến.
           assign-driver-placeholder: Chọn Tài Xế

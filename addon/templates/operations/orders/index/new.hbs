@@ -36,7 +36,7 @@
                 </div>
             </div>
         </DropdownButton>
-        <Button
+        {{!-- <Button
             @icon="upload"
             @type="magic"
             @text={{if (media "isMobile") "" (t "fleet-ops.common.import")}}
@@ -44,7 +44,7 @@
             @disabled={{this.isCreatingOrder}}
             @permission="fleet-ops import order"
             class="mr-2"
-        />
+        /> --}}
         <Button
             @icon="check"
             @type="primary"
@@ -122,7 +122,7 @@
                     />
                 </InputGroup> --}}
 
-                <InputGroup>
+                {{!-- <InputGroup>
                     <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.fees"}} @helpText={{t "fleet-ops.operations.orders.index.new.fees-help-text"}} />
                     <MoneyInput
                         class="w-full"
@@ -132,7 +132,7 @@
                         @onCurrencyChange={{fn (mut this.order.currency)}}
                         @disabled={{or this.order.dispatched (cannot "fleet-ops create order")}}
                     />
-                </InputGroup>
+                </InputGroup> --}}
 
                 {{!-- <InputGroup @label={{t "fleet-ops.operations.orders.index.new.is-collected-fees"}} @helpText={{t "fleet-ops.operations.orders.index.new.is-collected-fees-help-text"}}>
                     <Toggle
@@ -322,6 +322,51 @@
                         />
                     </InputGroup>
                 </div> --}}
+            </div>
+        </ContentPanel>
+
+        <ContentPanel @title={{t "fleet-ops.operations.orders.index.new.title-setting-fees-info"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <InputGroup @label={{t "fleet-ops.operations.orders.index.new.cash-or-debt"}} @helpText={{t "fleet-ops.operations.orders.index.new.cash-or-debt-help-text"}}>
+                <Toggle
+                    @label={{t "fleet-ops.operations.orders.index.new.cash-or-debt"}}
+                    @wrapperClass="justify-start-i"
+                    @isToggled={{this.order.is_receive_cash_fees}}
+                    @onToggle={{fn (mut this.order.is_receive_cash_fees)}}
+                    @disabled={{or this.order.dispatched (cannot "fleet-ops create order")}}
+                    @helpText={{t "fleet-ops.operations.orders.index.new.cash-or-debt-help-text"}}
+                />
+            </InputGroup>
+            <InputGroup @label={{t "fleet-ops.operations.orders.index.new.fees-type-by-order"}} @helpText={{t "fleet-ops.operations.orders.index.new.fees-type-by-order-help-text"}}>
+                <Toggle
+                    @label={{t "fleet-ops.operations.orders.index.new.fees-type-by-order"}}
+                    @wrapperClass="justify-start-i"
+                    @isToggled={{this.order.is_fees_type_by_order}}
+                    @onToggle={{this.onToggleFeesTypeByOrder}}
+                    @disabled={{or this.order.dispatched (cannot "fleet-ops create order")}}
+                    @helpText={{t "fleet-ops.operations.orders.index.new.fees-type-by-order-help-text"}}
+                />
+            </InputGroup>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-2">
+                <InputGroup>
+                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.quantity-fees"}} @helpText={{t "fleet-ops.operations.orders.index.new.quantity-fees-help-text"}} />
+                    <Input 
+                        @value={{this.order.quantity_fees}} 
+                        @type="number"
+                        min="1"
+                        class="w-full form-input form-input-sm"
+                        disabled={{this.order.is_fees_type_by_order}}
+                    />
+                </InputGroup>
+                <InputGroup>
+                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.unit-price-fees"}} @helpText={{t "fleet-ops.operations.orders.index.new.unit-price-fees-help-text"}} />
+                    <MoneyInput
+                        class="w-full"
+                        @value={{this.order.unit_price_fees}}
+                        @currency="VND"
+                        @canSelectCurrency={{false}}
+                        @disabled={{or this.order.dispatched (cannot "fleet-ops create order")}}
+                    />
+                </InputGroup>
             </div>
         </ContentPanel>
 

@@ -24,6 +24,7 @@ export default class OperationsOrdersIndexNewRoute extends Route {
 
     async setupController(controller) {
         super.setupController(...arguments);
-        controller.orderConfigs = await this.store.findAll('order-config');
+        // controller.orderConfigs = await this.store.findAll('order-config');
+        controller.loadOrderConfigs(); // dùng action thay vì set trực tiếp
     }
 }

@@ -122,7 +122,12 @@ class Order extends Model
         'currency',
         'estimate_date',
         'image_billing_uuid',
-        'fees_driver'
+        'fees_driver',
+        'is_fees_type_by_order',
+        'quantity_fees',
+        'unit_price_fees',
+        'is_receive_cash_fees',
+        'approval_fees'
     ];
 
     /**
@@ -212,7 +217,13 @@ class Order extends Model
         'started_at'        => 'datetime',
         'estimate_date'     => 'datetime',
         'image_billing_uuid'=> 'array',
-        'fees_driver'       => Json::class
+        'fees_driver'       => Json::class,
+        'is_fees_type_by_order'         => 'boolean',
+        'quantity_fees'     => 'integer',
+        'unit_price_fees'   => 'double',
+        'is_receive_cash_fees'     => 'boolean',
+        'approval_fees'     => 'double'
+
     ];
 
     /**
@@ -246,6 +257,16 @@ class Order extends Model
     public function setFeesAttribute($value)
     {
         $this->attributes['fees'] = Utils::numbersOnly($value);
+    }
+
+    public function setApprovalFeesAttribute($value)
+    {
+        $this->attributes['approval_fees'] = Utils::numbersOnly($value);
+    }
+
+    public function setUnitPriceFeesAttribute($value)
+    {
+        $this->attributes['unit_price_fees'] = Utils::numbersOnly($value);
     }
 
     /**
