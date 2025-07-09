@@ -1442,9 +1442,16 @@ fleet-ops:
           fees: Tiền cước
           status-fees: Trạng thái Thu Tiền cước
           status-fees-done: Đã thu
-          status-fees-not-done: Chưa thu
+          status-fees-not-done: Chưa 
+          type-payment: Loại thu tiền
+          type-payment-cash: Thu tiền mặt
+          type-payment-debt: Công nợ
+          fees-type: Loại Thu cước
+          fees-type-by-order: Thu cố định theo đơn hàng
+          fees-type-by-weight-load: Thu theo Trọng Tải
+          unit-fee-title: Giá trị đơn hàng
           order-details-title: Chi tiết Đơn Hàng
-          additional-details-title: Chi tiết thêm
+          additional-details-title: Chi tiết thêm 
           route: Tuyến Đường
           pickup: Nhận hàng
           dropoff: Giao hàng

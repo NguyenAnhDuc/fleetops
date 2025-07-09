@@ -161,5 +161,48 @@
                 </ModelSelect>
             </InputGroup>
         </div>
+
+        <InputGroup @label={{t "fleet-ops.operations.orders.index.new.cash-or-debt"}} @helpText={{t "fleet-ops.operations.orders.index.new.cash-or-debt-help-text"}}>
+            <Toggle
+                @label={{t "fleet-ops.operations.orders.index.new.cash-or-debt"}}
+                @wrapperClass="justify-start-i"
+                @isToggled={{@options.order.is_receive_cash_fees}}
+                @onToggle={{fn (mut @options.order.is_receive_cash_fees)}}
+                @disabled={{@options.order.isIntegratedVendorOrder}}
+                @helpText={{t "fleet-ops.operations.orders.index.new.cash-or-debt-help-text"}}
+            />
+        </InputGroup>
+        <InputGroup @label={{t "fleet-ops.operations.orders.index.new.fees-type-by-order"}} @helpText={{t "fleet-ops.operations.orders.index.new.fees-type-by-order-help-text"}}>
+            <Toggle
+                @label={{t "fleet-ops.operations.orders.index.new.fees-type-by-order"}}
+                @wrapperClass="justify-start-i"
+                @isToggled={{@options.order.is_fees_type_by_order}}
+                @onToggle={{fn (mut @options.order.is_fees_type_by_order)}}
+                @disabled={{@options.order.isIntegratedVendorOrder}}
+                @helpText={{t "fleet-ops.operations.orders.index.new.fees-type-by-order-help-text"}}
+            />
+        </InputGroup>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-2">
+            <InputGroup>
+                <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.quantity-fees"}} @helpText={{t "fleet-ops.operations.orders.index.new.quantity-fees-help-text"}} />
+                <Input 
+                    @value={{@options.order.quantity_fees}} 
+                    @type="number"
+                    min="1"
+                    class="w-full form-input form-input-sm"
+                    disabled={{@options.order.is_fees_type_by_order}}
+                />
+            </InputGroup>
+            <InputGroup>
+                <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.unit-price-fees"}} @helpText={{t "fleet-ops.operations.orders.index.new.unit-price-fees-help-text"}} />
+                <MoneyInput
+                    class="w-full"
+                    @value={{@options.order.unit_price_fees}}
+                    @currency="VND"
+                    @canSelectCurrency={{false}}
+                    @disabled={{@options.order.isIntegratedVendorOrder}}
+                />
+            </InputGroup>
+        </div>
     </div>
 </Modal::Default>

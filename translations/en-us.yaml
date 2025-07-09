@@ -1503,6 +1503,13 @@ fleet-ops:
           status-fees: Status Fees
           status-fees-done: Done
           status-fees-not-done: Not Done
+          type-payment: Loại thu tiền
+          type-payment-cash: Thu tiền mặt
+          type-payment-debt: Công nợ
+          fees-type: Type Fees
+          fees-type-by-order: By Order
+          fees-type-by-weight-load: By Weight/Load
+          unit-fee-title: Fees
           order-details-title: Order Details
           additional-details-title: Additional Details
           route: Route

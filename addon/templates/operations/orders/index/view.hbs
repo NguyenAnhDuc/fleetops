@@ -377,14 +377,22 @@
                 </div>
 
                 {{!-- QuyenPN 2025-05-12 Thêm hiển thị cho trường fees --}}
-                <div class="field-info-container space-y-2">
+                {{!-- <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.operations.orders.index.view.fees"}}</div>
                     <div class="field-value">{{format-currency @model.fees @model.currency}}</div>
-                </div>
+                </div> --}}
 
                 <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.operations.orders.index.view.status-fees"}}</div>
                     <div class="field-value">{{if @model.is_collected_fees (t "fleet-ops.operations.orders.index.view.status-fees-done") (t "fleet-ops.operations.orders.index.view.status-fees-not-done")}}</div>
+                </div>
+
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.type-payment"}}</div>
+                    <div class="field-value">{{if @model.is_receive_cash_fees 
+                        (t "fleet-ops.operations.orders.index.view.type-payment-cash") 
+                        (t "fleet-ops.operations.orders.index.view.type-payment-debt")}}
+                    </div>
                 </div>
 
                 <div class="field-info-container space-y-2">
@@ -399,6 +407,21 @@
                         <div class="field-value">{{n-a (smart-humanize @model.pod_method)}}</div>
                     </div>
                 {{/if}}
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-2 field-info-containers-darker gap-4 lg:gap-2">
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.fees-type"}}</div>
+                    <div class="field-value">{{if @model.is_fees_type_by_order 
+                        (t "fleet-ops.operations.orders.index.view.fees-type-by-order") 
+                        (t "fleet-ops.operations.orders.index.view.fees-type-by-weight-load")}}
+                    </div>
+                </div>
+
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.unit-fee-title"}}</div>
+                    <div class="field-value">{{n-a @model.displayQuantityUnitPriceFees}}</div>
+                </div>
             </div>
         </ContentPanel>
 
