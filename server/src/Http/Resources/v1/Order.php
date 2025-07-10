@@ -84,9 +84,9 @@ class Order extends FleetbaseResource
             'fees_driver'           => data_get($this, 'fees_driver', []),
             'is_receive_cash_fees'  => (bool) $this->fees_is_receive_cash_feestype,
             'quantity_fees'         => (int) $this->quantity_fees,
-            'unit_price_fees'       => (int) $this->unit_price_fees,
+            'unit_price_fees'       => (float) $this->unit_price_fees,
             'is_fees_type_by_order' => (bool) $this->is_fees_type_by_order,
-            'approval_fees'         => (int) $this->approval_fees,
+            'approval_fees'         => (float) $this->approval_fees,
         ];
     }
 
@@ -162,9 +162,9 @@ class Order extends FleetbaseResource
             'fees_driver'       => $this->fees_driver ?? [],
             'is_receive_cash_fees'  => (bool) $this->fees_is_receive_cash_feestype,
             'quantity_fees'         => (int) $this->quantity_fees,
-            'unit_price_fees'       => (int) $this->unit_price_fees,
+            'unit_price_fees'       => (float) $this->unit_price_fees,
             'is_fees_type_by_order' => (bool) $this->is_fees_type_by_order,
-            'approval_fees'         => (int) $this->approval_fees,
+            'approval_fees'         => (float) $this->approval_fees,
         ];
     }
 }

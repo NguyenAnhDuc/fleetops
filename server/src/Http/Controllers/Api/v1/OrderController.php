@@ -38,6 +38,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -72,9 +73,10 @@ class OrderController extends Controller
                 'is_collected_fees',
                 'is_receive_cash_fees',
                 'quantity_fees',
-                'is_fees_type_by_order'
+                'is_fees_type_by_order',
+                'unit_price_fees',
+                'approval_fees'
             ]);
-        $input['fees'] = Utils::numbersOnly($input['fees']); //2025-05-12 QuyenPN
         $input['unit_price_fees'] = Utils::numbersOnly($input['unit_price_fees']); 
         $input['approval_fees'] = Utils::numbersOnly($input['approval_fees']);
 
@@ -353,7 +355,7 @@ class OrderController extends Controller
     public function update($id, UpdateOrderRequest $request)
     {
         set_time_limit(180);
-
+        Log::info("DDDĐ");
         // find for the order
         try {
             $order = Order::findRecordOrFail($id);
@@ -386,12 +388,14 @@ class OrderController extends Controller
                 'is_collected_fees',
                 'is_receive_cash_fees',
                 'quantity_fees',
-                'is_fees_type_by_order'
+                'is_fees_type_by_order',
+                'unit_price_fees',
+                'approval_fees'
             ]);
         $input['fees'] = Utils::numbersOnly($input['fees']); //2025-05-12 QuyenPN
         $input['unit_price_fees'] = Utils::numbersOnly($input['unit_price_fees']);
         $input['approval_fees'] = Utils::numbersOnly($input['approval_fees']);
-
+        Log::info($input['unit_price_fees']);
         // update payload if new input or change payload by id
         if ($request->isArray('payload')) {
             $payload      = data_get($order, 'payload', new Payload());

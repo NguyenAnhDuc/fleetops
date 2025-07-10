@@ -497,7 +497,6 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             driversQuery: {},
             order,
             confirm: async (modal) => {
-                console.log("order:" + order);
                 modal.startLoading();
 
                 try {
