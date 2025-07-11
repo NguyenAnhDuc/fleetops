@@ -246,7 +246,12 @@ class Order extends Model
 
     public function getImageBillingUrlsAttribute()
     {
-        return File::whereIn('public_id', $this->image_billing_uuid ?? [])->pluck('path')->toArray();
+        $uuids = File::whereIn('public_id', $this->image_billing_uuid ?? [])->pluck('uuid')->toArray();
+        // Truy vấn file theo uuid
+        $files = File::whereIn('uuid', $uuids)->get();
+
+        // Trả về mảng các URL
+        return $files->pluck('url')->toArray();
     }
 
     /**
