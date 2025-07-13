@@ -1283,9 +1283,12 @@ fleet-ops:
         tracking: Số theo dõi
         driver-assigned: Tài xế
         vehicle-assigned: Xe
+        fees-driver: Chi phí (Lái xe)
+        approval-fees:  Chi phí (Phê duyệt)
         created-by: Tạo bởi
         updated-by: Cập nhật bởi
         view-order: Xem Đơn Hàng
+        view-billing-fees: Xem/Phê duyệt Chi phí
         cancel-order: Hủy Đơn Hàng
         delete-order: Xóa Đơn Hàng
         cancel-title: Bạn có chắc chắn muốn hủy đơn hàng này không?
@@ -1471,6 +1474,9 @@ fleet-ops:
           add-item-button: Thêm Mặt Hàng
           edit-item-button: Chỉnh sửa Mặt Hàng
           edit-order-title: Chỉnh sửa Chi tiết Đơn Hàng
+          view-approval-Billing-title: Phê duyệt Chi phí Đơn Hàng
+          view-fees-driver-title: Chi tiết Chi Phí Lái Xe
+          approval-fees-title: Phệ Duyệt Chi Phí
           update-success: 'Chi tiết {orderId} đã được cập nhật.'
           order-metadata: Metadata Đơn Hàng
           unassign-title: Bạn có chắc chắn muốn gỡ tài xế ({driverName}) khỏi đơn hàng này không?
@@ -1490,6 +1496,14 @@ fleet-ops:
           notes-placeholder: Nhập ghi chú đơn hàng ở đây....
           save-order-note: Lưu Ghi Chú Đơn Hàng
           order-notes-updated: Ghi chú đơn hàng đã được cập nhật.
+          food-fees: Chi phí Ăn uống
+          other-fees: Chi phí Khác
+          repair-fees: Chi phí Sửa xe
+          roadLaw-fees: Chi phí Cầu Đường
+          handling-fees: Chi phí Bốc Vác
+          external-fuel-fees: Chi phí Nguyên liệu
+          total-fees-driver: Tổng Chi Phí
+          approval-fees-money-title: Số Tiền Phê Duyệt
         config:
           title: Cấu Hình Đơn Hàng
           message: Cấu hình đơn hàng cho phép bạn xác định các cấu hình động sẽ cho Fleetbase biết cách thực hiện các loại đơn hàng khác nhau.

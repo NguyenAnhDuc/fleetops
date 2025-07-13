@@ -338,7 +338,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             valuePath: 'payload.entities',
             cellComponent: 'table/cell/entity-names',
             resizable: true,
-            hidden: false,
+            hidden: true,
             width: '185px',
             filterable: true,
             filterLabel: 'Payload ID',
@@ -363,7 +363,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             label: this.intl.t('fleet-ops.operations.orders.index.pickup'),
             valuePath: 'pickupName',
             cellComponent: 'table/cell/base',
-            width: '160px',
+            width: '130px',
             resizable: true,
             sortable: true,
             filterable: true,
@@ -378,7 +378,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             label: this.intl.t('fleet-ops.operations.orders.index.dropoff'),
             valuePath: 'dropoffName',
             cellComponent: 'table/cell/base',
-            width: '160px',
+            width: '130px',
             resizable: true,
             sortable: true,
             filterable: true,
@@ -408,7 +408,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             valuePath: 'vehicle_assigned.display_name',
             modelPath: 'vehicle_assigned',
             showOnlineIndicator: true,
-            width: '170px',
+            width: '150px',
             hidden: true,
             resizable: true,
             sortable: true,
@@ -417,6 +417,28 @@ export default class OperationsOrdersIndexController extends BaseController {
             filterComponentPlaceholder: 'Select vehicle for order',
             filterParam: 'vehicle',
             model: 'vehicle',
+        },
+        {
+            label: this.intl.t('fleet-ops.operations.orders.index.fees-driver'),
+            valuePath: 'getFeesDriver',
+            cellComponent: 'table/cell/base',
+            width: '125px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/model',
+            model: 'vendor',
+        },
+        {
+            label: this.intl.t('fleet-ops.operations.orders.index.approval-fees'),
+            valuePath: 'getApprovalFees',
+            cellComponent: 'table/cell/base',
+            width: '125px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/model',
+            model: 'vendor',
         },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.facilitator'),
@@ -561,6 +583,12 @@ export default class OperationsOrdersIndexController extends BaseController {
                     label: this.intl.t('fleet-ops.operations.orders.index.view-order'),
                     icon: 'eye',
                     fn: this.viewOrder,
+                    permission: 'fleet-ops view order',
+                },
+                {
+                    label: this.intl.t('fleet-ops.operations.orders.index.view-billing-fees'),
+                    icon: 'money-bill',
+                    fn: this.viewBillingFeee,
                     permission: 'fleet-ops view order',
                 },
                 {
@@ -874,6 +902,30 @@ export default class OperationsOrdersIndexController extends BaseController {
      */
     @action viewOrder(order) {
         return this.transitionToRoute('operations.orders.index.view', order);
+    }
+
+    @action viewBillingFeee(order, options = {}){
+        options = options === null ? {} : options;
+
+        this.modalsManager.show('modals/order-approval-billing-form', {
+            title: this.intl.t('fleet-ops.operations.orders.index.view.view-approval-Billing-title'),
+            acceptButtonText: this.intl.t('fleet-ops.common.save-changes'),
+            acceptButtonIcon: 'save',
+            driversQuery: {},
+            order,
+            confirm: async (modal) => {
+                modal.startLoading();
+                try {
+                    await order.save();
+                    this.notifications.success(options.successNotification || this.intl.t('fleet-ops.operations.orders.index.view.update-success', { orderId: order.public_id }));
+                    modal.done();
+                } catch (error) {
+                    this.notifications.serverError(error);
+                    modal.stopLoading();
+                }
+            },
+            ...options,
+        });
     }
 
     /**

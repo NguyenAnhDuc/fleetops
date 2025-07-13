@@ -1338,9 +1338,12 @@ fleet-ops:
         tracking: Tracking Number
         driver-assigned: Driver
         vehicle-assigned: Vehicle
+        fees-driver: Chi phí (Lái xe)
+        approval-fees:  Chi phí (Phê duyệt)
         created-by: Created By
         updated-by: Updated By
         view-order: View Order
+        view-billing-fees: View/Approval Billing Fees
         cancel-order: Cancel Order
         delete-order: Delete Order
         dispatch-order: Dispatch Order
@@ -1531,6 +1534,9 @@ fleet-ops:
           add-item-button: Add Item
           edit-item-button: Edit Item
           edit-order-title: Edit Order Details
+          view-approval-Billing-title: View Approval Billing Order
+          view-fees-driver-title: View Input Driver Fees
+          approval-fees-title: Approval Fees
           update-success: '{orderId} details has been updated.'
           order-metadata: Order Metadata
           unassign-title: Are you sure you wish to unassing the driver ({driverName}) from this order?
@@ -1550,6 +1556,14 @@ fleet-ops:
           notes-placeholder: Enter order notes here....
           save-order-note: Save Order Note
           order-notes-updated: Order notes updated.
+          food-fees: Chi phí Ăn uống
+          other-fees: Chi phí Khác
+          repair-fees: Chi phí Sửa xe
+          roadLaw-fees: Chi phí Cầu Đường
+          handling-fees: Chi phí Bốc Vác
+          external-fuel-fees: Chi phí Nguyên liệu
+          total-fees-driver: Tổng Chi Phí
+          approval-fees-money-title: Số Tiền Phê Duyệt
         config:
           title: Orders Configuration
           message: Order configurations allow you to define dynamic configurations which will tell Fleetbase how different types of orders should be executed.
