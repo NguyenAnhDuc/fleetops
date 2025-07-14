@@ -605,6 +605,13 @@ export default class OperationsOrdersIndexController extends BaseController {
                     permission: 'fleet-ops cancel order',
                 },
                 {
+                    label: this.intl.t('fleet-ops.operations.orders.index.finish-order-title'),
+                    icon: 'check-circle',
+                    fn: this.finishOrder,
+                    permission: 'fleet-ops finish order',
+                    isVisible: (order) => order.canBeFinished,
+                },
+                {
                     separator: true,
                 },
                 {
@@ -947,6 +954,28 @@ export default class OperationsOrdersIndexController extends BaseController {
                     await this.fetch.patch('orders/cancel', { order: order.id });
                     order.set('status', 'canceled');
                     this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.cancel-success', { orderId: order.public_id }));
+                    modal.done();
+                } catch (error) {
+                    this.notifications.serverError(error);
+                    modal.stopLoading();
+                }
+            },
+            ...options,
+        });
+    }
+
+    @action finishOrder(order, options = {}) {
+        this.modalsManager.confirm({
+            title: this.intl.t('fleet-ops.operations.orders.index.finish-title'),
+            body: this.intl.t('fleet-ops.operations.orders.index.finish-body'),
+            order,
+            confirm: async (modal) => {
+                modal.startLoading();
+
+                try {
+                    await this.fetch.patch('orders/finish', { order: order.id });
+                    // order.set('status', 'finished');
+                    this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.finish-success', { orderId: order.public_id }));
                     modal.done();
                 } catch (error) {
                     this.notifications.serverError(error);

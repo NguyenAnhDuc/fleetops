@@ -1289,11 +1289,15 @@ fleet-ops:
         updated-by: Cập nhật bởi
         view-order: Xem Đơn Hàng
         view-billing-fees: Xem/Phê duyệt Chi phí
+        finish-order-title: Hoàn thành Toàn bộ Đơn hàng
         cancel-order: Hủy Đơn Hàng
         delete-order: Xóa Đơn Hàng
         cancel-title: Bạn có chắc chắn muốn hủy đơn hàng này không?
+        finish-title: Bạn có chắc chắn muốn HOÀN THÀNH đơn hàng không?
         cancel-body: Khi đơn hàng này bị hủy, bản ghi đơn hàng vẫn sẽ hiển thị nhưng không thể thêm hoạt động vào đơn hàng này.
+        finish-body: Khi đơn hàng này HOÀN THÀNH thì đơn hàng này sẽ được chuyển qua cho Kế toán để làm báo cáo.
         cancel-success: Đơn hàng {orderId} đã được hủy.
+        finish-success: Đơn hàng {orderId} đã HOÀN THÀNH.
         dispatch-title: Bạn có chắc chắn muốn gửi đơn hàng này không?
         dispatch-body: Khi đơn hàng này được gửi, tài xế được gán sẽ nhận được thông báo.
         dispatch-success: Đơn hàng {orderId} đã được gửi.          

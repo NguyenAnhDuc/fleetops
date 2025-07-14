@@ -127,7 +127,8 @@ class Order extends Model
         'quantity_fees',
         'unit_price_fees',
         'is_receive_cash_fees',
-        'approval_fees'
+        'approval_fees',
+        'is_finish'
     ];
 
     /**
@@ -222,7 +223,8 @@ class Order extends Model
         'quantity_fees'     => 'integer',
         'unit_price_fees'   => 'double',
         'is_receive_cash_fees'     => 'boolean',
-        'approval_fees'     => 'double'
+        'approval_fees'     => 'double',
+        'is_fisish'         => 'boolean'
 
     ];
 

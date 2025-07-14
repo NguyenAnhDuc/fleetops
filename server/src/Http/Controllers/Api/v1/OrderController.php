@@ -1315,6 +1315,23 @@ class OrderController extends Controller
         return new OrderResource($order);
     }
 
+    public function finishOrder(string $id)
+    {
+        try {
+            $order = Order::findRecordOrFail($id);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(
+                [
+                    'error' => 'Order resource not found.',
+                ],
+                404
+            );
+        }
+        $order->is_finish = true;
+        $order->save();
+        return new OrderResource($order);
+    }
+
     /**
      * Updates the order payload destination with a valid place.
      *

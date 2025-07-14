@@ -1344,12 +1344,16 @@ fleet-ops:
         updated-by: Updated By
         view-order: View Order
         view-billing-fees: View/Approval Billing Fees
+        finish-order-title: Finish Order
         cancel-order: Cancel Order
         delete-order: Delete Order
         dispatch-order: Dispatch Order
         cancel-title: Are you sure you wish to cancel this order?
+        finish-title: Are your sure you wish to finish this order?
         cancel-body: Once this order is canceled, the order record will still be visible but activity cannot be added to this order.
+        finish-body: Khi đơn hàng này HOÀN THÀNH thì đơn hàng này sẽ được chuyển qua cho Kế toán để làm báo cáo.
         cancel-success: Order {orderId} has been canceled.
+        finish-success: Order {orderId} has been finished.
         dispatch-title: Are you sure you want to dispatch this order?
         dispatch-body: Once this order is dispatched the assigned driver will be notified.
         dispatch-success: Order {orderId} has been dispatched.          
