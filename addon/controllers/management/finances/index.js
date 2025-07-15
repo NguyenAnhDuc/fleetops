@@ -12,7 +12,8 @@ export default class ManagementFinanceController extends BaseController {
     @service notifications;
 
     @tracked vehicles = [];
-    @tracked selectedVehicleId = null;
+    @tracked customers = [];
+    @tracked selectedVehicle = null;
     @tracked startDate = null;
     @tracked endDate = null;
     @tracked results = [];
@@ -29,6 +30,14 @@ export default class ManagementFinanceController extends BaseController {
             this.vehicles = await this.store.findAll('vehicle');
         } catch (error) {
             this.notifications.error(this.intl.t('Không thể tải danh sách xe'));
+        }
+    }
+
+    async loadCustomer(){
+        try{
+            this.customers = await this.store.findAll('contact');
+        }catch(error){
+            this.notifications.error(this.intl.t('Không thể tải danh sách Khách hàng'));
         }
     }
 
@@ -52,8 +61,10 @@ export default class ManagementFinanceController extends BaseController {
     }
 
     @action
-    updateSelectedVehicle(event) {
-        this.selectedVehicleId = event.target.value;
+    updateSelectedVehicle(vehicle) {
+        if(vehicle){
+            this.selectedVehicle = vehicle;
+        }
     }
 
     @action
@@ -68,10 +79,6 @@ export default class ManagementFinanceController extends BaseController {
 
     @action
     openCreateOverlay() {
-        // this.contextualOverlay.open('finance-form-panel', {
-        //     title: 'Tạo mới Thu Chi',
-        //     // finance: this.store.createRecord('finance'),
-        // });
         return this.transitionToRoute('management.finances.index.new');
     }
 
@@ -91,16 +98,17 @@ export default class ManagementFinanceController extends BaseController {
             // Lấy đơn hàng (thu)
             const orders = await this.store.query('order', {
                 filter: {
-                    vehicle_id: this.selectedVehicleId,
-                    date_gte: this.startDate,
-                    date_lte: this.endDate,
+                    vehicle_assigned_uuid: this.selectedVehicle.uuid,
+                    is_finish: true
+                    // date_gte: this.startDate,
+                    // date_lte: this.endDate,
                 },
             });
 
             // Lấy chi phí (chi) - ví dụ fuel-report và sửa xe (issues)
             const fuelReports = await this.store.query('fuel-report', {
                 filter: {
-                    vehicle_id: this.selectedVehicleId,
+                    vehicle_id: this.selectedVehicle.uuid,
                     date_gte: this.startDate,
                     date_lte: this.endDate,
                 },
@@ -108,7 +116,7 @@ export default class ManagementFinanceController extends BaseController {
 
             const issues = await this.store.query('issue', {
                 filter: {
-                    vehicle_id: this.selectedVehicleId,
+                    vehicle_id: this.selectedVehicle.uuid,
                     date_gte: this.startDate,
                     date_lte: this.endDate,
                 },

@@ -417,6 +417,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             filterComponentPlaceholder: 'Select vehicle for order',
             filterParam: 'vehicle',
             model: 'vehicle',
+            modelNamePath: 'display_name',
         },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.fees-driver'),
