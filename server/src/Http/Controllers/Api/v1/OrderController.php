@@ -80,6 +80,7 @@ class OrderController extends Controller
             ]);
         $input['unit_price_fees'] = Utils::numbersOnly($input['unit_price_fees']); 
         $input['approval_fees'] = Utils::numbersOnly($input['approval_fees']);
+        $input['currency'] = "VND";
 
         // Get order config
         $orderConfig = OrderConfig::resolveFromIdentifier($request->only(['type', 'order_config']));
@@ -356,7 +357,7 @@ class OrderController extends Controller
     public function update($id, UpdateOrderRequest $request)
     {
         set_time_limit(180);
-        Log::info("DDDĐ");
+        Log::info("DDDD");
         // find for the order
         try {
             $order = Order::findRecordOrFail($id);
@@ -394,6 +395,7 @@ class OrderController extends Controller
                 'approval_fees',
                 'is_finish'
             ]);
+        $input['currency'] = "VND";
         $input['fees'] = Utils::numbersOnly($input['fees']); //2025-05-12 QuyenPN
         $input['unit_price_fees'] = Utils::numbersOnly($input['unit_price_fees']);
         $input['approval_fees'] = Utils::numbersOnly($input['approval_fees']);
