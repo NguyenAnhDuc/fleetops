@@ -211,10 +211,19 @@ class OrderController extends Controller
 
         // driver assignment
         if ($request->has('vehicle') && $integratedVendorOrder === null) {
-            $input['vehicle_assigned_uuid'] = Utils::getUuid('vehicles', [
+            $vehicleUuid = Utils::getUuid('vehicles', [
                 'public_id'    => $request->input('vehicle'),
                 'company_uuid' => session('company'),
             ]);
+            
+            if ($vehicleUuid) {
+                $input['vehicle_assigned_uuid'] = $vehicleUuid;
+                
+                // If driver is also assigned, update driver's vehicle assignment
+                if ($driver) {
+                    $driver->update(['vehicle_uuid' => $vehicleUuid]);
+                }
+            }
         }
 
         // facilitator assignment
