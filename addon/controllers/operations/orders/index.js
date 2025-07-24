@@ -51,6 +51,7 @@ export default class OperationsOrdersIndexController extends BaseController {
         'drawerOpen',
         'drawerTab',
         'orderPanelOpen',
+        'is_finish'
     ];
 
     /**
@@ -402,6 +403,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             filterParam: 'customer',
             model: 'customer',
         },
+        
         {
             label: this.intl.t('fleet-ops.operations.orders.index.vehicle-assigned'),
             cellComponent: 'cell/vehicle-name',
@@ -426,9 +428,8 @@ export default class OperationsOrdersIndexController extends BaseController {
             width: '125px',
             resizable: true,
             sortable: true,
-            filterable: true,
-            filterComponent: 'filter/model',
-            model: 'vendor',
+            filterable: false,
+            filterComponent: 'filter/string',
         },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.approval-fees'),
@@ -437,9 +438,9 @@ export default class OperationsOrdersIndexController extends BaseController {
             width: '125px',
             resizable: true,
             sortable: true,
-            filterable: true,
-            filterComponent: 'filter/model',
-            model: 'vendor',
+            filterable: false,
+            filterComponent: 'filter/string',
+            filterParam: 'approval-fees'
         },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.facilitator'),

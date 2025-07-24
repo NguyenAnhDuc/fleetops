@@ -159,6 +159,7 @@ class Order extends Model
         'updated_by',
         'layout',
         'with_tracker_data',
+        'is_finish'
     ];
 
     /**

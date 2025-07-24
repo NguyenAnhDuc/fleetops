@@ -75,7 +75,8 @@ class OrderController extends Controller
                 'quantity_fees',
                 'is_fees_type_by_order',
                 'unit_price_fees',
-                'approval_fees'
+                'approval_fees',
+                'is_finish'
             ]);
         $input['unit_price_fees'] = Utils::numbersOnly($input['unit_price_fees']); 
         $input['approval_fees'] = Utils::numbersOnly($input['approval_fees']);
@@ -390,7 +391,8 @@ class OrderController extends Controller
                 'quantity_fees',
                 'is_fees_type_by_order',
                 'unit_price_fees',
-                'approval_fees'
+                'approval_fees',
+                'is_finish'
             ]);
         $input['fees'] = Utils::numbersOnly($input['fees']); //2025-05-12 QuyenPN
         $input['unit_price_fees'] = Utils::numbersOnly($input['unit_price_fees']);
@@ -548,9 +550,31 @@ class OrderController extends Controller
     {
         set_time_limit(180);
 
-        $results = Order::queryWithRequest($request, function (&$query, $request) {
+        $results = Order::queryWithRequest($request, queryCallback: function (&$query, $request) {
             $query->where('company_uuid', session('company'));
             $query->whereNotNull('payload_uuid');
+
+            if ($request->has('is_finish')) {
+                $query->where('is_finish', $request->input('is_finish'));
+            }
+
+            if($request->filled('vehicle_id')){
+                $query->where('vehicle_assigned_uuid', $request->input('vehicle_id'));
+            }
+
+            if($request->filled('customer_id')){
+                $query->where('customer_uuid', $request->input('customer_id'));
+            }
+
+            if($request->filled('start_date')){
+                $query->whereNotNull('started_at');
+                $query->whereDate('started_at', '>=', $request->input('start_date'));
+            }
+
+            if($request->filled('end_date')){
+                $query->whereNotNull('started_at');
+                $query->whereDate('started_at', '>=', $request->input('end_date'));
+            }
 
             if ($request->has('payload')) {
                 $query->whereHas('payload', function ($q) use ($request) {

@@ -87,7 +87,7 @@ class Order extends FleetbaseResource
             'unit_price_fees'       => (float) $this->unit_price_fees,
             'is_fees_type_by_order' => (bool) $this->is_fees_type_by_order,
             'approval_fees'         => (float) $this->approval_fees,
-            'is_finish'         => (bool) $this->is_finish
+            'is_finish'             => (bool) $this->is_finish,
         ];
     }
 

@@ -21,6 +21,9 @@ export default class ManagementIssuesIndexRoute extends Route {
         category: { refreshModel: true },
         updatedAt: { refreshModel: true },
         createdAt: { refreshModel: true },
+        startDate: { refreshModel: true },
+        endDate: {refreshModel: true},
+        vehicle_id: {refreshModel: true}
     };
 
     @action willTransition(transition) {

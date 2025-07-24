@@ -14,6 +14,7 @@ export default class ManagementFinanceController extends BaseController {
     @tracked vehicles = [];
     @tracked customers = [];
     @tracked selectedVehicle = null;
+    @tracked selectedCustomer = null;
     @tracked startDate = null;
     @tracked endDate = null;
     @tracked results = [];
@@ -23,27 +24,30 @@ export default class ManagementFinanceController extends BaseController {
     constructor() {
         super(...arguments);
         this.loadVehicles();
+        // this.loadCustomers();
     }
 
     async loadVehicles() {
         try {
             this.vehicles = await this.store.findAll('vehicle');
         } catch (error) {
-            this.notifications.error(this.intl.t('Không thể tải danh sách xe'));
+            this.notifications.error('Không thể tải danh sách xe');
         }
     }
 
-    async loadCustomer(){
+    async loadCustomers(){
         try{
             this.customers = await this.store.findAll('contact');
         }catch(error){
-            this.notifications.error(this.intl.t('Không thể tải danh sách Khách hàng'));
+            this.notifications.error('Không thể tải danh sách Khách hàng');
         }
     }
 
     formatDateToInput(date) {
-        // Trả về dạng YYYY-MM-DD cho input date
-        return date.toISOString().slice(0, 10);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() là 0-11
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 
     @computed('results')
@@ -64,6 +68,13 @@ export default class ManagementFinanceController extends BaseController {
     updateSelectedVehicle(vehicle) {
         if(vehicle){
             this.selectedVehicle = vehicle;
+        }
+    }
+
+    @action
+    updateSelectedCustomer(customer) {
+        if(customer){
+            this.selectedCustomer = customer;
         }
     }
 
@@ -95,31 +106,38 @@ export default class ManagementFinanceController extends BaseController {
         // Mình sẽ lấy dữ liệu đơn hàng (thu) và chi phí (chi) rồi gộp lại
 
         try {
-            // Lấy đơn hàng (thu)
-            const orders = await this.store.query('order', {
-                filter: {
-                    vehicle_assigned_uuid: this.selectedVehicle.uuid,
-                    is_finish: true
-                    // date_gte: this.startDate,
-                    // date_lte: this.endDate,
-                },
-            });
+            var orders = null;
+            var fuelReports = null;
+            try{
+                // Lấy đơn hàng (thu)
+                orders = await this.store.query('order', {
+                    vehicle_assigned_uuid: this.selectedVehicle ? this.selectedVehicle.uuid : '',
+                    // customer_id: this.selectedCustomer? this.selectedCustomer.uuid : null,
+                    is_finish: 1,
+                    start_date: this.startDate,
+                    end_date: this.endDate,
+                });
+            }catch (error) {
+                this.notifications.error("Lỗi order:" + error);
+            }
 
-            // Lấy chi phí (chi) - ví dụ fuel-report và sửa xe (issues)
-            const fuelReports = await this.store.query('fuel-report', {
-                filter: {
-                    vehicle_id: this.selectedVehicle.uuid,
-                    date_gte: this.startDate,
-                    date_lte: this.endDate,
-                },
-            });
+            try{
+                // Lấy chi phí (chi) - ví dụ fuel-report và sửa xe (issues)
+                fuelReports = await this.store.query('fuel-report', {
+                    vehicle_id: this.selectedVehicle ? this.selectedVehicle.uuid : null,
+                    start_date: this.startDate,
+                    end_date: this.endDate,
+                });
+            }catch (error){
+                this.notifications.error("Lỗi fuel-report:" + error);
+            }
+
+            
 
             const issues = await this.store.query('issue', {
-                filter: {
-                    vehicle_id: this.selectedVehicle.uuid,
-                    date_gte: this.startDate,
-                    date_lte: this.endDate,
-                },
+                vehicle_id: this.selectedVehicle ? this.selectedVehicle.uuid : null,
+                start_date: this.startDate,
+                end_date: this.endDate,
             });
 
             // Gộp dữ liệu thu chi
@@ -163,7 +181,7 @@ export default class ManagementFinanceController extends BaseController {
 
             this.results = results;
         } catch (error) {
-            this.notifications.error(this.intl.t('Lỗi khi tìm kiếm dữ liệu thu chi'));
+            this.notifications.error("Lỗi khi tìm kiếm dữ liệu thu chi");
         }
     }
 }

@@ -20,6 +20,9 @@ export default class ManagementFuelReportsIndexRoute extends Route {
         public_id: { refreshModel: true },
         volume: { refreshModel: true },
         odometer: { refreshModel: true },
+        startDate: { refreshModel: true },
+        endDate: {refreshModel: true},
+        vehicle_id: {refreshModel: true}
     };
 
     @action willTransition(transition) {

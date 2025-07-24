@@ -56,6 +56,25 @@
                 </ModelSelect>
             </div>
 
+            {{!-- Chọn khách hàng
+            <div class="w-[320px]">
+                <ModelSelect
+                    @modelName="customer"
+                    @selectedModel={{this.selectedCustomer}}
+                    @placeholder="-- Chọn khách hàng --"
+                    @triggerClass="form-select form-input h-9 w-full !align-middle"
+                    @allowClear={{true}}
+                    @renderInPlace={{false}}
+                    @infiniteScroll={{false}}
+                    @onChange={{this.updateSelectedCustomer}}
+                    as |model|
+                >
+                    <div class="flex items-center space-x-2">
+                    <span class="uppercase">{{model.name}}</span>
+                    </div>
+                </ModelSelect>
+            </div> --}}
+
             {{!-- Nút tìm kiếm --}}
             <button
             type="submit"

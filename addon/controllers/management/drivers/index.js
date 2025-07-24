@@ -214,7 +214,7 @@ export default class ManagementDriversIndexController extends BaseController {
             valuePath: 'vehicle.display_name',
             modelNamePath: 'display_name',
             resizable: true,
-            width: '180px',
+            width: '180px', 
             filterable: true,
             filterComponent: 'filter/model',
             filterComponentPlaceholder: 'Select vehicle to filter by',

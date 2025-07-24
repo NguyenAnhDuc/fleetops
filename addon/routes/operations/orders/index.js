@@ -29,6 +29,11 @@ export default class OperationsOrdersIndexRoute extends Route {
         drawerOpen: { refreshModel: false },
         drawerTab: { refreshModel: false },
         orderPanelOpen: { refreshModel: false },
+        is_finish:  { refreshModel: true },
+        startDate: { refreshModel: true },
+        endDate: {refreshModel: true},
+        vehicle_id: {refreshModel: true},
+        customer_id: {refreshModel: true},
     };
 
     @action willTransition(transition) {
