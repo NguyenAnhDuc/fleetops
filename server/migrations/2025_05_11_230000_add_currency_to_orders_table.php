@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void 
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->string('currency')->default(0)->after('fees');
+            $table->string('currency', 3)->nullable()->default("VND")->after('fees');
         });
     }
 
