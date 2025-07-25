@@ -971,11 +971,8 @@ class OrderController extends Controller
             );
         }
 
-        $driver = Driver::where(['public_id' => $request->input('driver_id')])->first();
-        if ($driver) {
-            $order->driver_assigned_uuid = $driver->uuid;
-            $order->save();
-        }else{
+        $newDriver = Driver::where(['public_id' => $request->input('driver_id')])->first();
+        if (!$newDriver) {
             return response()->json(
                 [
                     'error' => 'Driver resource not found.',
@@ -983,6 +980,38 @@ class OrderController extends Controller
                 status: 404
             );
         }
+
+        // Get current assigned driver (if any)
+        $currentDriver = null;
+        if ($order->driver_assigned_uuid) {
+            $currentDriver = Driver::where('uuid', $order->driver_assigned_uuid)->first();
+        }
+
+        // Transfer vehicle from current driver to new driver
+        if ($currentDriver && $currentDriver->vehicle_uuid) {
+            $vehicleUuid = $currentDriver->vehicle_uuid;
+            
+            // Remove vehicle from current driver
+            $currentDriver->update(['vehicle_uuid' => null]);
+            
+            // Assign vehicle to new driver
+            $newDriver->update(['vehicle_uuid' => $vehicleUuid]);
+            
+            // Also assign vehicle to order
+            $order->vehicle_assigned_uuid = $vehicleUuid;
+            
+            // Log the vehicle transfer
+            \Log::info('Vehicle transferred during driver assignment', [
+                'order_id' => $order->public_id,
+                'from_driver' => $currentDriver->public_id,
+                'to_driver' => $newDriver->public_id,
+                'vehicle_uuid' => $vehicleUuid
+            ]);
+        }
+
+        // Assign new driver to order
+        $order->driver_assigned_uuid = $newDriver->uuid;
+        $order->save();
 
         return new OrderResource($order);
     }
