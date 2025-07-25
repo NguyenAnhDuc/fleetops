@@ -37,6 +37,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class OrderController extends FleetOpsController
@@ -132,6 +133,35 @@ class OrderController extends FleetOpsController
                         ->insertPayload($payload)
                         ->insertWaypoints($waypoints)
                         ->insertEntities($entities);
+                    
+                    // Assign vehicle to driver if both are provided and no integrated vendor
+                    $driverUuid = Utils::get($input, 'driver_assigned_uuid');
+                    $vehicleUuid = Utils::get($input, 'vehicle_assigned_uuid');
+                    Log::info('Creating order with driver and vehicle', [
+                        'driver_uuid' => $driverUuid,
+                        'vehicle_uuid' => $vehicleUuid,
+                        'is_integrated_vendor_order' => $isIntegratedVendorOrder,
+                    ]);
+                    
+                    if ($driverUuid && $vehicleUuid && !$isIntegratedVendorOrder) {
+                        // Find driver by UUID
+                        $driver = Driver::where([
+                            'uuid' => $driverUuid, 
+                            'company_uuid' => session('company')
+                        ])->first();
+                        
+                        // Assign vehicle to driver if driver exists
+                        if ($driver) {
+                            $driver->update(['vehicle_uuid' => $vehicleUuid]);
+                            
+                            // Optional: Log the assignment
+                            Log::info('Vehicle assigned to driver during order creation', [
+                                'driver_uuid' => $driverUuid,
+                                'vehicle_uuid' => $vehicleUuid,
+                                'order_id' => $order->public_id ?? 'creating'
+                            ]);
+                        }
+                    }    
 
                     // If order creation includes files assosciate each to this order
                     if ($uploads) {
