@@ -363,11 +363,11 @@ export default class ManagementVehiclesIndexController extends BaseController {
                     fn: this.editVehicle,
                     permission: 'fleet-ops update vehicle',
                 },
-                {
-                    label: this.intl.t('fleet-ops.management.vehicles.index.locate-action-title'),
-                    fn: this.locateVehicle,
-                    permission: 'fleet-ops view vehicle',
-                },
+                // {
+                //     label: this.intl.t('fleet-ops.management.vehicles.index.locate-action-title'),
+                //     fn: this.locateVehicle,
+                //     permission: 'fleet-ops view vehicle',
+                // },
                 {
                     separator: true,
                 },
