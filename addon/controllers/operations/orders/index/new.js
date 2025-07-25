@@ -342,6 +342,11 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         const { order, groupedMetaFields, payload, entities, waypoints } = this;
         const route = this.leafletOptimizedRoute ? this.getOptimizedRoute() : this.getRoute();
 
+        //2025-07-25
+        if(isEmpty(order.currency)){
+            order.currency = "VND";
+        }
+
         // set service quote if applicable
         if (this.selectedServiceQuote) {
             order.service_quote_uuid = this.selectedServiceQuote;
