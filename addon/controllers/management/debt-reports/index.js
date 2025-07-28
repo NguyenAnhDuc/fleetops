@@ -136,7 +136,7 @@ export default class ManagementFinanceController extends BaseController {
                     amount: order.quantity_fees * order.unit_price_fees,
                     amount_display: formatCurrency(order.quantity_fees * order.unit_price_fees, "VND"),
                     plate_number: order.vehicle_assigned ? order.vehicle_assigned.display_name : "",
-                    customerName: orders.customer.user.name
+                    customerName: order.customer? order.customer.name : ""
                 });
 
                 results.push({
@@ -146,7 +146,7 @@ export default class ManagementFinanceController extends BaseController {
                     amount: order.approval_fees,
                     amount_display: formatCurrency(order.approval_fees, "VND"),
                     plate_number: order.vehicle_assigned ? order.vehicle_assigned.display_name : "",
-                    customerName: orders.customer.user.name
+                    customerName: order.customer? order.customer.name : ""
                 });
             });
             

@@ -158,7 +158,8 @@ export default class ManagementFinanceController extends BaseController {
                     description: `Đơn hàng #${order.internal_id}`,
                     amount: order.quantity_fees * order.unit_price_fees,
                     amount_display: formatCurrency(order.quantity_fees * order.unit_price_fees, "VND"),
-                    plate_number: order.vehicle_assigned ? order.vehicle_assigned.display_name : ""
+                    plate_number: order.vehicle_assigned ? order.vehicle_assigned.display_name : "",
+                    customerName: order.customer? order.customer.name : ""
                 });
 
                 results.push({
@@ -167,7 +168,8 @@ export default class ManagementFinanceController extends BaseController {
                     description: `Đơn hàng #${order.internal_id}`,
                     amount: order.approval_fees,
                     amount_display: formatCurrency(order.approval_fees, "VND"),
-                    plate_number: order.vehicle_assigned ? order.vehicle_assigned.display_name : ""
+                    plate_number: order.vehicle_assigned ? order.vehicle_assigned.display_name : "",
+                    customerName: order.customer? order.customer.name : ""
                 });
             });
 
@@ -178,7 +180,8 @@ export default class ManagementFinanceController extends BaseController {
                     description: 'Chi phí nhiên liệu',
                     amount: fuel.amount,
                     amount_display: formatCurrency(fuel.amount, "VND"),
-                    plate_number: fuel.vehicle_name
+                    plate_number: fuel.vehicle_name,
+                    customerName: ""
                 });
             });
 
@@ -189,7 +192,8 @@ export default class ManagementFinanceController extends BaseController {
                     description: 'Chi phí sửa xe',
                     amount: issue.total_money,
                     amount_display: formatCurrency(issue.total_money, "VND"),
-                    plate_number: issue.vehicle_name
+                    plate_number: issue.vehicle_name,
+                    customerName: ""
                 });
             });
 
