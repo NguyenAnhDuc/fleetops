@@ -151,6 +151,14 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
                 permission: 'fleet-ops list issue',
                 visible: this.abilities.can('fleet-ops see issue'),
             },
+            {
+                intl: 'fleet-ops.component.layout.fleet-ops-sidebar.report-debts',
+                title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.report-debts'),
+                icon: 'money-bill-wave',
+                route: 'management.debt-reports',
+                permission: 'fleet-ops list issue',
+                visible: this.abilities.can('fleet-ops see issue'),
+            },
         ];
 
         const settingsItems = [

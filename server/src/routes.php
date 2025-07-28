@@ -352,6 +352,7 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                                 $router->match(['get', 'post'], 'export', $controller('export'))->middleware([Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]);
                                 $router->post('import', $controller('import'))->middleware([Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]);
                                 $router->delete('bulk-delete', $controller('bulkDelete'));
+                                $router->get('finance', $controller('finance'));
                             }
                         );
                         $router->fleetbaseRoutes(
@@ -360,6 +361,7 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                                 $router->match(['get', 'post'], 'export', $controller('export'))->middleware([Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]);
                                 $router->post('import', $controller('import'))->middleware([Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]);
                                 $router->delete('bulk-delete', $controller('bulkDelete'));
+                                $router->get('finance', $controller('finance'));
                             }
                         );
                         $router->fleetbaseRoutes(
@@ -392,6 +394,7 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                                 $router->patch('start', $controller('start'));
                                 $router->delete('bulk-delete', $controller('bulkDelete'));
                                 $router->match(['get', 'post'], 'export', $controller('export'))->middleware([Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]);
+                                $router->get('finance', $controller('finance'));
                             }
                         );
                         $router->fleetbaseRoutes('order-configs');

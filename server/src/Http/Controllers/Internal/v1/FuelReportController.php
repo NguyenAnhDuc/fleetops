@@ -9,6 +9,9 @@ use Fleetbase\Http\Requests\ExportRequest;
 use Fleetbase\Http\Requests\ImportRequest;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\Request;
+use Fleetbase\FleetOps\Http\Resources\v1\FuelReport as FuelReportResource;  
+use Fleetbase\FleetOps\Models\FuelReport;
 
 class FuelReportController extends FleetOpsController
 {
@@ -47,5 +50,23 @@ class FuelReportController extends FleetOpsController
         }
 
         return response()->json(['status' => 'ok', 'message' => 'Import completed']);
+    }
+
+    public function finance( Request $request){
+        $results = FuelReport::queryWithRequest($request,  function (&$query, $request) {
+            if($request->filled('vehicle_id')){
+                $query->where('vehicle_uuid', $request->input('vehicle_id'));
+            }
+
+            if($request->filled('start_date')){
+                $query->whereDate('created_at', '>=', $request->input('start_date'));
+            }
+
+            if($request->filled('end_date')){
+                $query->whereDate('created_at', '<=', $request->input('end_date'));
+            }
+        });
+
+        return FuelReportResource::collection($results);
     }
 }

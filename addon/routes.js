@@ -96,6 +96,9 @@ export default buildRoutes(function () {
         this.route('finances', function () {
             this.route('index', { path: '/' });
         });
+        this.route('debt-reports', function () {
+            this.route('index', { path: '/' });
+        });
     });
     this.route('comms', function () {
         this.route('chat');

@@ -917,4 +917,32 @@ class OrderController extends FleetOpsController
 
         return new OrderResource($order);
     }
+
+    public function finance( Request $request){
+        $results = Order::queryWithRequest($request,  function (&$query, $request) {
+
+            
+            if($request->filled('is_finish')){
+                $query->where('is_finish', $request->input('is_finish'));
+            }
+
+            if($request->filled('vehicle_id')){
+                $query->where('vehicle_assigned_uuid', $request->input('vehicle_id'));
+            }
+
+            if($request->filled('customer_id')){
+                $query->where('customer_uuid', $request->input('customer_id'));
+            }
+
+            if($request->filled('start_date')){
+                $query->whereDate('started_at', '>=', $request->input('start_date'));
+            }
+
+            if($request->filled('end_date')){
+                $query->whereDate('started_at', '<=', $request->input('end_date'));
+            }
+        });
+
+        return OrderResource::collection($results);
+    }
 }

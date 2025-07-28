@@ -556,28 +556,6 @@ class OrderController extends Controller
             $query->where('company_uuid', session('company'));
             $query->whereNotNull('payload_uuid');
 
-            if ($request->has('is_finish')) {
-                $query->where('is_finish', $request->input('is_finish'));
-            }
-
-            if($request->filled('vehicle_id')){
-                $query->where('vehicle_assigned_uuid', $request->input('vehicle_id'));
-            }
-
-            if($request->filled('customer_id')){
-                $query->where('customer_uuid', $request->input('customer_id'));
-            }
-
-            if($request->filled('start_date')){
-                $query->whereNotNull('started_at');
-                $query->whereDate('started_at', '>=', $request->input('start_date'));
-            }
-
-            if($request->filled('end_date')){
-                $query->whereNotNull('started_at');
-                $query->whereDate('started_at', '>=', $request->input('end_date'));
-            }
-
             if ($request->has('payload')) {
                 $query->whereHas('payload', function ($q) use ($request) {
                     $q->where('public_id', $request->input('payload'));

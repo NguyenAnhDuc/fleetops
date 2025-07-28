@@ -304,6 +304,7 @@ fleet-ops:
       fleet-ops-sidebar:
         car_repair_supplies: Sửa xe & Vật tư
         finance: 	Báo cáo thu chi
+        report-debts: Báo cáo công nợ
         navigator-app: Ứng dụng Navigator
         resources: Tài nguyên
         operations: Hoạt động

@@ -308,6 +308,7 @@ fleet-ops:
       fleet-ops-sidebar:
         car_repair_supplies: Car Repair & Supplies
         finance: 	Income & Expense Report
+        report-debts: Báo cáo công nợ
         payments: Payments
         navigator-app: Navigator App
         resources: Resources

@@ -24,8 +24,8 @@ export default class ManagementFinanceController extends BaseController {
 
     constructor() {
         super(...arguments);
-        this.loadVehicles();
-        // this.loadCustomers();
+        //this.loadVehicles();
+        this.loadCustomers();
     }
 
     async loadVehicles() {
@@ -69,7 +69,6 @@ export default class ManagementFinanceController extends BaseController {
     updateSelectedVehicle(vehicle) {
         if(vehicle){
             this.selectedVehicle = vehicle;
-            console.log(this.selectedVehicle);
         }
     }
 
@@ -77,6 +76,7 @@ export default class ManagementFinanceController extends BaseController {
     updateSelectedCustomer(customer) {
         if(customer){
             this.selectedCustomer = customer;
+            console.log(this.selectedCustomer);
         }
     }
 
@@ -107,50 +107,27 @@ export default class ManagementFinanceController extends BaseController {
         // Giả sử có API hoặc model để lấy dữ liệu thu chi theo xe và khoảng thời gian
         // Mình sẽ lấy dữ liệu đơn hàng (thu) và chi phí (chi) rồi gộp lại
         // Hiển thị thông báo đang load
-        let loadingNotice = this.notifications.info("Đang lấy dữ liệu để tổng hợp báo cáo thu chi ...", { autoClear: false });
-
+        let loadingNotice = this.notifications.info("Đang lấy dữ liệu công nợ ...", { autoClear: false });
         try {
             var orders = null;
-            var fuelReports = null;
-            var issues = null;
-            try{
+            try {
                 // Lấy đơn hàng (thu)
                 orders = await this.fetch.get(`orders/finance`,{
-                    vehicle_id: this.selectedVehicle ? this.selectedVehicle.uuid : '',
-                    // customer_id: this.selectedCustomer? this.selectedCustomer.uuid : null,
+                    //vehicle_id: this.selectedVehicle ? this.selectedVehicle.uuid : '',
+                    customer_id: this.selectedCustomer? this.selectedCustomer.uuid : '',
                     is_finish: 1,
                     start_date: this.startDate,
                     end_date: this.endDate,
                 });
+
             }catch (error) {
                 this.notifications.error("Lỗi order:" + error);
             }
-
-            try{
-                fuelReports = await this.fetch.get(`fuel-reports/finance`,{
-                    vehicle_id: this.selectedVehicle ? this.selectedVehicle.uuid : '',
-                    start_date: this.startDate,
-                    end_date: this.endDate,
-                });
-            }catch (error){
-                this.notifications.error("Lỗi fuel-report:" + error);
-            }
             
-            try{
-                issues = await this.fetch.get(`issues/finance`,{
-                    vehicle_id: this.selectedVehicle ? this.selectedVehicle.uuid : '',
-                    start_date: this.startDate,
-                    end_date: this.endDate,
-                });
-            }catch(error){
-                this.notifications.error("Lỗi issues:" + error);
-            }
 
             // Gộp dữ liệu thu chi
             const results = [];
             orders = orders?.data ?? [];
-            fuelReports = fuelReports?.data ?? [];
-            issues = issues?.data ?? [];
             orders.forEach((order) => {
                 results.push({
                     date: formatDate(new Date(order.started_at), 'yyyy-MM-dd'),
@@ -158,7 +135,8 @@ export default class ManagementFinanceController extends BaseController {
                     description: `Đơn hàng #${order.internal_id}`,
                     amount: order.quantity_fees * order.unit_price_fees,
                     amount_display: formatCurrency(order.quantity_fees * order.unit_price_fees, "VND"),
-                    plate_number: order.vehicle_assigned ? order.vehicle_assigned.display_name : ""
+                    plate_number: order.vehicle_assigned ? order.vehicle_assigned.display_name : "",
+                    customerName: orders.customer.user.name
                 });
 
                 results.push({
@@ -167,36 +145,15 @@ export default class ManagementFinanceController extends BaseController {
                     description: `Đơn hàng #${order.internal_id}`,
                     amount: order.approval_fees,
                     amount_display: formatCurrency(order.approval_fees, "VND"),
-                    plate_number: order.vehicle_assigned ? order.vehicle_assigned.display_name : ""
+                    plate_number: order.vehicle_assigned ? order.vehicle_assigned.display_name : "",
+                    customerName: orders.customer.user.name
                 });
             });
-
-            fuelReports.forEach((fuel) => {
-                results.push({
-                    date: formatDate(new Date(fuel.created_at), 'yyyy-MM-dd'),
-                    type: 'Chi',
-                    description: 'Chi phí nhiên liệu',
-                    amount: fuel.amount,
-                    amount_display: formatCurrency(fuel.amount, "VND"),
-                    plate_number: fuel.vehicle_name
-                });
-            });
-
-            issues.forEach((issue) => {
-                results.push({
-                    date: formatDate(new Date(issue.created_at), 'yyyy-MM-dd'),
-                    type: 'Chi',
-                    description: 'Chi phí sửa xe',
-                    amount: issue.total_money,
-                    amount_display: formatCurrency(issue.total_money, "VND"),
-                    plate_number: issue.vehicle_name
-                });
-            });
-
+            
             // Sắp xếp theo ngày
             results.sort((a, b) => new Date(a.date) - new Date(b.date));
-            this.results = results;
 
+            this.results = results;
             // Clear hoặc update thông báo khi xong
             this.notifications.removeNotification(loadingNotice);
 
@@ -206,7 +163,7 @@ export default class ManagementFinanceController extends BaseController {
                 this.notifications.success("Đã tổng hợp dữ liệu thành công!");
             }
         } catch (error) {
-            this.notifications.error("Lỗi khi tìm kiếm dữ liệu thu chi: "+ error);
+            this.notifications.error("Lỗi khi tìm kiếm dữ liệu công nợ: "+ error);
         }
     }
 }
