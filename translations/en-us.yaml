@@ -1511,9 +1511,9 @@ fleet-ops:
           status-fees: Status Fees
           status-fees-done: Done
           status-fees-not-done: Not Done
-          type-payment: Loại thu tiền
-          type-payment-cash: Thu tiền mặt
-          type-payment-debt: Công nợ
+          type-payment: Hình thức thanh toán cước
+          type-payment-cash: Thu tiền ngay khi giao hàng
+          type-payment-debt: Công nợ (trả sau)
           fees-type: Type Fees
           fees-type-by-order: By Order
           fees-type-by-weight-load: By Weight/Load

@@ -162,7 +162,93 @@
             </InputGroup>
         </div>
 
-        <InputGroup @label={{t "fleet-ops.operations.orders.index.new.cash-or-debt"}} @helpText={{t "fleet-ops.operations.orders.index.new.cash-or-debt-help-text"}}>
+        <div class="bg-[#374151] rounded-xl p-4 mt-4 shadow-md text-sm">
+            <h3 class="text-sm font-bold text-white mb-3">
+                Hình thức thanh toán cước
+            </h3>
+            
+            <div class="flex flex-col space-y-3 text-gray-200">
+                <label class="flex items-center space-x-3 cursor-pointer">
+                    <RadioButton
+                        @radioClass="text-blue-500 focus:ring-blue-400 h-5 w-5"
+                        @radioId="receive_cash_true"
+                        @value={{true}}
+                        @groupValue={{@options.order.is_receive_cash_fees}}
+                        @name="is_receive_cash_fees"
+                        @changed={{fn (mut @options.order.is_receive_cash_fees)}}
+                    />
+                    <span>Thu tiền ngay khi giao hàng</span>
+                </label>
+
+                <label class="flex items-center space-x-3 cursor-pointer">
+                    <RadioButton
+                        @radioClass="text-blue-500 focus:ring-blue-400 h-5 w-5"
+                        @radioId="receive_cash_false"
+                        @value={{false}}
+                        @groupValue={{@options.order.is_receive_cash_fees}}
+                        @name="is_receive_cash_fees"
+                        @changed={{fn (mut @options.order.is_receive_cash_fees)}}
+                    />
+                    <span>Tính vào công nợ (thu sau)</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="bg-[#374151] rounded-xl p-4 mt-4 shadow-md text-sm">
+            <h3 class="text-sm font-bold text-white mb-3">
+                Cách tính Cước phí
+            </h3>
+            
+            <div class="flex flex-col space-y-3 text-gray-200">
+                <label class="flex items-center space-x-3 cursor-pointer">
+                    <RadioButton
+                        @radioClass="text-blue-500 focus:ring-blue-400 h-5 w-5"
+                        @radioId="is_fees_type_by_order"
+                        @value={{true}}
+                        @groupValue={{@options.order.is_fees_type_by_order}}
+                        @name="is_fees_type_by_order"
+                        @changed={{fn (mut @options.order.is_fees_type_by_order)}}
+                    />
+                    <span>Thu phí theo chuyến (đơn hàng)</span>
+                </label>
+
+                <label class="flex items-center space-x-3 cursor-pointer">
+                    <RadioButton
+                        @radioClass="text-blue-500 focus:ring-blue-400 h-5 w-5"
+                        @radioId="is_fees_type_by_order"
+                        @value={{false}}
+                        @groupValue={{@options.order.is_fees_type_by_order}}
+                        @name="is_fees_type_by_order"
+                        @changed={{fn (mut @options.order.is_fees_type_by_order)}}
+                    />
+                    <span>Thu phí theo trọng tải</span>
+                </label>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-2">
+                <InputGroup>
+                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.quantity-fees"}} @helpText={{t "fleet-ops.operations.orders.index.new.quantity-fees-help-text"}} />
+                    <Input 
+                        @value={{@options.order.quantity_fees}} 
+                        @type="number"
+                        min="1"
+                        class="w-full form-input form-input-sm"
+                        disabled={{@options.order.is_fees_type_by_order}}
+                    />
+                </InputGroup>
+                <InputGroup>
+                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.unit-price-fees"}} @helpText={{t "fleet-ops.operations.orders.index.new.unit-price-fees-help-text"}} />
+                    <MoneyInput
+                        class="w-full"
+                        @value={{@options.order.unit_price_fees}}
+                        @currency="VND"
+                        @canSelectCurrency={{false}}
+                    />
+                </InputGroup>
+            </div>
+        </div>
+
+        {{!-- <InputGroup @label={{t "fleet-ops.operations.orders.index.new.cash-or-debt"}} @helpText={{t "fleet-ops.operations.orders.index.new.cash-or-debt-help-text"}}>
             <Toggle
                 @label={{t "fleet-ops.operations.orders.index.new.cash-or-debt"}}
                 @wrapperClass="justify-start-i"
@@ -171,8 +257,8 @@
                 @disabled={{@options.order.isIntegratedVendorOrder}}
                 @helpText={{t "fleet-ops.operations.orders.index.new.cash-or-debt-help-text"}}
             />
-        </InputGroup>
-        <InputGroup @label={{t "fleet-ops.operations.orders.index.new.fees-type-by-order"}} @helpText={{t "fleet-ops.operations.orders.index.new.fees-type-by-order-help-text"}}>
+        </InputGroup> --}}
+        {{!-- <InputGroup @label={{t "fleet-ops.operations.orders.index.new.fees-type-by-order"}} @helpText={{t "fleet-ops.operations.orders.index.new.fees-type-by-order-help-text"}}>
             <Toggle
                 @label={{t "fleet-ops.operations.orders.index.new.fees-type-by-order"}}
                 @wrapperClass="justify-start-i"
@@ -203,6 +289,6 @@
                     @disabled={{@options.order.isIntegratedVendorOrder}}
                 />
             </InputGroup>
-        </div>
+        </div> --}}
     </div>
 </Modal::Default>

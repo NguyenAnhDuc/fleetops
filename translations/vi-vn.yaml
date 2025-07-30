@@ -1451,10 +1451,10 @@ fleet-ops:
           status-fees: Trạng thái Thu Tiền cước
           status-fees-done: Đã thu
           status-fees-not-done: Chưa 
-          type-payment: Loại thu tiền
-          type-payment-cash: Thu tiền mặt
-          type-payment-debt: Công nợ
-          fees-type: Loại Thu cước
+          type-payment: Hình thức thanh toán cước
+          type-payment-cash: Thu tiền ngay khi giao hàng
+          type-payment-debt: Công nợ (trả sau)
+          fees-type: Cách tính cước phí
           fees-type-by-order: Thu cố định theo đơn hàng
           fees-type-by-weight-load: Thu theo Trọng Tải
           unit-fee-title: Giá trị đơn hàng
