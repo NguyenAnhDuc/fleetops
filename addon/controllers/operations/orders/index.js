@@ -975,7 +975,7 @@ export default class OperationsOrdersIndexController extends BaseController {
                 modal.startLoading();
 
                 try {
-                    await this.fetch.patch('orders/finish', { order: order.id });
+                    await this.fetch.patch(`orders/${order.id}/finish`);
                     // order.set('status', 'finished');
                     this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.finish-success', { orderId: order.public_id }));
                     modal.done();
