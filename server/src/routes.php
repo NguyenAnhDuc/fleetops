@@ -390,7 +390,7 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                                 $router->post('bulk-dispatch', $controller('bulkDispatch'));
                                 $router->patch('cancel', $controller('cancel'));
                                 $router->patch('dispatch', $controller('dispatchOrder'));
-                                $router->patch('finish', $controller('finishOrder'));
+                                $router->post('{id}/finish', $controller('finishOrder'));
                                 $router->patch('start', $controller('start'));
                                 $router->delete('bulk-delete', $controller('bulkDelete'));
                                 $router->match(['get', 'post'], 'export', $controller('export'))->middleware([Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]);
