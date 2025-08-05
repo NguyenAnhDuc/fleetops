@@ -76,6 +76,15 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                     $router->put('{id}', 'FuelReportController@update');
                     $router->delete('{id}', 'FuelReportController@delete');
                 });
+
+                // contact-debt routes
+                $router->group(['prefix' => 'contact-debts'], function () use ($router) {
+                    $router->post('/', 'ContactDebtController@create');
+                    $router->get('/', 'ContactDebtController@query');
+                    $router->get('{id}', 'ContactDebtController@find');
+                    $router->put('{id}', 'ContactDebtController@update');
+                    $router->delete('{id}', 'ContactDebtController@delete');
+                });
                 // orders routes
                 $router->group(['prefix' => 'orders', 'middleware' => [Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]], function () use ($router) {
                     $router->post('/', 'OrderController@create');
@@ -355,6 +364,14 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                                 $router->get('finance', $controller('finance'));
                             }
                         );
+
+                        $router->fleetbaseRoutes(
+                            'contact-debts',
+                            function ($router, $controller) {
+                                $router->get('get', $controller('get'));
+                            }
+                        );
+
                         $router->fleetbaseRoutes(
                             'issues',
                             function ($router, $controller) {
