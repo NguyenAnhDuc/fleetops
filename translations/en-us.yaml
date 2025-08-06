@@ -941,6 +941,19 @@ fleet-ops:
       select-status: Select issue status
       issue-report: Issue Report
       issue: Issue
+    contact-debt-form-panel:
+      new-form-title: Tạo mới Công nợ
+      form-title: Công nợ
+      button-save: Lưu
+      button-create: Tạo mới
+      button-detail: Chi tiết
+      button-cancel: Huỷ bỏ
+      button-cancel-edit: Huỷ Chỉnh Sửa
+      content-panel-input-info: Thông tin Công nợ
+      select-contact: Chọn Khách hàng
+      received-at: Ngày nhận tiền
+      amount: Số tiền
+      note: Ghi Chú
     issue-panel:
       details:
         assigned: Assigned To
@@ -1285,6 +1298,9 @@ fleet-ops:
         title: Car Repair & Supplies
         edit: Edit Car Repair & Supplies
         delete: Delete Car Repair & Supplies
+    contact-debt:
+      index:
+        title: Công nợ
     places:
       index:
         view-details: View Place Details

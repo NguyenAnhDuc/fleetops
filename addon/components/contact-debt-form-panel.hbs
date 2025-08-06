@@ -1,0 +1,110 @@
+<Overlay
+    @onLoad={{this.setOverlayContext}}
+    @onOpen={{this.onOpen}}
+    @onClose={{this.onClose}}
+    @onToggle={{this.onToggle}}
+    @position="right"
+    @noBackdrop={{true}}
+    @fullHeight={{true}}
+    @isResizable={{or this.isResizable @isResizable}}
+    @width={{or this.width @width "570px"}}
+>
+    <Overlay::Header
+        @title={{if
+            this.contactDebt.public_id
+            (concat (t "fleet-ops.component.contact-debt-form-panel.form-title") " : " (format-date this.contactDebt.created_at "MMM dd, yyyy HH:mm"))
+            (t "fleet-ops.component.contact-debt-form-panel.new-form-title")
+        }}
+        @hideStatusDot={{true}}
+        @titleWrapperClass="leading-5"
+    >
+        <div class="flex flex-1 justify-end">
+            <Button
+                @icon={{if this.contactDebt.public_id "save" "check"}}
+                @type="primary"
+                @text={{if this.contactDebt.public_id (t "fleet-ops.component.contact-debt-form-panel.button-save") (t "fleet-ops.component.contact-debt-form-panel.button-create")}}
+                @onClick={{perform this.save}}
+                @isLoading={{this.save.isRunning}}
+                @permission={{this.savePermission}}
+                @wrapperClass="mr-2"
+            />
+            {{#if this.contactDebt.public_id}}
+                <Button
+                    @type="default"
+                    @icon="circle-exclamation"
+                    @helpText={{t "fleet-ops.component.contact-debt-form-panel.button-detail"}}
+                    @onClick={{this.onViewDetails}}
+                    @wrapperClass="mr-2"
+                    @permission="fleet-ops view contact-debt"
+                />
+            {{/if}}
+            <Button
+                @type="default"
+                @icon="times"
+                @helpText={{if this.contactDebt.public_id (t "fleet-ops.component.contact-debt-form-panel.button-cancel-edit") (t "fleet-ops.component.contact-debt-form-panel.button-cancel")}}
+                @onClick={{this.onPressCancel}}
+            />
+        </div>
+    </Overlay::Header>
+
+    <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 pt-4">
+        {{#let (cannot this.savePermission) as |unauthorized|}}
+            <ContentPanel @title={{t "fleet-ops.component.contact-debt-form-panel.content-panel-input-info"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-2 no-input-group-padding text-xs">
+                    <InputGroup @name={{t "fleet-ops.common.customer"}}>
+                        <ModelSelect
+                            @modelName="contact"
+                            @selectedModel={{this.contactDebt.contact}}
+                            @placeholder={{t "fleet-ops.component.contact-debt-form-panel.select-contact"}}
+                            @triggerClass="form-select form-input"
+                            @infiniteScroll={{false}}
+                            @renderInPlace={{true}}
+                            @onChange={{fn (mut this.contactDebt.contact)}}
+                            @disabled={{unauthorized}}
+                            as |model|
+                        >
+                            {{model.name}}
+                        </ModelSelect>
+                    </InputGroup>
+
+                    <InputGroup @name={{t "fleet-ops.component.contact-debt-form-panel.received-at"}} @wrapperClass="col-span-1">
+                        <DateTimeInput
+                            class="form-input"
+                            @value={{this.contactDebt.received_at}}
+                            @onUpdate={{fn (mut this.contactDebt.received_at)}}
+                            @disabled={{unauthorized}}
+                        />
+                    </InputGroup>
+                    
+                    <InputGroup @name={{t "fleet-ops.component.contact-debt-form-panel.amount"}} @wrapperClass="col-span-1">
+                        <MoneyInput
+                            class="w-full"
+                            @value={{this.contactDebt.amount}}
+                            @currency="VND"
+                            @canSelectCurrency={{false}}
+                        />
+                    </InputGroup>
+
+                    <InputGroup @name={{t "fleet-ops.component.contact-debt-form-panel.note"}} @wrapperClass="col-span-2">
+                        <Textarea
+                            @value={{this.contactDebt.note}}
+                            aria-label="Issue Report"
+                            class="w-full form-input"
+                            disabled={{unauthorized}}
+                            placeholder={{t "fleet-ops.component.contact-debt-form-panel.note"}}
+                            rows={{5}}
+                        />
+                    </InputGroup>
+                    <RegistryYield @registry="fleet-ops:component:contact-debt-form-panel:details" as |RegistryComponent|>
+                        <RegistryComponent @contactDebt={{this.contactDebt}} @controller={{this.controller}} @permission={{this.savePermission}} />
+                    </RegistryYield>
+                </div>
+            </ContentPanel>
+
+            <RegistryYield @registry="fleet-ops:component:contact-debt-form-panel" as |RegistryComponent|>s
+                <RegistryComponent @contactDebt={{this.contactDebt}} @controller={{this.controller}} @permission={{this.savePermission}} />
+            </RegistryYield>
+        {{/let}}
+        <Spacer @height="300px" />
+    </Overlay::Body>
+</Overlay>

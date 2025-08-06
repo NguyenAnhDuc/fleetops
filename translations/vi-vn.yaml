@@ -904,6 +904,19 @@ fleet-ops:
       priority: Ưu tiên Vấn đề
       select-priority: Chọn mức độ ưu tiên của vấn đề
       select-status: Chọn trạng thái vấn đề
+    contact-debt-form-panel:
+      new-form-title: Tạo mới Công nợ
+      form-title: Công nợ
+      button-save: Lưu
+      button-create: Tạo mới
+      button-detail: Chi tiết
+      button-cancel: Huỷ bỏ
+      button-cancel-edit: Huỷ Chỉnh Sửa
+      content-panel-input-info: Thông tin Công nợ
+      select-contact: Chọn Khách hàng
+      received-at: Ngày nhận tiền
+      amount: Số tiền
+      note: Ghi Chú
     issue-panel:
       details:
         assigned: Được Gán Cho
@@ -1230,6 +1243,9 @@ fleet-ops:
         title: Sửa xe & Vật tư
         edit: Chỉnh sửa
         delete: Xoá
+    contact-debt:
+      index:
+        title: Công nợ
     places:
       index:
         view-details: Xem Chi tiết Địa điểm

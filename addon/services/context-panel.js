@@ -103,6 +103,16 @@ export default class ContextPanelService extends Service {
                 componentArguments: [{ isResizable: true }, { width: '500px' }],
             },
         },
+        debtReport:{
+            viewing: {
+                component: 'contact-debt-panel',
+                componentArguments: [{ isResizable: true }, { width: '500px' }],
+            },
+            editing: {
+                component: 'contact-debt-form-panel',
+                componentArguments: [{ isResizable: true }, { width: '500px' }],
+            },
+        },
         finance: {
             viewing: {
                 component: 'finance-panel',

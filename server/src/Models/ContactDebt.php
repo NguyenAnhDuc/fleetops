@@ -50,6 +50,9 @@ class ContactDebt extends Model
      * @var array
      */
     protected $fillable = [
+        '_key',
+        'uuid',
+        'public_id',
         'contact_uuid',
         'amount',
         'received_at',
@@ -69,7 +72,8 @@ class ContactDebt extends Model
      * @var array
      */
     protected $casts = [
-       
+       'received_at' => 'date',
+       'amount'      => 'double',
     ];
 
     /**
@@ -93,11 +97,16 @@ class ContactDebt extends Model
      */
     protected $filterParams = ['note'];
 
+    public function setAmountAttribute($value)
+    {
+        $this->attributes['amount'] = Utils::numbersOnly($value);
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function contact()
     {
-        return $this->belongsTo(Contact::class);
+        return $this->belongsTo(Contact::class, 'contact_uuid', 'uuid');
     }
 }

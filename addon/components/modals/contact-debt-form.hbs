@@ -1,0 +1,80 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container space-y-4">
+        <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.view-fees-driver-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <div class="grid grid-cols-2 gap-4 text-xs dark:text-gray-100">
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.roadLaw-fees"}}</div>
+                    <div class="field-value">{{n-a @options.order.getRoadLawFees}}</div>
+                </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.food-fees"}}</div>
+                    <div class="field-value">{{n-a @options.order.getFoodFees}}</div>
+                </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.handling-fees"}}</div>
+                    <div class="field-value">{{n-a @options.order.getHandlingFees}}</div>
+                </div>
+                 <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.repair-fees"}}</div>
+                    <div class="field-value">{{n-a @options.order.getRepairFees}}</div>
+                </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.external-fuel-fees"}}</div>
+                    <div class="field-value">{{n-a @options.order.getExternalFuelFees}}</div>
+                </div>
+                 <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.other-fees"}}</div>
+                    <div class="field-value">{{n-a @options.order.getOtherFees}}</div>
+                </div>
+            </div>
+
+            {{!-- Hiển thị tổng chi phí --}}
+            <div class="col-span-2 border-t pt-3 mt-2">
+                <div class="flex justify-between items-center">
+                    <div class="text-white font-bold text-sm">
+                        {{t "fleet-ops.operations.orders.index.view.total-fees-driver"}}
+                    </div>
+                    <div class="text-green-500 text-base font-bold">
+                        {{n-a @options.order.getFeesDriver}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-white font-bold text-sm col-span-2 border-t pt-3 mt-2 ">Hóa đơn</div>
+            <div class="flex overflow-x-auto space-x-4 py-2">
+                {{#each @options.order.image_billing_urls as |url|}}
+                    <div class="flex-none">
+                    <a href={{url}} target="_blank" rel="noopener noreferrer">
+                        <img
+                            src={{url}}
+                            alt="Billing Image"
+                            class="w-28 h-28 object-cover rounded-lg border border-gray-300 dark:border-gray-700 hover:scale-105 transition-transform"
+                        />
+                    </a>
+                    </div>
+                {{/each}}
+            </div>
+        </ContentPanel>
+
+        <ContentPanel 
+            @title={{t "fleet-ops.operations.orders.index.view.approval-fees-title"}} 
+            @open={{true}} 
+            @pad={{true}} 
+            @panelBodyClass="bg-white dark:bg-gray-800"
+        >
+            <div class="col-span-2 pt-3 mt-2">
+                <div class="flex justify-between items-center">
+                    <div class="text-white font-bold text-sm">
+                        {{t "fleet-ops.operations.orders.index.view.approval-fees-money-title"}}
+                    </div>
+                    <MoneyInput
+                        class="w-full"
+                        @value={{@options.order.approval_fees}}
+                        @currency="VND"
+                        @canSelectCurrency={{false}}
+                    />
+                </div>
+            </div>
+        </ContentPanel>
+    </div>
+</Modal::Default>

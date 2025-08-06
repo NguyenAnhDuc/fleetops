@@ -9,6 +9,7 @@ use Fleetbase\FleetOps\Models\Contact;
 use Fleetbase\FleetOps\Models\ContactDebt;
 use Fleetbase\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Fleetbase\FleetOps\Support\Utils;
 
 class ContactDebtController extends Controller
 {
@@ -28,6 +29,8 @@ class ContactDebtController extends Controller
             'received_at',
             'note',
         ]);
+
+        $input['amount'] = Utils::numbersOnly($input['amount']); 
 
         // Find Contact
         try {
@@ -76,6 +79,7 @@ class ContactDebtController extends Controller
             'received_at',
             'note',
         ]);
+        $input['amount'] = Utils::numbersOnly($input['amount']); 
 
         // update the fuel report
         $contactDebt->update($input);

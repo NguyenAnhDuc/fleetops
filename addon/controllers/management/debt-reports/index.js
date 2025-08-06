@@ -92,7 +92,7 @@ export default class ManagementFinanceController extends BaseController {
 
     @action
     openCreateOverlay() {
-        return this.transitionToRoute('management.finances.index.new');
+        return this.transitionToRoute('management.debt-reports.index.new');
     }
 
     @action

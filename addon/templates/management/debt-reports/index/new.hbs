@@ -1,0 +1,20 @@
+<ContactDebtFormPanel 
+    @contactDebt={{this.contactDebt}} 
+    @controller={{this}} 
+    @onPressCancel={{this.transitionBack}} 
+    @onAfterSave={{this.onAfterSave}} 
+    @onLoad={{this.setOverlayContext}} 
+/>
+
+{{!-- <Overlay
+    @onLoad={{this.setOverlayContext}}
+    @onOpen={{this.onOpen}}
+    @onClose={{this.onClose}}
+    @onToggle={{this.onToggle}}
+    @position="right"
+    @noBackdrop={{true}}
+    @fullHeight={{true}}
+    @isResizable={{or this.isResizable @isResizable}}
+    @width={{or this.width @width "570px"}}
+>
+</Overlay> --}}
