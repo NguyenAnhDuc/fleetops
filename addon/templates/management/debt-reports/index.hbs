@@ -58,9 +58,15 @@
   {{#if this.results.length}}
     <!-- Tổng hợp thu chi -->
     <div class="flex justify-end mb-2 text-sm text-gray-700 dark:text-gray-200 px-4">
-        <div class="text-right">
-            <div  class="text-green-400">Tổng thu: <span class="font-semibold"> {{this.totalIncome}}</span></div>
-            <div class="text-red-400">Tổng chi: <span class="font-semibold"> {{this.totalExpense}}</span></div>
+        <div class="grid grid-cols-[auto,auto] gap-x-4 text-right">
+            <span class="text-red-400">Dự thu:</span>
+            <span class="font-semibold text-red-400">{{this.totalIncome}}</span>
+
+            <span class="text-green-400">Đã nhận:</span>
+            <span class="font-semibold text-green-400">{{this.totalExpense}}</span>
+
+            <span class="text-yellow-400">Còn nợ:</span>
+            <span class="font-semibold text-yellow-400">{{this.totalProfit}}</span>
         </div>
     </div>
 
@@ -92,13 +98,13 @@
             <td class="py-2 pl-4 text-white">{{item.dropoff}}</td>
             <td class="py-2 pl-4 text-white">{{item.weight_unit}}</td>
             <td class="py-2 pl-4 text-white">{{item.quantity_fees}}</td>
-            <td class="py-2 pl-4 text-white">{{item.unit_price_fees}}</td>
+            <td class="py-2 pl-4 text-white">{{item.unit_price_fees_display}}</td>
             <td class="py-2 pl-4 text-white">{{item.amount_display}}</td>
             <td class="py-2">
               {{#if (eq item.type "debt_estimate")}}
-                <span class="text-green-400 pl-4 font-medium">Dự tính</span>
+                <span class="text-red-400 pl-4 font-medium">Dự thu</span>
               {{else}}
-                <span class="text-red-400 pl-4 font-medium">Đã nhận</span>
+                <span class="text-green-400 pl-4 font-medium">Đã nhận</span>
               {{/if}}
             </td>
             <td class="py-2 pl-4 text-white">{{item.note}}</td>

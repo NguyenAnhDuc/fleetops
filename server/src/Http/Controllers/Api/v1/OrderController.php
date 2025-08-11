@@ -77,11 +77,15 @@ class OrderController extends Controller
                 'unit_price_fees',
                 'approval_fees',
                 'driver_advance_fee',
+                'driver_earnings',
+                'driver_remittance',
                 'is_finish'
             ]);
         $input['unit_price_fees'] = Utils::numbersOnly($input['unit_price_fees']); 
         $input['approval_fees'] = Utils::numbersOnly($input['approval_fees']);
         $input['driver_advance_fee'] = Utils::numbersOnly($input['driver_advance_fee']);
+        $input['driver_earnings'] = Utils::numbersOnly($input['driver_earnings']);
+        $input['driver_remittance'] = Utils::numbersOnly($input['driver_remittance']);
         $input['currency'] = "VND";
 
         // Get order config
@@ -396,6 +400,8 @@ class OrderController extends Controller
                 'unit_price_fees',
                 'approval_fees',
                 'driver_advance_fee',
+                'driver_earnings',
+                'driver_remittance',
                 'is_finish'
             ]);
         $input['currency'] = "VND";
@@ -403,6 +409,8 @@ class OrderController extends Controller
         $input['unit_price_fees'] = Utils::numbersOnly($input['unit_price_fees']);
         $input['approval_fees'] = Utils::numbersOnly($input['approval_fees']);
         $input['driver_advance_fee'] = Utils::numbersOnly($input['driver_advance_fee']);
+        $input['driver_earnings'] = Utils::numbersOnly($input['driver_earnings']);
+        $input['driver_remittance'] = Utils::numbersOnly($input['driver_remittance']);
         Log::info($input['unit_price_fees']);
         // update payload if new input or change payload by id
         if ($request->isArray('payload')) {
@@ -1033,8 +1041,13 @@ class OrderController extends Controller
 
         $fees_driver = $request->input('fees_driver', []);
         $driver_advance_fee = $request->input('driver_advance_fee', 0);
+        $driver_earnings =  $request->input('driver_earnings', 0);
+        $driver_remittance =  $request->input('driver_remittance', 0);
+
         $order->fees_driver = $fees_driver;
         $order->driver_advance_fee = $driver_advance_fee;
+        $order->driver_earnings = $driver_earnings;
+        $order->driver_remittance = $driver_remittance;
         $order->save();
         return new OrderResource($order);
     }

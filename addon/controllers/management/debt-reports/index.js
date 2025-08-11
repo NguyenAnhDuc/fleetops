@@ -53,17 +53,32 @@ export default class ManagementFinanceController extends BaseController {
     }
 
     @computed('results')
-    get totalIncome() {
-        return formatCurrency(this.results
-            .filter((r) => r.type === 'debt_received')
-            .reduce((sum, r) => sum + parseFloat(r.amount || 0), 0), "VND");
+    get totalIncomeValue() {
+        return this.results
+            .filter((r) => r.type === 'debt_estimate')
+            .reduce((sum, r) => sum + parseFloat(r.amount || 0), 0);
     }
 
     @computed('results')
+    get totalExpenseValue() {
+        return this.results
+            .filter((r) => r.type === 'debt_received')
+            .reduce((sum, r) => sum + parseFloat(r.amount || 0), 0);
+    }
+
+    @computed('totalIncomeValue')
+    get totalIncome() {
+        return formatCurrency(this.totalIncomeValue, 'VND');
+    }
+
+    @computed('totalExpenseValue')
     get totalExpense() {
-        return formatCurrency(this.results
-            .filter((r) => r.type === 'debt_estimate')
-            .reduce((sum, r) => sum + parseFloat(r.amount || 0), 0), "VND");
+        return formatCurrency(this.totalExpenseValue, 'VND');
+    }
+
+    @computed('totalIncomeValue', 'totalExpenseValue')
+    get totalProfit() {
+        return formatCurrency(this.totalIncomeValue - this.totalExpenseValue, 'VND');
     }
 
     @action
@@ -148,13 +163,14 @@ export default class ManagementFinanceController extends BaseController {
                     date: formatDate(new Date(order.started_at), 'yyyy-MM-dd'),
                     type: 'debt_estimate',
                     plate_number: order.vehicle_assigned ? order.vehicle_assigned.display_name : "",
-                    sku_name: order.payload.entities ? order.payload.entities[0].name : "",
+                    sku_name: order.payload.entities ? (order.payload.entities.length > 0 ? order.payload.entities[0].name : "") : "",
                     customerName: order.customer? order.customer.name : "",
                     pickup: order.payload.pickup? (isEmpty(order.payload.pickup.city)? order.payload.pickup.address : "") : "",
                     dropoff: order.payload.dropoff? (isEmpty(order.payload.dropoff.city)?  order.payload.dropoff.address : "") : "",
-                    weight_unit: order.payload.entities ? order.payload.entities[0].weight_unit : "",
+                    weight_unit: order.payload.entities ? (order.payload.entities.length > 0 ? order.payload.entities[0].weight_unit : "") : "",
                     quantity_fees: order.quantity_fees,
                     unit_price_fees: order.unit_price_fees,
+                    unit_price_fees_display: formatCurrency(order.unit_price_fees, "VND"),
                     amount: order.quantity_fees * order.unit_price_fees,
                     amount_display: formatCurrency(order.quantity_fees * order.unit_price_fees, "VND"),
                     note: "",
