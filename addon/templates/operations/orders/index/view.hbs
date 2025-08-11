@@ -250,7 +250,7 @@
                         </div>
                     {{/if}}
                 </div>
-                <div class="field-info-container space-y-2">
+                {{!-- <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.operations.orders.index.view.facilitator"}}</div>
                     <div class="flex flex-row">
                         <div>
@@ -268,7 +268,7 @@
                             {{/if}}
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <div class="field-info-container space-y-2">
                     <div class="field-name flex flex-row items-center justify-between">
                         <span>{{t "fleet-ops.operations.orders.index.view.driver-assigned"}}</span>
@@ -358,10 +358,10 @@
                     <div class="field-name">{{t "fleet-ops.operations.orders.index.view.tracking-number"}}</div>
                     <ClickToCopy @value={{@model.tracking_number.tracking_number}} class="field-value">{{n-a @model.tracking_number.tracking_number}}</ClickToCopy>
                 </div> --}}
-                <div class="field-info-container space-y-2">
+                {{!-- <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.operations.orders.index.view.date-scheduled"}}</div>
                     <div class="field-value">{{n-a @model.scheduledAt}}</div>
-                </div>
+                </div> --}}
                 <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.operations.orders.index.view.date-dispatched"}}</div>
                     <div class="field-value">{{n-a @model.dispatchedAt}}</div>
@@ -395,12 +395,12 @@
                     </div>
                 </div>
 
-                <div class="field-info-container space-y-2">
+                {{!-- <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.common.type"}}</div>
                     <div class="field-value">
                         <Badge @status="info">{{n-a (humanize @model.type)}}</Badge>
                     </div>
-                </div>
+                </div> --}}
                 {{#if @model.pod_required}}
                     <div class="field-info-container space-y-2">
                         <div class="field-name">{{t "fleet-ops.operations.orders.index.view.proof-of-delivery"}}</div>
