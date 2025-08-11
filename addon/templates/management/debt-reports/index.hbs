@@ -67,12 +67,18 @@
     <table class="w-full table-auto text-sm">
       <thead>
         <tr class="text-gray-400 text-xs uppercase border-b border-gray-700">
-          <th class="text-left py-2 pl-4">Ngày</th>
-          <th class="text-left py-2 pl-4">Phương tiện</th>
-          <th class="text-left py-2 pl-4">Khách hàng</th>
-          <th class="text-left py-2 pl-4">Loại</th>
-          <th class="text-left py-2 pl-4">Mô tả</th>
-          <th class="text-left py-2 pl-4">Giá trị</th>
+          <th class="text-left py-2 pl-4">Ngày tháng</th>
+          <th class="text-left py-2 pl-4">Số xe</th>
+          <th class="text-left py-2 pl-4">Tên hàng</th>
+          <th class="text-left py-2 pl-4">Chủ Hàng</th>
+          <th class="text-left py-2 pl-4">Nơi nhận hàng</th>
+          <th class="text-left py-2 pl-4">Nơi giao hàng</th>
+          <th class="text-left py-2 pl-4">ĐVT</th>
+          <th class="text-left py-2 pl-4">Số lượng</th>
+          <th class="text-left py-2 pl-4">Đơn giá</th>
+          <th class="text-left py-2 pl-4">Thành tiền</th>
+          <th class="text-left py-2 pl-4">Trạng thái</th>
+          <th class="text-left py-2 pl-4">Ghi Chú</th>
         </tr>
       </thead>
       <tbody>
@@ -80,16 +86,22 @@
           <tr class="border-b border-gray-700 hover:bg-gray-800 transition">
             <td class="py-2 pl-4 text-white">{{item.date}}</td>
             <td class="py-2 pl-4 text-white">{{item.plate_number}}</td>
+            <td class="py-2 pl-4 text-white">{{item.sku_name}}</td>
             <td class="py-2 pl-4 text-white">{{item.customerName}}</td>
+            <td class="py-2 pl-4 text-white">{{item.pickup}}</td>
+            <td class="py-2 pl-4 text-white">{{item.dropoff}}</td>
+            <td class="py-2 pl-4 text-white">{{item.weight_unit}}</td>
+            <td class="py-2 pl-4 text-white">{{item.quantity_fees}}</td>
+            <td class="py-2 pl-4 text-white">{{item.unit_price_fees}}</td>
+            <td class="py-2 pl-4 text-white">{{item.amount_display}}</td>
             <td class="py-2">
-              {{#if (eq item.type "Thu")}}
-                <span class="text-green-400 pl-4 font-medium">Thu</span>
+              {{#if (eq item.type "debt_estimate")}}
+                <span class="text-green-400 pl-4 font-medium">Dự tính</span>
               {{else}}
-                <span class="text-red-400 pl-4 font-medium">Chi</span>
+                <span class="text-red-400 pl-4 font-medium">Đã nhận</span>
               {{/if}}
             </td>
-            <td class="py-2 pl-4 text-white">{{item.description}}</td>
-            <td class="py-2 pl-4 text-white">{{item.amount_display}}</td>
+            <td class="py-2 pl-4 text-white">{{item.note}}</td>
           </tr>
         {{/each}}
       </tbody>

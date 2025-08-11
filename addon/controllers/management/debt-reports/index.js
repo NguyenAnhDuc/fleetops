@@ -5,6 +5,7 @@ import { action } from '@ember/object';
 import { computed } from '@ember/object';
 import { format as formatDate, isValid as isValidDate, formatDistanceToNow } from 'date-fns';
 import formatCurrency from '@fleetbase/ember-ui/utils/format-currency';
+import { isEmpty } from '@ember/utils';
 
 export default class ManagementFinanceController extends BaseController {
     @service store;
@@ -54,14 +55,14 @@ export default class ManagementFinanceController extends BaseController {
     @computed('results')
     get totalIncome() {
         return formatCurrency(this.results
-            .filter((r) => r.type === 'Thu')
+            .filter((r) => r.type === 'debt_received')
             .reduce((sum, r) => sum + parseFloat(r.amount || 0), 0), "VND");
     }
 
     @computed('results')
     get totalExpense() {
         return formatCurrency(this.results
-            .filter((r) => r.type === 'Chi')
+            .filter((r) => r.type === 'debt_estimate')
             .reduce((sum, r) => sum + parseFloat(r.amount || 0), 0), "VND");
     }
 
@@ -110,11 +111,13 @@ export default class ManagementFinanceController extends BaseController {
         let loadingNotice = this.notifications.info("Đang lấy dữ liệu công nợ ...", { autoClear: false });
         try {
             var orders = null;
+            var contactDebts = null;
             try {
                 // Lấy đơn hàng (thu)
                 orders = await this.fetch.get(`orders/finance`,{
                     //vehicle_id: this.selectedVehicle ? this.selectedVehicle.uuid : '',
                     customer_id: this.selectedCustomer? this.selectedCustomer.uuid : '',
+                    is_receive_cash_fees: 1, //Chỉ lấy những đơn hàng là công nợ
                     is_finish: 1,
                     start_date: this.startDate,
                     end_date: this.endDate,
@@ -123,7 +126,19 @@ export default class ManagementFinanceController extends BaseController {
             }catch (error) {
                 this.notifications.error("Lỗi order:" + error);
             }
+
+            //Lấy thông tin công nợ
+            try{
+                contactDebts = await this.fetch.get(`contact-debts/get`,{
+                    contact_uuid: this.selectedCustomer? this.selectedCustomer.uuid : '',
+                    start_date: this.startDate,
+                    end_date: this.endDate,
+                });
+            }catch(error){
+                this.notifications.error("Lỗi lấy thông tin công nợ:" + error);
+            }
             
+            console.log("contactDebts:" + contactDebts);
 
             // Gộp dữ liệu thu chi
             const results = [];
@@ -131,22 +146,31 @@ export default class ManagementFinanceController extends BaseController {
             orders.forEach((order) => {
                 results.push({
                     date: formatDate(new Date(order.started_at), 'yyyy-MM-dd'),
-                    type: 'Thu',
-                    description: `Đơn hàng #${order.internal_id}`,
+                    type: 'debt_estimate',
+                    plate_number: order.vehicle_assigned ? order.vehicle_assigned.display_name : "",
+                    sku_name: order.payload.entities ? order.payload.entities[0].name : "",
+                    customerName: order.customer? order.customer.name : "",
+                    pickup: order.payload.pickup? (isEmpty(order.payload.pickup.city)? order.payload.pickup.address : "") : "",
+                    dropoff: order.payload.dropoff? (isEmpty(order.payload.dropoff.city)?  order.payload.dropoff.address : "") : "",
+                    weight_unit: order.payload.entities ? order.payload.entities[0].weight_unit : "",
+                    quantity_fees: order.quantity_fees,
+                    unit_price_fees: order.unit_price_fees,
                     amount: order.quantity_fees * order.unit_price_fees,
                     amount_display: formatCurrency(order.quantity_fees * order.unit_price_fees, "VND"),
-                    plate_number: order.vehicle_assigned ? order.vehicle_assigned.display_name : "",
-                    customerName: order.customer? order.customer.name : ""
+                    note: "",
                 });
+            });
 
+            contactDebts = contactDebts?.data ?? [];
+            contactDebts.forEach((debt) => {
                 results.push({
-                    date: formatDate(new Date(order.started_at), 'yyyy-MM-dd'),
-                    type: 'Chi',
-                    description: `Đơn hàng #${order.internal_id}`,
-                    amount: order.approval_fees,
-                    amount_display: formatCurrency(order.approval_fees, "VND"),
-                    plate_number: order.vehicle_assigned ? order.vehicle_assigned.display_name : "",
-                    customerName: order.customer? order.customer.name : ""
+                    date: formatDate(new Date(debt.received_at), 'yyyy-MM-dd'),
+                    type: 'debt_received',
+                    note: debt.note,
+                    amount: debt.amount,
+                    amount_display: formatCurrency(debt.amount, "VND"),
+                    plate_number: "",
+                    customerName: ""
                 });
             });
             

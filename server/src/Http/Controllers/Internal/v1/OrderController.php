@@ -926,6 +926,10 @@ class OrderController extends FleetOpsController
                 $query->where('is_finish', $request->input('is_finish'));
             }
 
+            if($request->filled('is_receive_cash_fees')){
+                $query->where('is_receive_cash_fees', $request->input('is_receive_cash_fees'));
+            }
+
             if($request->filled('vehicle_id')){
                 $query->where('vehicle_assigned_uuid', $request->input('vehicle_id'));
             }

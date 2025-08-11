@@ -128,6 +128,7 @@ class Order extends Model
         'unit_price_fees',
         'is_receive_cash_fees',
         'approval_fees',
+        'driver_advance_fee',
         'is_finish'
     ];
 
@@ -225,6 +226,7 @@ class Order extends Model
         'unit_price_fees'   => 'double',
         'is_receive_cash_fees'     => 'boolean',
         'approval_fees'     => 'double',
+        'driver_advance_fee'=> 'double',
         'is_fisish'         => 'boolean'
 
     ];
@@ -270,6 +272,11 @@ class Order extends Model
     public function setApprovalFeesAttribute($value)
     {
         $this->attributes['approval_fees'] = Utils::numbersOnly($value);
+    }
+
+    public function setDriverAdvanceFeeAttribute($value)
+    {
+        $this->attributes['driver_advance_fee'] = Utils::numbersOnly($value);
     }
 
     public function setUnitPriceFeesAttribute($value)

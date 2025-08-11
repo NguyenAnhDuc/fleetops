@@ -76,10 +76,12 @@ class OrderController extends Controller
                 'is_fees_type_by_order',
                 'unit_price_fees',
                 'approval_fees',
+                'driver_advance_fee',
                 'is_finish'
             ]);
         $input['unit_price_fees'] = Utils::numbersOnly($input['unit_price_fees']); 
         $input['approval_fees'] = Utils::numbersOnly($input['approval_fees']);
+        $input['driver_advance_fee'] = Utils::numbersOnly($input['driver_advance_fee']);
         $input['currency'] = "VND";
 
         // Get order config
@@ -393,12 +395,14 @@ class OrderController extends Controller
                 'is_fees_type_by_order',
                 'unit_price_fees',
                 'approval_fees',
+                'driver_advance_fee',
                 'is_finish'
             ]);
         $input['currency'] = "VND";
         $input['fees'] = Utils::numbersOnly($input['fees']); //2025-05-12 QuyenPN
         $input['unit_price_fees'] = Utils::numbersOnly($input['unit_price_fees']);
         $input['approval_fees'] = Utils::numbersOnly($input['approval_fees']);
+        $input['driver_advance_fee'] = Utils::numbersOnly($input['driver_advance_fee']);
         Log::info($input['unit_price_fees']);
         // update payload if new input or change payload by id
         if ($request->isArray('payload')) {
@@ -1028,8 +1032,9 @@ class OrderController extends Controller
         }
 
         $fees_driver = $request->input('fees_driver', []);
-
+        $driver_advance_fee = $request->input('driver_advance_fee', 0);
         $order->fees_driver = $fees_driver;
+        $order->driver_advance_fee = $driver_advance_fee;
         $order->save();
         return new OrderResource($order);
     }
