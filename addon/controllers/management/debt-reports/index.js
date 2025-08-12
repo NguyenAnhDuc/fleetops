@@ -68,17 +68,17 @@ export default class ManagementFinanceController extends BaseController {
 
     @computed('totalIncomeValue')
     get totalIncome() {
-        return formatCurrency(this.totalIncomeValue, 'VND');
+        return formatCurrency(this.totalIncomeValue, 'VND').replace('₫', '');
     }
 
     @computed('totalExpenseValue')
     get totalExpense() {
-        return formatCurrency(this.totalExpenseValue, 'VND');
+        return formatCurrency(this.totalExpenseValue, 'VND').replace('₫', '');
     }
 
     @computed('totalIncomeValue', 'totalExpenseValue')
     get totalProfit() {
-        return formatCurrency(this.totalIncomeValue - this.totalExpenseValue, 'VND');
+        return formatCurrency(this.totalIncomeValue - this.totalExpenseValue, 'VND').replace('₫', '');
     }
 
     @action
@@ -167,12 +167,12 @@ export default class ManagementFinanceController extends BaseController {
                     customerName: order.customer? order.customer.name : "",
                     pickup: order.payload.pickup? (isEmpty(order.payload.pickup.city)? order.payload.pickup.address : "") : "",
                     dropoff: order.payload.dropoff? (isEmpty(order.payload.dropoff.city)?  order.payload.dropoff.address : "") : "",
-                    weight_unit: order.payload.entities ? (order.payload.entities.length > 0 ? order.payload.entities[0].weight_unit : "") : "",
+                    // weight_unit: order.payload.entities ? (order.payload.entities.length > 0 ? order.payload.entities[0].weight_unit : "") : "",
                     quantity_fees: order.quantity_fees,
                     unit_price_fees: order.unit_price_fees,
-                    unit_price_fees_display: formatCurrency(order.unit_price_fees, "VND"),
+                    unit_price_fees_display: formatCurrency(order.unit_price_fees, "VND").replace('₫', ''),
                     amount: order.quantity_fees * order.unit_price_fees,
-                    amount_display: formatCurrency(order.quantity_fees * order.unit_price_fees, "VND"),
+                    amount_display: formatCurrency(order.quantity_fees * order.unit_price_fees, "VND").replace('₫', ''),
                     note: "",
                 });
             });
@@ -184,7 +184,7 @@ export default class ManagementFinanceController extends BaseController {
                     type: 'debt_received',
                     note: debt.note,
                     amount: debt.amount,
-                    amount_display: formatCurrency(debt.amount, "VND"),
+                    amount_display: formatCurrency(debt.amount, "VND").replace('₫', ''),
                     plate_number: "",
                     customerName: ""
                 });

@@ -60,10 +60,19 @@
     {{#if this.results.length}}
       <!-- Tổng hợp thu chi -->
       <div class="flex justify-end mb-2 text-sm text-gray-700 dark:text-gray-200 px-4">
-          <div class="text-right">
-              <div  class="text-green-400">Tổng thu: <span class="font-semibold"> {{this.totalIncome}}</span></div>
-              <div class="text-red-400">Tổng chi: <span class="font-semibold"> {{this.totalExpense}}</span></div>
-          </div>
+        <div class="grid grid-cols-[auto,auto] gap-x-4 text-right">
+            <span class="text-blue-400">Dự thu:</span>
+            <span class="font-semibold text-blue-400">{{this.totalIncome}}</span>
+
+            <span class="text-green-400">Đã nhận:</span>
+            <span class="font-semibold text-green-400">{{this.totalIncome_Receive}}</span>
+
+            <span class="text-yellow-400">Chênh lệch:</span>
+            <span class="font-semibold text-yellow-400">{{this.totalDiffIncomeReceive}}</span>
+
+            <span class="text-red-400">Đã chi:</span>
+            <span class="font-semibold text-red-400">{{this.totalExpense}}</span>
+        </div>
       </div>
 
       <table class="w-full table-auto text-sm">
@@ -72,6 +81,7 @@
             <th class="text-left py-2 pl-2">Ngày</th>
             <th class="text-left py-2 pl-2">Hàng</th>
             <th class="text-left py-2 pl-2">Phương tiện</th>
+            <th class="text-left py-2 pl-2">Khách hàng</th>
             <th class="text-left py-2 pl-2">Nơi Nhận</th>
             <th class="text-left py-2 pl-2">Nơi Trả</th>
             <th class="text-left py-2 pl-2">Tải trọng</th>
@@ -81,26 +91,38 @@
             <th class="text-left py-2 pl-2">LX Thu</th>
             <th class="text-left py-2 pl-2">LX ứng</th>
             <th class="text-left py-2 pl-2">LX Nộp</th>
-            <th class="text-left py-2 pl-2">Khách hàng</th>
-            <th class="text-left py-2 pl-2">Loại</th>
+            <th class="text-left py-2 pl-2">Đổ dầu</th>
+            {{!-- <th class="text-left py-2 pl-2">Loại</th> --}}
             <th class="text-left py-2 pl-2">Mô tả</th>
           </tr>
         </thead>
         <tbody>
           {{#each this.results as |item|}}
             <tr class="border-b border-gray-700 hover:bg-gray-800 transition">
-              <td class="py-2 pl-4 text-white">{{item.date}}</td>
-              <td class="py-2 pl-4 text-white">{{item.plate_number}}</td>
-              <td class="py-2 pl-4 text-white">{{item.customerName}}</td>
-              <td class="py-2">
-                {{#if (eq item.type "Thu")}}
-                  <span class="text-green-400 pl-4 font-medium">Thu</span>
+              <td class="py-2 pl-2 text-white">{{item.date}}</td>
+              <td class="py-2 pl-2 text-white">{{item.sku_name}}</td>
+              <td class="py-2 pl-2 text-white">{{item.plate_number}}</td>
+              <td class="py-2 pl-2 text-white">{{item.customerName}}</td>
+              <td class="py-2 pl-2 text-white">{{item.pickup}}</td>
+              <td class="py-2 pl-2 text-white">{{item.dropoff}}</td>
+              <td class="py-2 pl-2 text-white">{{item.quantity_fees}}</td>
+              <td class="py-2 pl-2 text-white">{{item.unit_price_fees_display}}</td>
+              <td class="py-2 pl-2 text-white">{{item.amount_display}}</td>
+              <td class="py-2 pl-2 text-white">{{item.chiphi_display}}</td>
+              <td class="py-2 pl-2 text-white">{{item.laixe_thu_display}}</td>
+              <td class="py-2 pl-2 text-white">{{item.laixe_ung_display}}</td>
+              <td class="py-2 pl-2 text-white">{{item.laixe_nop_display}}</td>
+              <td class="py-2 pl-2 text-white">{{item.do_dau_display}}</td>
+              {{!-- <td class="py-2">
+                {{#if (eq item.type "thu_tienmat")}}
+                  <span class="text-green-400 pl-4 font-medium">Thu Tiền mặt</span>
+                {{else if (eq item.type "thu_congno")}}
+                  <span class="text-blue-400 pl-4 font-medium">Công Nợ</span>
                 {{else}}
                   <span class="text-red-400 pl-4 font-medium">Chi</span>
                 {{/if}}
-              </td>
-              <td class="py-2 pl-4 text-white">{{item.description}}</td>
-              <td class="py-2 pl-4 text-white">{{item.amount_display}}</td>
+              </td> --}}
+              <td class="py-2 pl-2 text-white">{{item.note}}</td>
             </tr>
           {{/each}}
         </tbody>
