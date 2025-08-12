@@ -776,6 +776,10 @@ fleet-ops:
       cancel-edit-button: Hủy chỉnh sửa liên hệ
       cancel-new-button: Hủy liên hệ mới
       new-contact: Liên hệ Mới
+      select-address: Chọn địa chỉ
+      edit: Chỉnh sửa
+      new-address: Địa chỉ mới
+      contact-details: Chi tiết
     contact-panel:
       details:
         web-url: URL Trang web
