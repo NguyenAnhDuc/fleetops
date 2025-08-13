@@ -963,6 +963,7 @@ class OrderController extends FleetOpsController
             );
         }
         $order->is_finish = true;
+        $order->status = "finished";
         $order->save();
         return new OrderResource($order);
     }
