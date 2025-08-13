@@ -90,9 +90,8 @@ export default class ManagementFinanceController extends BaseController {
     get totalExpense() {
         return formatCurrency(this.results
             .reduce((sum, r) => sum + parseFloat(r.chiphi || 0) 
-                            + parseFloat(r.do_dau || 0)), "VND").replace('₫', '');
+                            + parseFloat(r.do_dau || 0), 0), "VND").replace('₫', '');
     }
-    
 
     @action
     updateSelectedVehicle(vehicle) {
