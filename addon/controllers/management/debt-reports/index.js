@@ -132,7 +132,7 @@ export default class ManagementFinanceController extends BaseController {
                 orders = await this.fetch.get(`orders/finance`,{
                     //vehicle_id: this.selectedVehicle ? this.selectedVehicle.uuid : '',
                     customer_id: this.selectedCustomer? this.selectedCustomer.uuid : '',
-                    is_receive_cash_fees: 1, //Chỉ lấy những đơn hàng là công nợ
+                    is_receive_cash_fees: 0, //Chỉ lấy những đơn hàng là công nợ
                     is_finish: 1,
                     start_date: this.startDate,
                     end_date: this.endDate,

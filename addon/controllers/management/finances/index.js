@@ -230,7 +230,7 @@ export default class ManagementFinanceController extends BaseController {
                 results.push({
                     date: formatDate(new Date(issue.created_at), 'yyyy-MM-dd'),
                     type: 'chi',
-                    description: 'Chi phí sửa xe',
+                    note: 'Chi phí sửa xe',
                     chiphi: issue.total_money,
                     chiphi_display: formatCurrency(issue.total_money, "VND").replace('₫', ''),
                     plate_number: issue.vehicle_name,
