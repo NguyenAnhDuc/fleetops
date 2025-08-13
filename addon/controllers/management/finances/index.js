@@ -238,9 +238,7 @@ export default class ManagementFinanceController extends BaseController {
                     customerName: "",
                     sku_name: "",
                     pickup: "",
-                    weight_unit: "",
-                    chiphi: 0
-
+                    weight_unit: ""
                 });
             });
 
