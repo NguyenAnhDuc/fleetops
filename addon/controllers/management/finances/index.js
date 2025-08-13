@@ -92,6 +92,7 @@ export default class ManagementFinanceController extends BaseController {
             .reduce((sum, r) => sum + parseFloat(r.chiphi || 0) 
                             + parseFloat(r.do_dau || 0)), "VND").replace('₫', '');
     }
+    
 
     @action
     updateSelectedVehicle(vehicle) {
