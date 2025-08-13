@@ -173,7 +173,7 @@ export default class ManagementFinanceController extends BaseController {
                     unit_price_fees_display: formatCurrency(order.unit_price_fees, "VND").replace('₫', ''),
                     amount: order.quantity_fees * order.unit_price_fees,
                     amount_display: formatCurrency(order.quantity_fees * order.unit_price_fees, "VND").replace('₫', ''),
-                    note: "",
+                    note: `Đơn hàng # ${order.public_id.replace('order_','')}`,
                 });
             });
 
