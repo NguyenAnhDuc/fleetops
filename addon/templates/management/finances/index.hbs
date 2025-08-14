@@ -64,7 +64,7 @@
             <span class="text-blue-400">Dự thu:</span>
             <span class="font-semibold text-blue-400">{{this.totalIncome}}</span>
 
-            <span class="text-green-400">Đã nhận:</span>
+            <span class="text-green-400">Lái xe thu:</span>
             <span class="font-semibold text-green-400">{{this.totalIncome_Receive}}</span>
 
             <span class="text-yellow-400">Chênh lệch:</span>
@@ -72,6 +72,17 @@
 
             <span class="text-red-400">Đã chi:</span>
             <span class="font-semibold text-red-400">{{this.totalExpense}}</span>
+
+            <span class="text-gray-400">Tiền tồn:</span>
+            <span class="font-semibold text-gray-400">{{this.tien_ton}}</span>
+
+            <span class="text-aqua-400">Lãi/Lỗ:</span>
+            {{#if (gt this.lai_lo 0)}}
+              <span class="font-semibold text-blue-400">{{this.lai_lo}}</span>
+            {{else}}
+                <span class="font-semibold text-red-400">{{this.lai_lo}}</span>
+            {{/if}}
+            
         </div>
       </div>
 

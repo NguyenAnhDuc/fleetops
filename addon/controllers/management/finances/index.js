@@ -87,10 +87,39 @@ export default class ManagementFinanceController extends BaseController {
     }
 
     @computed('results')
+    get totalExpenseValue() {
+        return this.results
+        .reduce((sum, r) => sum + parseFloat(r.chiphi || 0) + parseFloat(r.do_dau || 0), 0);
+    }
+
+    @computed('totalExpenseValue')
     get totalExpense() {
-        return formatCurrency(this.results
-            .reduce((sum, r) => sum + parseFloat(r.chiphi || 0) 
-                            + parseFloat(r.do_dau || 0), 0), "VND").replace('₫', '');
+        return formatCurrency(this.totalExpenseValue, "VND").replace('₫', '');
+    }
+
+    @computed('results')
+    get tien_tonValue(){
+        return this.results
+                .filter((r) => r.type === 'thu_tienmat' || r.type === 'thu_congno')
+                .reduce((sum, r) => sum + parseFloat(r.laixe_thu || 0)
+                            + parseFloat(r.laixe_ung || 0)
+                            - parseFloat(r.chiphi || 0)
+                            - parseFloat(r.laixe_nop || 0),0);
+    }
+
+    @computed('tien_tonValue')
+    get tien_ton(){
+        return formatCurrency(this.tien_tonValue, "VND").replace('₫', '');
+    }
+
+    @computed('totalIncomeValue', 'totalExpenseValue')
+    get lai_loValue(){
+        return this.totalIncomeValue - this.totalExpenseValue;
+    }
+
+    @computed('lai_loValue')
+    get lai_lo(){
+        return formatCurrency(this.lai_loValue, "VND").replace('₫', '');
     }
 
     @action
