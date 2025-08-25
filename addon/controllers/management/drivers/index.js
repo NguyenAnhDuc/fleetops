@@ -238,28 +238,28 @@ export default class ManagementDriversIndexController extends BaseController {
             filterParam: 'fleet',
             model: 'fleet',
         },
-        {
-            label: this.intl.t('fleet-ops.common.vendor'),
-            cellComponent: 'table/cell/anchor',
-            permission: 'fleet-ops view vendor',
-            onClick: async (driver) => {
-                const vendor = await driver.loadVendor();
+        // {
+        //     label: this.intl.t('fleet-ops.common.vendor'),
+        //     cellComponent: 'table/cell/anchor',
+        //     permission: 'fleet-ops view vendor',
+        //     onClick: async (driver) => {
+        //         const vendor = await driver.loadVendor();
 
-                if (vendor) {
-                    this.contextPanel.focus(vendor);
-                }
-            },
-            valuePath: 'vendor.name',
-            modelNamePath: 'name',
-            width: '180px',
-            resizable: true,
-            filterable: true,
-            hidden: true,
-            filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select vendor to filter by',
-            filterParam: 'vendor',
-            model: 'vendor',
-        },
+        //         if (vendor) {
+        //             this.contextPanel.focus(vendor);
+        //         }
+        //     },
+        //     valuePath: 'vendor.name',
+        //     modelNamePath: 'name',
+        //     width: '180px',
+        //     resizable: true,
+        //     filterable: true,
+        //     hidden: true,
+        //     filterComponent: 'filter/model',
+        //     filterComponentPlaceholder: 'Select vendor to filter by',
+        //     filterParam: 'vendor',
+        //     model: 'vendor',
+        // },
         {
             label: this.intl.t('fleet-ops.common.license'),
             valuePath: 'drivers_license_number',
