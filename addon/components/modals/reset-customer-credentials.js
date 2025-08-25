@@ -19,8 +19,8 @@ export default class ModalsResetCustomerCredentialsComponent extends Component {
     }
 
     setupOptions() {
-        this.options.title = 'Reset Customer Credentials';
-        this.options.acceptButtonText = 'Reset Credentials';
+        this.options.title = 'Khôi phục mật khẩu khác hàng';
+        this.options.acceptButtonText = 'Khôi phục mật khẩu';
         this.options.declineButtonHidden = true;
         this.options.confirm = async (modal) => {
             modal.startLoading();

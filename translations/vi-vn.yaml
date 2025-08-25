@@ -780,6 +780,21 @@ fleet-ops:
       edit: Chỉnh sửa
       new-address: Địa chỉ mới
       contact-details: Chi tiết
+    customer-form-panel:
+      user-account: Tài khoản
+      user-account-help-text: Each customer profile needs to be connected to a specific user account. This association is essential for handling the authentication process, ensuring that each customer can securely access and manage their profile and other services.
+      select-user: Chọn Tài khoản
+      success-message: Khách hàng {customerName} lưu thành công.
+      view-customer-button: Xem chi tiết 
+      save-customer: Lưu Khách hàng
+      create-customer: Tạo Khách hàng
+      cancel-edit-button: Huỷ Chỉnh Sửa
+      cancel-new-button: Huỷ Tạo mới
+      new-customer: Tạo mới Khách hàng
+      select-address: Chọn Địa chỉ
+      edit: Chỉnh sửa
+      new-address: Địa chỉ mới
+      customer-details: Chi tiết Khách hàng
     contact-panel:
       details:
         web-url: URL Trang web
@@ -1181,6 +1196,19 @@ fleet-ops:
           button: Tiếp tục mà không lưu
         title: Danh Bạ
         delete-contacts: Xóa Danh Bạ
+      customers:
+        delete-button: Xoá Khách hàng
+        updated: Cập nhập lúc
+        created: Ngày tạo
+        view-customer: Xem Chi tiết
+        edit-customer: Chỉnh sửa
+        delete-customer: Xoá
+        edit:
+          title: Tiếp tục mà không lưu lại?
+          body: Bạn sẽ mất các thay đổi chưa lưu. Nhấn Tiếp tục để xác nhận.
+          button: Tiếp tục mà không lưu lại
+        title: Khách hàng
+        delete-customers: Xoá Khách hàng
     drivers:
       index:
         create-driver: Tạo mới tài xế...

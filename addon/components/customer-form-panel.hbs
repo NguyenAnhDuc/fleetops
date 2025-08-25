@@ -145,7 +145,12 @@
                         </InputGroup>
 
                         <InputGroup @name={{t "fleet-ops.common.phone"}} @wrapperClass="mb-0i">
-                            <PhoneInput @value={{this.customer.user.phone}} @onInput={{fn (mut this.customer.phone)}} class="form-input w-full" disabled={{true}} />
+                            <PhoneInput 
+                                @value={{this.customer.user.phone}} 
+                                @onInput={{fn (mut this.customer.phone)}} 
+                                class="form-input w-full" 
+                                disabled={{true}} 
+                            />
                         </InputGroup>
                     </div>
                 {{/if}}

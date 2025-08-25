@@ -113,7 +113,7 @@ export default class ManagementContactsCustomersController extends ManagementCon
             ddButtonText: false,
             ddButtonIcon: 'ellipsis-h',
             ddButtonIconPrefix: 'fas',
-            ddMenuLabel: 'Customer Actions',
+            ddMenuLabel: 'Thao tác',
             cellClassNames: 'overflow-visible',
             wrapperClass: 'flex items-center justify-end mx-2',
             width: '9%',
