@@ -128,6 +128,7 @@ class Order extends Model
         'unit_price_fees',
         'is_receive_cash_fees',
         'approval_fees',
+        'note_approval_fees',
         'driver_advance_fee',
         'driver_earnings',
         'driver_remittance',
@@ -187,6 +188,7 @@ class Order extends Model
         'dropoff_name',
         'payload_id',
         'purchase_rate_id',
+        'note_approval_fees',
         'is_scheduled',
         'qr_code',
         'created_by_name',
@@ -231,7 +233,8 @@ class Order extends Model
         'driver_advance_fee'=> 'double',
         'driver_earnings'   => 'double',
         'driver_remittance' => 'double',
-        'is_fisish'         => 'boolean'
+        'is_fisish'         => 'boolean',
+        'note_approval_fees'=> 'string'
 
     ];
 

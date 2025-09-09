@@ -75,6 +75,15 @@
                     />
                 </div>
             </div>
+            <div class="col-span-2 pt-3 mt-2">
+                <Textarea
+                    @value={{@options.order.note_approval_fees}}
+                    class="form-input w-full"
+                    placeholder={{t "fleet-ops.operations.orders.index.new.notes-approval-fees-placeholder"}}
+                    disabled={{cannot "fleet-ops create order"}}
+                    rows={{4}}
+                />
+            </div>
         </ContentPanel>
     </div>
 </Modal::Default>

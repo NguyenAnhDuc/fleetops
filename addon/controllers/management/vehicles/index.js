@@ -242,6 +242,16 @@ export default class ManagementVehiclesIndexController extends BaseController {
             filterComponent: 'filter/string',
         },
         {
+            label: this.intl.t('fleet-ops.common.outstanding-balance'),
+            valuePath: 'outstanding_balance',
+            cellComponent: 'table/cell/base',
+            width: '100px',
+            resizable: true,
+            sortable: true,
+            filterable: false,
+            hidden: false,
+        },
+        {
             label: this.intl.t('fleet-ops.common.coordinates-location'),
             valuePath: 'driver_location',
             cellComponent: 'click-to-copy',

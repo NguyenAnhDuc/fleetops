@@ -458,7 +458,7 @@ class Driver extends Model
                 $trimmed = floor($result * 100) / 100;
                 #return number_format($trimmed, 2, '.', '');
                 $plus_icon = '';
-                if( $trimmed > 0.3) {
+                if( $trimmed > 0.4) { //2025-09-07 Chuyển từ 0.3 => 0.4
                     $plus_icon = '⚠️ ';
                 }
                 return $plus_icon . number_format($trimmed, 2, '.', '') .$metric_unit . '/km';

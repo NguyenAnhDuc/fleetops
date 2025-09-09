@@ -25,6 +25,7 @@ class Vehicle extends VehicleWithoutDriver
                 'display_name' => $this->display_name,
                 'driver_name'  => $this->driver_name,
                 'driver_location' => $this->driver_location,
+                'outstanding_balance' => $this -> outstanding_balance
             ],
             'id'
         );

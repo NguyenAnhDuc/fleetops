@@ -242,6 +242,19 @@ class DriverController extends Controller
         return new DriverResource($driver);
     }
 
+    public function updateFcmToken($id, Request $request){
+        $user = User::where('public_id', $id)->first();
+        if (!$user) {
+            return response()->error('No user found', 401);
+        }
+
+        $updates = [];
+        $updates['notify_token'] = $request->input('notify_token');
+        $updates['device_type_login'] = $request->input('device_type_login');
+        
+        return $user->update($updates);
+    }
+
     /**
      * Query for Fleetbase Driver resources.
      *

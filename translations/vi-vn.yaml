@@ -42,6 +42,7 @@ fleet-ops:
     fuel-driver-status: Trạng thái Nhiêu liệu
     assign-driver: Lái xe
     coordinates-location: Vị trí
+    outstanding-balance: Tiền tồn
     item: Mục
     key: Khóa
     label: Nhãn
@@ -288,7 +289,7 @@ fleet-ops:
       add-onboard-document: Thêm tài liệu onboard
     cell:
       driver-name:
-        not-assigned: Không có tài xế được chỉ định
+        not-assigned: Chưa chỉ định Tài Xế
     fleet-panel:
       details:
         active-manpower: Nhân lực Hoạt động
@@ -1452,6 +1453,7 @@ fleet-ops:
           input-order-info-text: Nhập tuyến đường đơn hàng để xem bảng giá dịch vụ.
           notes-title: Ghi chú
           notes-placeholder: Nhập ghi chú đơn hàng ở đây....
+          notes-approval-fees-placeholder: Nhập ghi chú Phê duyệt Chi phí ở đây....
           success-message: Đơn hàng mới {orderId} đã được tạo
           warning-message: Không có tệp nào trong hàng đợi để tải lên!
           import-success: Nhập khẩu hoàn tất.

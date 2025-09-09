@@ -299,6 +299,18 @@ export default class OperationsOrdersIndexController extends BaseController {
      */
     @tracked columns = [
         {
+            label: this.intl.t('fleet-ops.common.created-at'),
+            valuePath: 'createdAtShort',
+            sortParam: 'created_at',
+            filterParam: 'created_at',
+            width: '130px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/date',
+            hidden: false,
+        },
+        {
             label: this.intl.t('fleet-ops.common.id'),
             valuePath: 'public_id',
             width: '140px',
@@ -321,6 +333,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             sortable: true,
             filterable: true,
             filterComponent: 'filter/string',
+            hidden: true
         },
         // {
         //     label: this.intl.t('fleet-ops.operations.orders.index.payload'),
@@ -522,18 +535,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             filterComponent: 'filter/multi-option',
             filterOptions: this.statusOptions,
         },
-        {
-            label: this.intl.t('fleet-ops.common.created-at'),
-            valuePath: 'createdAtShort',
-            sortParam: 'created_at',
-            filterParam: 'created_at',
-            width: '140px',
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/date',
-            hidden: true,
-        },
+        
         {
             label: this.intl.t('fleet-ops.common.updated-at'),
             valuePath: 'updatedAtShort',

@@ -42,6 +42,7 @@ fleet-ops:
     order-status: Order Status
     fuel-driver-status: Fuel Status
     assign-driver: Driver Assigned
+    outstanding-balance: Tiền tồn
     s: Location
     item: Item
     key: Key
@@ -1477,6 +1478,7 @@ fleet-ops:
           input-order-info-text: Input order route to view service quotes.
           notes-title: Notes
           notes-placeholder: Enter order notes here....
+          notes-approval-fees-placeholder: Nhập ghi chú Phê duyệt Chi phí ở đây....
           success-message: New Order {orderId} Created
           warning-message: No files in queue to upload!
           import-success: Import completed.

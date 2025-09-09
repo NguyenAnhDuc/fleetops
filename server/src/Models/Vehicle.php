@@ -117,6 +117,7 @@ class Vehicle extends Model
         'status',
         'online',
         'slug',
+        'outstanding_balance'
     ];
 
     /**
@@ -133,7 +134,14 @@ class Vehicle extends Model
      *
      * @var array
      */
-    protected $appends = ['display_name', 'photo_url', 'driver_name', 'vendor_name', 'driver_location'];
+    protected $appends = [
+        'display_name', 
+        'photo_url', 
+        'driver_name', 
+        'vendor_name', 
+        'driver_location', 
+        'outstanding_balance'
+    ];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -194,6 +202,38 @@ class Vehicle extends Model
     public function positions(): HasMany
     {
         return $this->hasMany(Position::class, 'subject_uuid');
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'vehicle_assigned_uuid');
+    }
+    
+    public function getOutstandingBalanceAttribute(): string
+    {
+        // Tổng = advance_fee + earnings - approval_fees - remittance
+        if ($this->relationLoaded('orders')) {
+            $total = $this->orders->sum(function ($o) {
+                return (float)($o->driver_advance_fee ?? 0)
+                    + (float)($o->driver_earnings ?? 0)
+                    - (float)($o->approval_fees ?? 0)
+                    - (float)($o->driver_remittance ?? 0);
+            });
+        } else {
+            $total = $this->orders()
+                ->selectRaw("
+                    COALESCE(SUM(
+                        COALESCE(driver_advance_fee,0)
+                    + COALESCE(driver_earnings,0)
+                    - COALESCE(approval_fees,0)
+                    - COALESCE(driver_remittance,0)
+                    ), 0) AS total
+                ")
+                ->value('total');
+        }
+
+        // Trả về dạng chuỗi tiền tệ: 1.234.567 VNĐ
+        return number_format((float)$total, 0, ',', '.');
     }
 
     /**

@@ -66,6 +66,7 @@ class Driver extends FleetbaseResource
             'current_job_status'            => $this->current_job_status,
             'current_job_name'              => $this->current_job_name,
             'fuel_report_status'            => $this->fuel_report_status,
+            'outstanding_balance'           => $this->outstanding_balance,
         ];
     }
 

@@ -31,6 +31,7 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                     $router->post('login-with-sms', 'DriverController@loginWithPhone');
                     $router->post('verify-code', 'DriverController@verifyCode');
                     $router->post('login', 'DriverController@login');
+                    $router->post('{id}/fcm-token', 'DriverController@updateFcmToken');
                     $router->post('{id}/simulate', 'DriverController@simulate');
                     $router->match(['put', 'patch', 'post'], '{id}/track', 'DriverController@track');
                     $router->post('{id}/register-device', 'DriverController@registerDevice');
