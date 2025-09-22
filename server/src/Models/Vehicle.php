@@ -140,7 +140,8 @@ class Vehicle extends Model
         'driver_name', 
         'vendor_name', 
         'driver_location', 
-        'outstanding_balance'
+        'outstanding_balance',
+        'fuel_report_status',
     ];
 
     /**
@@ -208,6 +209,11 @@ class Vehicle extends Model
     {
         return $this->hasMany(Order::class, 'vehicle_assigned_uuid');
     }
+
+    public function fuelReports(): HasMany
+    {
+        return $this->hasMany(FuelReport::class, 'vehicle_uuid');
+    }
     
     public function getOutstandingBalanceAttribute(): string
     {
@@ -234,6 +240,49 @@ class Vehicle extends Model
 
         // Trả về dạng chuỗi tiền tệ: 1.234.567 VNĐ
         return number_format((float)$total, 0, ',', '.');
+    }
+
+    public function getFuelReportStatusAttribute(): ?string
+    {
+        $volume = 0;
+        $odometer = 0;
+        $odometer_1 = 0;
+        $odometer_2 = 0;
+        $metric_unit = "";
+        if($this -> fuelReports()){
+            $lastest_data = $this -> fuelReports() 
+            -> orderBy('created_at', 'desc') ->first();
+            if($lastest_data){
+                $volume = (int) $lastest_data->value('volume');
+                $metric_unit = $lastest_data->value('metric_unit');
+            }
+            #return (string) $volume;
+            #lấy 2 giá trị gần nhất
+            $arr_data = $this -> fuelReports() 
+            -> orderBy('created_at', 'desc')-> get();
+            if ($arr_data->count() >= 2) {
+                $odometer_1 = (int) $arr_data[0]->odometer;
+                $odometer_2 = (int) $arr_data[1]->odometer;
+            } elseif ($arr_data->count() === 1) {
+                $odometer_1 = (int) $arr_data[0]->odometer;
+            } else {
+                $odometer_1 = 0;
+            }
+            $odometer = abs($odometer_1 - $odometer_2);
+            if ($volume > 0) {
+                $result = $odometer / $volume;
+                $trimmed = floor($result * 100) / 100;
+                #return number_format($trimmed, 2, '.', '');
+                $plus_icon = '';
+                if( $trimmed > 0.4) { //2025-09-07 Chuyển từ 0.3 => 0.4
+                    $plus_icon = '⚠️ ';
+                }
+                return $plus_icon . number_format($trimmed, 2, '.', '') .$metric_unit . '/km';
+            } else {
+                return "";
+            }
+        }
+        return "";
     }
 
     /**

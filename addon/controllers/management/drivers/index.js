@@ -301,7 +301,6 @@ export default class ManagementDriversIndexController extends BaseController {
             resizable: true,
             sortable: true,
             filterable: true,
-            filterParam: 'phone',
             filterComponent: 'filter/string',
         },
         {

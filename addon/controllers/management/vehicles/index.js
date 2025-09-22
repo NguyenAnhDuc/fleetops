@@ -242,6 +242,16 @@ export default class ManagementVehiclesIndexController extends BaseController {
             filterComponent: 'filter/string',
         },
         {
+            label: this.intl.t('fleet-ops.common.fuel-driver-status'),
+            valuePath: 'fuel_report_status',
+            cellComponent: 'table/cell/base',
+            width: '180px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/string',
+        },
+        {
             label: this.intl.t('fleet-ops.common.outstanding-balance'),
             valuePath: 'outstanding_balance',
             cellComponent: 'table/cell/base',
