@@ -509,6 +509,9 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                                 $router->get('query', 'GeocoderController@geocode');
                             }
                         );
+                        $router->group(['prefix' => 'notifications'], function () use ($router) {
+                            $router->match(['post', 'put'], 'send', 'NotiFirebaseController@send');
+                        });
                         $router->group(
                             ['prefix' => 'fleet-ops'],
                             function ($router) {

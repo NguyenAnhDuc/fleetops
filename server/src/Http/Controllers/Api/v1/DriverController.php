@@ -247,12 +247,23 @@ class DriverController extends Controller
         if (!$user) {
             return response()->error('No user found', 401);
         }
-
-        $updates = [];
-        $updates['notify_token'] = $request->input('notify_token');
-        $updates['device_type_login'] = $request->input('device_type_login');
         
-        return $user->update($updates);
+        $user->notify_token = $request->input('notify_token');
+        $user->device_type_login = $request->input('device_type_login');
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'user' => $user->only(['public_id','username','notify_token','device_type_login'])
+        ]);
+
+        // $updates = [];
+        // //$updates['notify_token'] = $request->input('notify_token');
+        // // $updates['device_type_login'] = $request->input('device_type_login');
+        // $updates['username'] = 'dmmmmm12aaaa';
+        // $updates['notify_token'] = 'ksassssss';
+        // $updates['device_type_login'] = 2;
+        // return $user->update($updates);
     }
 
     /**
