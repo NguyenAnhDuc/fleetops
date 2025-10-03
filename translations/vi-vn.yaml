@@ -3,6 +3,7 @@ fleet-ops:
   common:
     image: Hình ảnh
     car_repair_date: Ngày sửa xe
+    inspection-expire-date: Ngày hết hạn Đăng kiểm
     action-car-repair-supplies: Hành động
     total_money: Tổng tiền
     active-manpower: Nhân lực hoạt động
@@ -1112,7 +1113,7 @@ fleet-ops:
       upload-photo: Tải lên ảnh mới
       new-vehicle: Xe Mới
       not-assigned: Chưa gán tài xế
-      plate-number: Số Biển Số
+      plate-number: Biển Số Xe
       vin-number: Số VIN
       make: Hãng
       vehicle-make: Hãng xe

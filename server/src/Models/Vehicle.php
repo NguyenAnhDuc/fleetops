@@ -117,7 +117,8 @@ class Vehicle extends Model
         'status',
         'online',
         'slug',
-        'outstanding_balance'
+        'outstanding_balance',
+        'inspection_expire_date'
     ];
 
     /**
@@ -142,6 +143,7 @@ class Vehicle extends Model
         'driver_location', 
         'outstanding_balance',
         'fuel_report_status',
+        'inspection_expire_date'
     ];
 
     /**
@@ -173,6 +175,7 @@ class Vehicle extends Model
         'model_data' => Json::class,
         'vin_data'   => Json::class,
         'online'     => 'boolean',
+        'inspection_expire_date' => 'date',
     ];
 
     public function photo(): BelongsTo

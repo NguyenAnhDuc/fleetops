@@ -72,6 +72,7 @@
                             class="form-input"
                             @value={{this.finance.car_repair_date}}
                             @onUpdate={{fn (mut this.finance.car_repair_date)}}
+                            @withTime={{false}}
                             @disabled={{unauthorized}}
                         />
                     </InputGroup>

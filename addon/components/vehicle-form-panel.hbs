@@ -173,6 +173,18 @@
                             </ModelSelect>
                         </InputGroup>
 
+
+                        {{!-- 2025-09-30 thêm Ngày hết hạn đăng kiểm --}}
+                        <InputGroup @name={{t "fleet-ops.common.inspection-expire-date"}} @wrapperClass="col-span-1">
+                            <DateTimeInput
+                                class="form-input"
+                                @value={{this.vehicle.inspection_expire_date}}
+                                @onUpdate={{fn (mut this.vehicle.inspection_expire_date)}}
+                                @withTime={{false}}
+                                @disabled={{unauthorized}}
+                            />
+                        </InputGroup>
+
                         <InputGroup @name={{t "fleet-ops.common.status"}}>
                             <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                                 <PowerSelect

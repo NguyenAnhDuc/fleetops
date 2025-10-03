@@ -155,6 +155,7 @@
                             @value={{this.issue.car_repair_date}}
                             @onUpdate={{fn (mut this.issue.car_repair_date)}}
                             @disabled={{unauthorized}}
+                            @options={{hash enableTime=false dateFormat="Y-m-d" altInput=false}}
                         />
                     </InputGroup>
                     

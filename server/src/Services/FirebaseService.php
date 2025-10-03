@@ -41,6 +41,40 @@ class FirebaseService
                 'notification' => ['title' => $title, 'body' => $body],
                 'data' => $data,
             ],
+            // data custom (dùng cho điều hướng, vv.)
+            'data' => array_map('strval', $data), // FCM data nên là string
+
+            // ---- iOS (APNs) ----
+            'apns' => [
+                'headers' => [
+                    'apns-push-type' => 'alert',           // 'background' nếu silent
+                    'apns-priority'  => '10',              // 10 cho alert; 5 nếu background
+                    'apns-topic'     => 'ducna.xyz.navigator',         // *** BẮT BUỘC: bundle id ***
+                ],
+                'payload' => [
+                    'aps' => [
+                        'sound' => 'default',
+                        'badge' => 1,
+                        // nếu muốn hiển thị trong nền, thêm:
+                        // 'content-available' => 1,
+                        // và khi đó đừng gửi 'notification' nếu muốn pure-silent
+                    ],
+                ],
+            ],
+
+            // ---- Android (không ảnh hưởng iOS, nhưng thêm cho chuẩn) ----
+            'android' => [
+                'priority' => 'HIGH',
+                'notification' => [
+                    'sound' => 'default',
+                    // 'channel_id' => 'default', // nếu có tạo channel
+                ],
+            ],
+
+            // Optional: analytics tag
+            'fcm_options' => [
+                'analytics_label' => 'prod_push',
+            ],
         ];
 
         $res = Http::withToken($this->accessToken())->post($url, $payload);
