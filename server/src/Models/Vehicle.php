@@ -117,7 +117,6 @@ class Vehicle extends Model
         'status',
         'online',
         'slug',
-        'outstanding_balance',
         'inspection_expire_date'
     ];
 

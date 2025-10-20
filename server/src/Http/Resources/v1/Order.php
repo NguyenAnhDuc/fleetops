@@ -92,6 +92,7 @@ class Order extends FleetbaseResource
             'driver_earnings'       => (float) $this-> driver_earnings,
             'driver_remittance'     => (float) $this-> driver_remittance,
             'is_finish'             => (bool) $this->is_finish,
+            'driver_id'             => $this->driver_id
         ];
     }
 
@@ -174,7 +175,8 @@ class Order extends FleetbaseResource
             'driver_advance_fee'    => (float) $this-> driver_advance_fee,
             'driver_earnings'       => (float) $this-> driver_earnings,
             'driver_remittance'     => (float) $this-> driver_remittance,
-            'is_finish'         => (bool) $this->is_finish
+            'is_finish'         => (bool) $this->is_finish,
+            'driver_id'             => $this->driver_id
         ];
     }
 }

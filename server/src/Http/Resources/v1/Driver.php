@@ -67,6 +67,7 @@ class Driver extends FleetbaseResource
             'current_job_name'              => $this->current_job_name,
             'fuel_report_status'            => $this->fuel_report_status,
             'outstanding_balance'           => $this->outstanding_balance,
+            'user_id'                       => $this->user_id,
         ];
     }
 
@@ -112,6 +113,7 @@ class Driver extends FleetbaseResource
             'meta'                   => $this->meta,
             'updated_at'             => $this->updated_at,
             'created_at'             => $this->created_at,
+            'user_id'                => $this->user_id,
         ];
     }
 }

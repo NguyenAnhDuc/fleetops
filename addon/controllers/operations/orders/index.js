@@ -1011,6 +1011,40 @@ export default class OperationsOrdersIndexController extends BaseController {
                 try {
                     await this.fetch.patch('orders/dispatch', { order: order.id });
                     order.set('status', 'dispatched');
+                    const formatDateSafeYYYYMMDD = (value) => {
+                        try {
+                          if (value == null) return '';
+                          const d = value instanceof Date ? value : new Date(value);
+                          if (Number.isNaN(d.getTime())) return '';
+                      
+                          const y = d.getFullYear();
+                          const m = String(d.getMonth() + 1).padStart(2, '0'); // 01-12
+                          const day = String(d.getDate()).padStart(2, '0');    // 01-31
+                          return `${y}-${m}-${day}`; // yyyy-MM-dd (giờ địa phương)
+                        } catch {
+                          return '';
+                        }
+                      };
+                    //2025-10-13 Send notify
+                    if(order.driver_assigned && order.driver_assigned.user_id && order.scheduled_at){
+                        const bodyLines=[];
+                        if (order.customer?.name) {
+                            bodyLines.push(`🏢 Công ty: ${order.customer.name}`);
+                        }
+                        bodyLines.push(`📅 Ngày bắt đầu: ${formatDateSafeYYYYMMDD(order.scheduled_at)}`);
+                        bodyLines.push(`📍 Từ: ${order.payload.pickup?.address ?? ''}`);
+                        bodyLines.push(`➡️ Đến: ${order.payload.dropoff?.address ?? ''}`);
+                        const payload = { 
+                            driver_id: order.driver_assigned.user_id, 
+                            title: `🚛 Bạn có đơn hàng mới ${order.internal_id}`, 
+                            body: bodyLines.join('\n'),
+                            data: {
+                                order_id: order.internal_id,
+                            },
+                        };
+                        await this.fetch.post('notifications/send', payload);
+                    }
+
                     this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.dispatch-success', { orderId: order.public_id }));
                     modal.done();
                 } catch (error) {

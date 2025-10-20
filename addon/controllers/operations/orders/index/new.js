@@ -216,7 +216,8 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         'order.type', 
         'payload.{dropoff,pickup}', 
         'waypoints.length',
-        'order.unit_price_fees', 
+        'order.unit_price_fees',
+        'order.scheduled_at', 
         )
     get isValid() {
         const { isMultipleDropoffOrder, isSubscriptionValid, isFetchingQuotes } = this;
@@ -226,6 +227,11 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         const isDropoffSet = isNotEmpty(this.payload?.dropoff);
         // const isPayloadSet = this.entities?.length > 0;
         if(isEmpty(this.order.unit_price_fees)){
+            return false;
+        }
+
+        //2025-10-10
+        if(isEmpty(this.order.scheduled_at)){
             return false;
         }
 

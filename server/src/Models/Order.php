@@ -98,6 +98,7 @@ class Order extends Model
         'purchase_rate_uuid',
         'tracking_number_uuid',
         'driver_assigned_uuid',
+        'driver_id',
         'vehicle_assigned_uuid',
         'created_by_uuid',
         'updated_by_uuid',

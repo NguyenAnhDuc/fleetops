@@ -153,6 +153,7 @@ class Driver extends Model
         'vehicle_name',
         'vehicle_avatar',
         'vendor_name',
+        'user_id'
     ];
 
     /**
@@ -299,6 +300,11 @@ class Driver extends Model
     {
         return $this->hasMany(FuelReport::class, 'vehicle_uuid','vehicle_uuid');
     }
+
+    public function getUserIdAttribute(): ?string{
+        return $this->user()->value('public_id');
+    }
+
 
     /**
      * Get avatar url.
