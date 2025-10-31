@@ -35,53 +35,56 @@ class FirebaseService
     public function sendToToken(string $token, string $title, string $body, array $data = []): array
     {
         $url = "https://fcm.googleapis.com/v1/projects/{$this->projectId}/messages:send";
+
+        $dataStr = array_map('strval', $data); // FCM data nên là string
+
         $payload = [
             'message' => [
                 'token' => $token,
-                'notification' => ['title' => $title, 'body' => $body],
-                'data' => $data,
-            ],
-            // data custom (dùng cho điều hướng, vv.)
-            'data' => array_map('strval', $data), // FCM data nên là string
-
-            // ---- iOS (APNs) ----
-            'apns' => [
-                'headers' => [
-                    'apns-push-type' => 'alert',           // 'background' nếu silent
-                    'apns-priority'  => '10',              // 10 cho alert; 5 nếu background
-                    'apns-topic'     => 'ducna.xyz.navigator',         // *** BẮT BUỘC: bundle id ***
+                'notification' => [
+                    'title' => $title,
+                    'body'  => $body,
                 ],
-                'payload' => [
-                    'aps' => [
+                'data' => $dataStr,
+                'android' => [
+                    'priority' => 'HIGH',
+                    'notification' => [
                         'sound' => 'default',
-                        'badge' => 1,
-                        // nếu muốn hiển thị trong nền, thêm:
-                        // 'content-available' => 1,
-                        // và khi đó đừng gửi 'notification' nếu muốn pure-silent
+                        // 'channel_id' => 'default',
                     ],
                 ],
-            ],
-
-            // ---- Android (không ảnh hưởng iOS, nhưng thêm cho chuẩn) ----
-            'android' => [
-                'priority' => 'HIGH',
-                'notification' => [
-                    'sound' => 'default',
-                    // 'channel_id' => 'default', // nếu có tạo channel
+                'apns' => [
+                    'headers' => [
+                        'apns-push-type' => 'alert',
+                        'apns-priority'  => '10',
+                        'apns-topic'     => 'ducna.xyz.navigator', // đúng bundle id iOS
+                    ],
+                    'payload' => [
+                        'aps' => [
+                            'sound' => 'default',
+                            'badge' => 1,
+                        ],
+                    ],
+                ],
+                'fcm_options' => [
+                    'analytics_label' => 'prod_push',
                 ],
             ],
-
-            // Optional: analytics tag
-            'fcm_options' => [
-                'analytics_label' => 'prod_push',
-            ],
+            // 'validate_only' => true,
         ];
 
-        $res = Http::withToken($this->accessToken())->post($url, $payload);
+        $res = Http::withToken($this->accessToken())
+            ->acceptJson()
+            ->post($url, $payload);
+
         if ($res->failed()) {
-            // log lỗi chi tiết cho dễ debug
-            logger()->error('[FCM] Send failed', ['status' => $res->status(), 'body' => $res->body()]);
+            logger()->error('[FCM] Send failed', [
+                'status'  => $res->status(),
+                'body'    => $res->body(),
+                'payload' => $payload,
+            ]);
         }
         return $res->json() ?? [];
     }
+
 }
