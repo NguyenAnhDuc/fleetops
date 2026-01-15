@@ -711,13 +711,14 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         const d = dateInstance instanceof Date ? new Date(dateInstance) : new Date(dateInstance);
         if (isNaN(d)) return;
 
-        // Nếu không chọn time: 00:00:00 → set mặc định 01:01:00
+        // Nếu không chọn time: 00:00:00 → set mặc định 01:00:00
         if (d.getHours() === 0 && d.getMinutes() === 0 && d.getSeconds() === 0) {
             d.setHours(1, 0, 0, 0); // 01:01:00.000 (theo local time GMT+7)
         }
 
         // Tuỳ bạn dùng field nào
         this.order.scheduled_at = d;
+        console.log("scheduleOrder:" , this.order.scheduled_at);
     }
 
     //2025-04-30 QuyenPN
@@ -729,11 +730,12 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         const d = dateInstance instanceof Date ? new Date(dateInstance) : new Date(dateInstance);
         if (isNaN(d)) return;
 
-        // Nếu không chọn time: 00:00:00 → set mặc định 01:01:00
+        // Nếu không chọn time: 00:00:00 → set mặc định 01:00:00
         if (d.getHours() === 0 && d.getMinutes() === 0 && d.getSeconds() === 0) {
             d.setHours(1, 0, 0, 0); // 01:01:00.000 (theo local time GMT+7)
         }
         this.order.estimate_date = d;
+        console.log("estimateDateOrder:" , this.order.estimate_date);
     }
 
     @action setupInterface() {
