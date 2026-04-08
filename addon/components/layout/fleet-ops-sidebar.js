@@ -2,8 +2,8 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
-import FleetListingComponent from './fleet-ops-sidebar/fleet-listing';
-import DriverListingComponent from './fleet-ops-sidebar/driver-listing';
+// import FleetListingComponent from './fleet-ops-sidebar/fleet-listing';
+// import DriverListingComponent from './fleet-ops-sidebar/driver-listing';
 
 export default class LayoutFleetOpsSidebarComponent extends Component {
     @service universe;
@@ -56,14 +56,14 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
             //     permission: 'fleet-ops view finance',
             //     visible: this.abilities.can('fleet-ops view finance'),
             // },
-            {
-                intl: 'fleet-ops.component.layout.fleet-ops-sidebar.scheduler',
-                title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.scheduler'),
-                icon: 'calendar-day',
-                route: 'operations.scheduler',
-                permission: 'fleet-ops list order',
-                visible: this.abilities.can('fleet-ops see order'),
-            },
+            // {
+            //     intl: 'fleet-ops.component.layout.fleet-ops-sidebar.scheduler',
+            //     title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.scheduler'),
+            //     icon: 'calendar-day',
+            //     route: 'operations.scheduler',
+            //     permission: 'fleet-ops list order',
+            //     visible: this.abilities.can('fleet-ops see order'),
+            // },
             {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.order-config',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.order-config'),
@@ -80,8 +80,6 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.drivers'),
                 icon: 'id-card',
                 route: 'management.drivers',
-                renderComponentInPlace: true,
-                component: DriverListingComponent,
                 permission: 'fleet-ops list driver',
                 visible: this.abilities.can('fleet-ops see driver'),
             },
@@ -93,16 +91,16 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
                 permission: 'fleet-ops list vehicle',
                 visible: this.abilities.can('fleet-ops see vehicle'),
             },
-            {
-                intl: 'fleet-ops.component.layout.fleet-ops-sidebar.fleets',
-                title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.fleets'),
-                icon: 'user-group',
-                route: 'management.fleets',
-                renderComponentInPlace: true,
-                component: FleetListingComponent,
-                permission: 'fleet-ops list fleet',
-                visible: this.abilities.can('fleet-ops see fleet'),
-            },
+            // {
+            //     intl: 'fleet-ops.component.layout.fleet-ops-sidebar.fleets',
+            //     title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.fleets'),
+            //     icon: 'user-group',
+            //     route: 'management.fleets',
+            //     renderComponentInPlace: true,
+            //     component: FleetListingComponent,
+            //     permission: 'fleet-ops list fleet',
+            //     visible: this.abilities.can('fleet-ops see fleet'),
+            // },
             // {
             //     intl: 'fleet-ops.component.layout.fleet-ops-sidebar.vendors',
             //     title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.vendors'),
@@ -119,14 +117,14 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
                 permission: 'fleet-ops list contact',
                 visible: this.abilities.can('fleet-ops see contact'),
             },
-            {
-                intl: 'fleet-ops.component.layout.fleet-ops-sidebar.places',
-                title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.places'),
-                icon: 'location-dot',
-                route: 'management.places',
-                permission: 'fleet-ops list place',
-                visible: this.abilities.can('fleet-ops see place'),
-            },
+            // {
+            //     intl: 'fleet-ops.component.layout.fleet-ops-sidebar.places',
+            //     title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.places'),
+            //     icon: 'location-dot',
+            //     route: 'management.places',
+            //     permission: 'fleet-ops list place',
+            //     visible: this.abilities.can('fleet-ops see place'),
+            // },
             {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.fuel-reports',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.fuel-reports'),
@@ -161,24 +159,24 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
             },
         ];
 
-        const settingsItems = [
-            {
-                intl: 'fleet-ops.component.layout.fleet-ops-sidebar.navigator-app',
-                title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.navigator-app'),
-                icon: 'location-arrow',
-                route: 'settings.navigator-app',
-                permission: 'fleet-ops view navigator-settings',
-                visible: this.abilities.can('fleet-ops see navigator-settings'),
-            },
-            {
-                intl: 'fleet-ops.component.layout.fleet-ops-sidebar.payments',
-                title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.payments'),
-                icon: 'cash-register',
-                route: 'settings.payments',
-                permission: 'fleet-ops view payments',
-                visible: this.abilities.can('fleet-ops see payments'),
-            },
-        ];
+        // const settingsItems = [
+        //     {
+        //         intl: 'fleet-ops.component.layout.fleet-ops-sidebar.navigator-app',
+        //         title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.navigator-app'),
+        //         icon: 'location-arrow',
+        //         route: 'settings.navigator-app',
+        //         permission: 'fleet-ops view navigator-settings',
+        //         visible: this.abilities.can('fleet-ops see navigator-settings'),
+        //     },
+        //     {
+        //         intl: 'fleet-ops.component.layout.fleet-ops-sidebar.payments',
+        //         title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.payments'),
+        //         icon: 'cash-register',
+        //         route: 'settings.payments',
+        //         permission: 'fleet-ops view payments',
+        //         visible: this.abilities.can('fleet-ops see payments'),
+        //     },
+        // ];
 
         const createPanel = (intl, routePrefix, items = []) => ({
             intl,
