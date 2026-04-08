@@ -31,13 +31,33 @@ class FuelReport extends FleetbaseResource
             'vehicle'           => $this->whenLoaded('vehicle', fn () => new Vehicle($this->vehicle)),
             'driver'            => $this->whenLoaded('driver', fn () => new Driver($this->driver)),
             'odometer'          => $this->odometer,
+            'odometer_difference' => $this->when(Http::isInternalRequest(), function() {
+                // Ưu tiên tìm theo ngày đổ xăng fueled_at như thực tế. 
+                // Khi test trùng lặp ngày, dùng ID làm mốc fallback để bắt chính xác record ngay trước đó.
+                $prev = \Fleetbase\FleetOps\Models\FuelReport::where('vehicle_uuid', $this->vehicle_uuid)
+                    ->where(function($q) {
+                        $q->where('fueled_at', '<', $this->fueled_at ?? now())
+                          ->orWhere(function($sameDay) {
+                              $sameDay->where('fueled_at', '=', $this->fueled_at ?? now())
+                                      ->where('id', '<', $this->id ?? 0);
+                          });
+                    })
+                    ->orderBy('fueled_at', 'desc')
+                    ->orderBy('id', 'desc')
+                    ->first();
+                return $prev ? ($this->odometer - $prev->odometer) : null;
+            }),
             'amount'            => $this->amount,
             'currency'          => $this->currency,
             'volume'            => $this->volume,
             'metric_unit'       => $this->metric_unit,
+            'unit_price'        => $this->unit_price,
+            'amount_extra'      => $this->amount_extra,
+            'volume_extra'      => $this->volume_extra,
             'type'              => $this->type,
             'status'            => $this->status,
             'location'          => $this->location ?? new Point(0, 0),
+            'fueled_at'         => $this->fueled_at,
             'updated_at'        => $this->updated_at,
             'created_at'        => $this->created_at,
         ];

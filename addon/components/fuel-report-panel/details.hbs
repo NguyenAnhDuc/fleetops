@@ -2,14 +2,6 @@
     <ContentPanel @title={{t "fleet-ops.common.details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
         <div class="grid grid-cols-2 gap-4 text-xs md:mb-6 dark:text-gray-100">
             <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.id"}}</div>
-                <div class="field-value">{{n-a @fuelReport.public_id}}</div>
-            </div>
-            <div class="field-info-container col-span-2">
-                <div class="field-name">{{t "fleet-ops.common.reporter"}}</div>
-                <div class="field-value">{{n-a @fuelReport.reporter_name}}</div>
-            </div>
-            <div class="field-info-container space-y-2">
                 <div class="field-name">{{t "fleet-ops.common.driver"}}</div>
                 <div class="field-value">{{n-a @fuelReport.driver_name}}</div>
             </div>
@@ -17,25 +9,47 @@
                 <div class="field-name">{{t "fleet-ops.common.vehicle"}}</div>
                 <div class="field-value">{{n-a @fuelReport.vehicle_name}}</div>
             </div>
+
+            <div class="field-info-container space-y-2">
+                <div class="field-name">Ngày đổ dầu</div>
+                <div class="field-value">{{n-a @fuelReport.fueledAtShort}}</div>
+            </div>
             <div class="field-info-container space-y-2">
                 <div class="field-name">{{t "fleet-ops.common.odometer"}}</div>
-                <div class="field-value">{{n-a @fuelReport.odometer}}</div>
+                <div class="field-value">
+                    {{n-a @fuelReport.odometerDisplay}}
+                </div>
+            </div>
+
+            <div class="field-info-container space-y-2">
+                <div class="field-name">Thể tích / Khối lượng</div>
+                <div class="field-value">
+                    {{n-a @fuelReport.volume}}{{#if @fuelReport.volume_extra}} (+{{@fuelReport.volume_extra}}){{/if}} {{n-a @fuelReport.metric_unit}}
+                </div>
             </div>
             <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.cost"}}</div>
-                <div class="field-value">{{format-currency @fuelReport.amount @fuelReport.currency}}</div>
+                <div class="field-name">Đơn giá</div>
+                <div class="field-value">{{n-a @fuelReport.unitPriceDisplay}}</div>
+            </div>
+
+            <div class="field-info-container space-y-2">
+                <div class="field-name">Chi phí (Tổng cộng)</div>
+                <div class="field-value">{{n-a @fuelReport.amountDisplay}}</div>
             </div>
             <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.component.fuel-report-panel.details.fuel"}}</div>
-                <div class="field-value">{{pluralize (n-a @fuelReport.volume) (n-a @fuelReport.metric_unit)}}</div>
+                <div class="field-name">Chi phí phụ / Tăng thêm</div>
+                <div class="field-value">{{n-a @fuelReport.amountExtraDisplay}}</div>
             </div>
+
             <div class="field-info-container space-y-2">
                 <div class="field-name">{{t "fleet-ops.common.date-created"}}</div>
                 <div class="field-value">{{@fuelReport.createdAtShort}}</div>
             </div>
             <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.coordinates"}}</div>
-                <div class="field-value">{{point-coordinates @fuelReport.location}}</div>
+                <div class="field-name">Trạng thái</div>
+                <div class="field-value">
+                    <Badge @status={{@fuelReport.status}} />
+                </div>
             </div>
         </div>
     </ContentPanel>

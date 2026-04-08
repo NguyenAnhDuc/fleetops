@@ -27,11 +27,21 @@ class FuelReportController extends Controller
             'location',
             'odometer',
             'volume',
+            'volume_extra',
             'metric_unit',
             'amount',
+            'amount_extra',
             'currency',
+            'unit_price',
+            'fueled_at',
             'status',
+            'report',
         ]);
+
+        // Tự động tính amount = unit_price × volume nếu có unit_price và volume
+        if (!empty($input['unit_price']) && !empty($input['volume'])) {
+            $input['amount'] = round((float) $input['unit_price'] * (float) $input['volume'], 2);
+        }
 
         // Find driver who is reporting
         try {
@@ -49,7 +59,7 @@ class FuelReportController extends Controller
         $input['company_uuid']      = $driver->company_uuid;
         $input['driver_uuid']       = $driver->uuid;
         $input['reported_by_uuid']  = $driver->user_uuid;
-        $input['vehicle_uuid']      = $driver->vehicle_uuid;
+        $input['vehicle_uuid']      = $request->input('vehicle_uuid') ?? $request->input('vehicle') ?? $driver->vehicle_uuid;
 
         // create the fuel report
         $fuelReport = FuelReport::create($input);
@@ -83,11 +93,24 @@ class FuelReportController extends Controller
         $input = $request->only([
             'odometer',
             'volume',
+            'volume_extra',
             'metric_unit',
             'amount',
+            'amount_extra',
             'currency',
+            'unit_price',
+            'fueled_at',
             'status',
+            'report',
         ]);
+
+        // Tự động tính lại amount = unit_price × volume nếu có unit_price và volume
+        if (!empty($input['unit_price']) && !empty($input['volume'])) {
+            $input['amount'] = round((float) $input['unit_price'] * (float) $input['volume'], 2);
+        } elseif (!empty($input['unit_price']) && !empty($fuelReport->volume)) {
+            // Nếu chỉ update unit_price mà không gửi volume → dùng volume hiện tại
+            $input['amount'] = round((float) $input['unit_price'] * (float) $fuelReport->volume, 2);
+        }
 
         // update the fuel report
         $fuelReport->update($input);

@@ -121,9 +121,9 @@ class Driver extends Model
      * @var array
      */
     protected $casts = [
-        'location'   => Point::class,
-        'online'     => 'boolean',
-        'meta'       => Json::class,
+        'location' => Point::class,
+        'online' => 'boolean',
+        'meta' => Json::class,
     ];
 
     /**
@@ -298,10 +298,11 @@ class Driver extends Model
 
     public function fuelReports(): HasMany
     {
-        return $this->hasMany(FuelReport::class, 'vehicle_uuid','vehicle_uuid');
+        return $this->hasMany(FuelReport::class, 'vehicle_uuid', 'vehicle_uuid');
     }
 
-    public function getUserIdAttribute(): ?string{
+    public function getUserIdAttribute(): ?string
+    {
         return $this->user()->value('public_id');
     }
 
@@ -439,17 +440,33 @@ class Driver extends Model
         $odometer_1 = 0;
         $odometer_2 = 0;
         $metric_unit = "";
-        if($this -> fuelReports()){
-            $lastest_data = $this -> fuelReports() 
-            -> orderBy('created_at', 'desc') ->first();
-            if($lastest_data){
+
+        \Log::info('[FuelReportStatus] driver: ' . $this->public_id . ' | vehicle_uuid: ' . $this->vehicle_uuid);
+
+        if ($this->fuelReports()) {
+            $lastest_data = $this->fuelReports()
+                ->orderBy('created_at', 'desc')->first();
+
+            \Log::info('[FuelReportStatus] latest_data: ', [
+                'data' => $lastest_data ? $lastest_data->toArray() : null,
+            ]);
+
+            if ($lastest_data) {
                 $volume = (int) $lastest_data->value('volume');
                 $metric_unit = $lastest_data->value('metric_unit');
             }
             #return (string) $volume;
             #lấy 2 giá trị gần nhất
-            $arr_data = $this -> fuelReports() 
-            -> orderBy('created_at', 'desc')-> get();
+            $arr_data = $this->fuelReports()
+                ->orderBy('created_at', 'desc')->get();
+
+            \Log::info('[FuelReportStatus] all fuel reports: ', [
+                'count' => $arr_data->count(),
+                'odometers' => $arr_data->pluck('odometer')->toArray(),
+                'volumes' => $arr_data->pluck('volume')->toArray(),
+                'created_at' => $arr_data->pluck('created_at')->toArray(),
+            ]);
+
             if ($arr_data->count() >= 2) {
                 $odometer_1 = (int) $arr_data[0]->odometer;
                 $odometer_2 = (int) $arr_data[1]->odometer;
@@ -459,16 +476,28 @@ class Driver extends Model
                 $odometer_1 = 0;
             }
             $odometer = abs($odometer_1 - $odometer_2);
+
+            \Log::info('[FuelReportStatus] calculation: ', [
+                'odometer_1' => $odometer_1,
+                'odometer_2' => $odometer_2,
+                'odometer' => $odometer,
+                'volume' => $volume,
+                'metric_unit' => $metric_unit,
+            ]);
+
             if ($volume > 0) {
                 $result = $odometer / $volume;
                 $trimmed = floor($result * 100) / 100;
                 #return number_format($trimmed, 2, '.', '');
                 $plus_icon = '';
-                if( $trimmed > 0.4) { //2025-09-07 Chuyển từ 0.3 => 0.4
+                if ($trimmed > 0.4) { //2025-09-07 Chuyển từ 0.3 => 0.4
                     $plus_icon = '⚠️ ';
                 }
-                return $plus_icon . number_format($trimmed, 2, '.', '') .$metric_unit . '/km';
+                $final = $plus_icon . number_format($trimmed, 2, '.', '') . $metric_unit . '/km';
+                \Log::info('[FuelReportStatus] result: ' . $final);
+                return $final;
             } else {
+                \Log::info('[FuelReportStatus] volume = 0, returning empty');
                 return "";
             }
         }
@@ -478,13 +507,13 @@ class Driver extends Model
     public function getCurrentJobNameAttribute(): ?string
     {
         #return $this->currentJob()->value('internal_id');
-        if($this->orders()){
+        if ($this->orders()) {
             $data = $this->orders()->whereIn(\DB::raw('LOWER(status)'), ['started', 'loader', 'moved'])
-            ->orderBy('created_at', 'desc')
-            ->first();
-            if($data){
+                ->orderBy('created_at', 'desc')
+                ->first();
+            if ($data) {
                 return $data->value('internal_id');
-            }else{
+            } else {
                 return "";
             }
         }
@@ -492,19 +521,19 @@ class Driver extends Model
     }
     public function getCurrentJobStatusAttribute(): ?string
     {
-        if($this->orders()){
+        if ($this->orders()) {
             $data = $this->orders()->whereIn(\DB::raw('LOWER(status)'), ['started', 'loader', 'moved'])
-            ->orderBy('created_at', 'desc')
-            ->first();
-            if($data){
+                ->orderBy('created_at', 'desc')
+                ->first();
+            if ($data) {
                 return $data->value('status');
-            }else{
+            } else {
                 return "";
             }
         }
         return "";
     }
-    
+
     /**
      * Get assigned vehicle assigned name.
      */
@@ -707,9 +736,9 @@ class Driver extends Model
     public function getLastKnownPosition(): ?Position
     {
         return $this->positions()
-        ->where('company_uuid', session('company', $this->company_uuid))
-        ->latest()
-        ->first();
+            ->where('company_uuid', session('company', $this->company_uuid))
+            ->latest()
+            ->first();
     }
 
     /**
@@ -726,22 +755,22 @@ class Driver extends Model
     {
         $lastPosition = $this->getLastKnownPosition();
         $currentOrder = $order instanceof Order ? $order : $this->getCurrentOrder();
-        $destination  = $currentOrder?->payload?->getPickupOrCurrentWaypoint();
+        $destination = $currentOrder?->payload?->getPickupOrCurrentWaypoint();
 
         $positionData = [
-            'company_uuid'     => session('company', $this->company_uuid),
-            'subject_uuid'     => $this->uuid,
-            'subject_type'     => get_class($this),
-            'coordinates'      => $this->location,
-            'altitude'         => $this->altitude,
-            'heading'          => $this->heading,
-            'speed'            => $this->speed,
-            'order_uuid'       => $currentOrder?->uuid,
+            'company_uuid' => session('company', $this->company_uuid),
+            'subject_uuid' => $this->uuid,
+            'subject_type' => get_class($this),
+            'coordinates' => $this->location,
+            'altitude' => $this->altitude,
+            'heading' => $this->heading,
+            'speed' => $this->speed,
+            'order_uuid' => $currentOrder?->uuid,
             'destination_uuid' => $destination?->uuid,
         ];
 
         $isFirstPosition = is_null($lastPosition);
-        $isPast50Meters  = $lastPosition && FleetOpsUtils::vincentyGreatCircleDistance($this->location, $lastPosition->coordinates) > 50;
+        $isPast50Meters = $lastPosition && FleetOpsUtils::vincentyGreatCircleDistance($this->location, $lastPosition->coordinates) > 50;
 
         // Create a position if it's the first one or the driver has moved significantly
         return ($isFirstPosition || $isPast50Meters) ? Position::create($positionData) : null;
@@ -768,13 +797,13 @@ class Driver extends Model
         $row = array_filter($row);
 
         // Get driver columns
-        $name                 = Utils::or($row, ['name', 'full_name', 'first_name', 'driver', 'person']);
-        $phone                = Utils::or($row, ['phone', 'mobile', 'phone_number', 'number', 'cell', 'cell_phone', 'mobile_number', 'contact_number', 'tel', 'telephone', 'telephone_number']);
-        $email                = Utils::or($row, ['email', 'email_address']);
-        $country              = Utils::or($row, ['country', 'country_name']);
+        $name = Utils::or($row, ['name', 'full_name', 'first_name', 'driver', 'person']);
+        $phone = Utils::or($row, ['phone', 'mobile', 'phone_number', 'number', 'cell', 'cell_phone', 'mobile_number', 'contact_number', 'tel', 'telephone', 'telephone_number']);
+        $email = Utils::or($row, ['email', 'email_address']);
+        $country = Utils::or($row, ['country', 'country_name']);
         $driversLicenseNumber = Utils::or($row, ['drivers_license', 'driver_license', 'drivers_license_number', 'driver_license_number', 'license', 'driver_id', 'driver_identification', 'driver_identification_number']);
-        $vehicleName          = Utils::or($row, ['vehicle', 'vehicle_name', 'vehicle_id', 'vehicle_id_number', 'vehicle_number', 'vehicle_plate', 'vehicle_plate_number', 'vin', 'vehicle_vin', 'vehicle_identification_number']);
-        $password             = Utils::get($row, 'password');
+        $vehicleName = Utils::or($row, ['vehicle', 'vehicle_name', 'vehicle_id', 'vehicle_id_number', 'vehicle_number', 'vehicle_plate', 'vehicle_plate_number', 'vin', 'vehicle_vin', 'vehicle_identification_number']);
+        $password = Utils::get($row, 'password');
 
         // Fix phone number format
         $phone = Utils::fixPhone($phone);
@@ -791,11 +820,11 @@ class Driver extends Model
         if (!$user) {
             $user = User::newUserWithRequestInfo(request(), [
                 'company_uuid' => session('company'),
-                'name'         => $name,
-                'phone'        => $phone,
-                'email'        => $email,
-                'username'     => Str::slug($name . '_' . Str::random(4), '_'),
-                'status'       => 'active',
+                'name' => $name,
+                'phone' => $phone,
+                'email' => $email,
+                'username' => Str::slug($name . '_' . Str::random(4), '_'),
+                'status' => 'active',
             ]);
 
             // if password is provided
@@ -820,12 +849,12 @@ class Driver extends Model
 
         // Create driver
         $driver = new static([
-            'company_uuid'           => session('company'),
-            'user_uuid'              => $user->uuid,
+            'company_uuid' => session('company'),
+            'user_uuid' => $user->uuid,
             'drivers_license_number' => $driversLicenseNumber,
-            'country'                => $country,
-            'status'                 => 'active',
-            'location'               => Utils::parsePointToWkt(new Point(0, 0)),
+            'country' => $country,
+            'status' => 'active',
+            'location' => Utils::parsePointToWkt(new Point(0, 0)),
         ]);
 
         // If vehicle resolved

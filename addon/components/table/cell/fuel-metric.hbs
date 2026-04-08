@@ -1,0 +1,13 @@
+<div class="flex items-center w-full min-w-0" ...attributes>
+    <div class="truncate block w-full whitespace-nowrap">
+        {{this.value}}
+        {{#if this.hasDifference}}
+            <span class="{{this.differenceColorClass}} ml-1">
+                ({{this.differenceFormatted}})
+            </span>
+        {{/if}}
+        {{#if @column.suffix}}
+            <span class="text-xs text-gray-500 ml-1">{{@column.suffix}}</span>
+        {{/if}}
+    </div>
+</div>

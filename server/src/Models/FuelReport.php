@@ -42,7 +42,7 @@ class FuelReport extends Model
      *
      * @var array
      */
-    protected $searchableColumns = ['report', 'vehicle.name', 'driver.name'];
+    protected $searchableColumns = ['report', 'public_id', 'driver.user.name', 'vehicle.plate_number', 'vehicle.make', 'vehicle.model', 'vehicle.trim'];
 
     /**
      * The attributes that are mass assignable.
@@ -58,9 +58,13 @@ class FuelReport extends Model
         'odometer',
         'location',
         'amount',
+        'amount_extra',
         'currency',
         'volume',
+        'volume_extra',
         'metric_unit',
+        'unit_price',
+        'fueled_at',
         'meta',
         'status',
     ];
@@ -78,8 +82,12 @@ class FuelReport extends Model
      * @var array
      */
     protected $casts = [
-        'location' => Point::class,
-        'meta'     => Json::class,
+        'location'     => Point::class,
+        'meta'         => Json::class,
+        'unit_price'   => 'decimal:2',
+        'amount_extra' => 'decimal:2',
+        'volume_extra' => 'decimal:2',
+        'fueled_at'    => 'date:Y-m-d',
     ];
 
     /**

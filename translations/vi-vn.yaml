@@ -863,6 +863,8 @@ fleet-ops:
     fuel-report-form-panel:
       success-message: Báo cáo nhiên liệu đã được lưu thành công.
       fuel-report: Báo cáo Nhiên liệu Mới
+      fuel-reported: Báo cáo nhiên liệu
+      new-fuel-report: Báo cáo nhiên liệu
       save-fuel-report: Lưu Báo cáo Nhiên liệu
       create-fuel-report: Tạo Báo cáo Nhiên liệu
       view-details: Xem chi tiết báo cáo nhiên liệu

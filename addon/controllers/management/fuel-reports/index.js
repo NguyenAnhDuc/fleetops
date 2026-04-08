@@ -43,7 +43,7 @@ export default class ManagementFuelReportsIndexController extends BaseController
      *
      * @var {String}
      */
-    @tracked sort = '-created_at';
+    @tracked sort = '-fueled_at';
 
     /**
      * The filterable param `public_id`
@@ -108,38 +108,17 @@ export default class ManagementFuelReportsIndexController extends BaseController
      */
     @tracked columns = [
         {
-            label: this.intl.t('fleet-ops.common.id'),
-            valuePath: 'public_id',
-            width: '130px',
-            cellComponent: 'click-to-copy',
+            label: 'Ngày Đổ Dầu',
+            valuePath: 'fueledAt',
+            sortParam: 'fueled_at',
+            width: '150px',
             resizable: true,
             sortable: true,
             filterable: true,
-            hidden: false,
-            filterComponent: 'filter/string',
+            filterComponent: 'filter/date',
         },
         {
-            label: this.intl.t('fleet-ops.common.reporter'),
-            valuePath: 'reporter_name',
-            width: '100px',
-            cellComponent: 'table/cell/anchor',
-            onClick: async (fuelReport) => {
-                let reporter = await this.store.findRecord('user', fuelReport.reported_by_uuid);
-
-                if (reporter) {
-                    this.contextPanel.focus(reporter);
-                }
-            },
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select reporter',
-            filterParam: 'reporter',
-            model: 'user',
-        },
-        {
-            label: this.intl.t('fleet-ops.common.driver'),
+            label: 'Tài xế',
             valuePath: 'driver_name',
             width: '120px',
             cellComponent: 'table/cell/anchor',
@@ -160,9 +139,9 @@ export default class ManagementFuelReportsIndexController extends BaseController
             model: 'driver',
         },
         {
-            label: this.intl.t('fleet-ops.common.vehicle'),
+            label: 'Phương tiện',
             valuePath: 'vehicle_name',
-            width: '100px',
+            width: '120px',
             cellComponent: 'table/cell/anchor',
             permission: 'fleet-ops view vehicle',
             onClick: async (fuelReport) => {
@@ -182,7 +161,56 @@ export default class ManagementFuelReportsIndexController extends BaseController
             modelNamePath: 'displayName',
         },
         {
-            label: this.intl.t('fleet-ops.common.status'),
+            label: 'Công tơ mét',
+            valuePath: 'odometer',
+            sortParam: 'odometer',
+            width: '150px',
+            cellComponent: 'table/cell/fuel-metric',
+            differencePath: 'odometer_difference',
+            differenceType: 'positive-green',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            hidden: false,
+            filterComponent: 'filter/string',
+        },
+        {
+            label: 'Thể tích',
+            valuePath: 'volume',
+            width: '130px',
+            cellComponent: 'table/cell/fuel-metric',
+            differencePath: 'volume_extra',
+            differenceType: 'positive-green',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            hidden: false,
+            filterComponent: 'filter/string',
+        },
+        {
+            label: 'Đơn giá',
+            valuePath: 'unit_price',
+            width: '140px',
+            cellComponent: 'table/cell/fuel-metric',
+            currencyFormat: true,
+            resizable: true,
+            sortable: true,
+            filterable: false,
+        },
+        {
+            label: 'Chi phí',
+            valuePath: 'amount',
+            width: '180px',
+            cellComponent: 'table/cell/fuel-metric',
+            differencePath: 'amount_extra',
+            differenceType: 'positive-green',
+            currencyFormat: true,
+            resizable: true,
+            sortable: true,
+            filterable: false,
+        },
+        {
+            label: 'Trạng thái',
             valuePath: 'status',
             cellComponent: 'table/cell/status',
             width: '100px',
@@ -193,55 +221,12 @@ export default class ManagementFuelReportsIndexController extends BaseController
             filterOptions: ['draft', 'pending-approval', 'approved', 'rejected', 'revised', 'submitted', 'in-review', 'confirmed', 'processed', 'archived', 'cancelled'],
         },
         {
-            label: this.intl.t('fleet-ops.common.volume'),
-            valuePath: 'volume',
-            width: '130px',
-            cellComponent: 'click-to-copy',
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            hidden: false,
-            filterComponent: 'filter/string',
-        },
-        {
-            label: this.intl.t('fleet-ops.common.odometer'),
-            valuePath: 'odometer',
-            width: '130px',
-            cellComponent: 'click-to-copy',
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            hidden: false,
-            filterComponent: 'filter/string',
-        },
-        {
-            label: this.intl.t('fleet-ops.common.created-at'),
-            valuePath: 'createdAt',
-            sortParam: 'created_at',
-            width: '120px',
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/date',
-        },
-        {
-            label: this.intl.t('fleet-ops.common.updated-at'),
-            valuePath: 'updatedAt',
-            sortParam: 'updated_at',
-            width: '120px',
-            resizable: true,
-            sortable: true,
-            hidden: true,
-            filterable: true,
-            filterComponent: 'filter/date',
-        },
-        {
             label: '',
             cellComponent: 'table/cell/dropdown',
             ddButtonText: false,
             ddButtonIcon: 'ellipsis-h',
             ddButtonIconPrefix: 'fas',
-            ddMenuLabel: 'Fuel Report Actions',
+            ddMenuLabel: 'Thao tác Báo cáo Nhiên liệu',
             cellClassNames: 'overflow-visible',
             wrapperClass: 'flex items-center justify-end mx-2',
             width: '10%',
@@ -364,6 +349,12 @@ export default class ManagementFuelReportsIndexController extends BaseController
      */
     @action deleteFuelReport(fuelReport, options = {}) {
         this.crud.delete(fuelReport, {
+            title: 'Bạn có chắc chắn muốn xoá báo cáo nhiên liệu này không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'check',
+            cancelButtonText: 'Hủy',
+            cancelButtonIcon: 'times',
+            successNotification: 'Đã xóa báo cáo nhiên liệu.',
             onConfirm: () => {
                 this.hostRouter.refresh();
             },
@@ -382,7 +373,12 @@ export default class ManagementFuelReportsIndexController extends BaseController
 
         this.crud.bulkDelete(selected, {
             modelNamePath: `name`,
-            acceptButtonText: this.intl.t('fleet-ops.management.fuel-reports.index.delete-button'),
+            title: 'Bạn có chắc chắn muốn xoá các báo cáo nhiên liệu đã chọn không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'check',
+            cancelButtonText: 'Hủy',
+            cancelButtonIcon: 'times',
+            successNotification: 'Các báo cáo nhiên liệu đã được xoá.',
             onSuccess: async () => {
                 await this.hostRouter.refresh();
                 this.table.untoggleSelectAll();

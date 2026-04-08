@@ -20,7 +20,35 @@ class FuelReportFilter extends Filter
 
     public function query(?string $searchQuery)
     {
-        $this->builder->search($searchQuery);
+        if (empty($searchQuery)) {
+            return;
+        }
+
+        $this->builder->where(function ($q) use ($searchQuery) {
+            // Tìm theo ID hoặc Report
+            $q->where('report', 'LIKE', '%' . $searchQuery . '%')
+              ->orWhere('public_id', 'LIKE', '%' . $searchQuery . '%');
+
+            // Tìm theo ngày đổ dầu (nhập dạng DD/MM/YYYY, DD-MM-YYYY, hoặc YYYY-MM-DD)
+            $q->orWhereRaw('DATE_FORMAT(fueled_at, "%d/%m/%Y") LIKE ?', ['%' . $searchQuery . '%'])
+              ->orWhereRaw('DATE_FORMAT(fueled_at, "%d-%m-%Y") LIKE ?', ['%' . $searchQuery . '%'])
+              ->orWhereRaw('DATE_FORMAT(fueled_at, "%Y-%m-%d") LIKE ?', ['%' . $searchQuery . '%']);
+
+            // Tìm theo tên tài xế (qua user.name vì Driver không có cột name trực tiếp)
+            $q->orWhereHas('driver', function ($dq) use ($searchQuery) {
+                $dq->whereHas('user', function ($uq) use ($searchQuery) {
+                    $uq->where('name', 'LIKE', '%' . $searchQuery . '%');
+                });
+            });
+
+            // Tìm theo biển số/hãng xe/model (Vehicle không có cột name)
+            $q->orWhereHas('vehicle', function ($vq) use ($searchQuery) {
+                $vq->where('plate_number', 'LIKE', '%' . $searchQuery . '%')
+                   ->orWhere('make', 'LIKE', '%' . $searchQuery . '%')
+                   ->orWhere('model', 'LIKE', '%' . $searchQuery . '%')
+                   ->orWhere('trim', 'LIKE', '%' . $searchQuery . '%');
+            });
+        });
     }
 
     public function publicId(?string $publicId)
@@ -59,6 +87,17 @@ class FuelReportFilter extends Filter
             $this->builder->whereBetween('created_at', $createdAt);
         } else {
             $this->builder->whereDate('created_at', $createdAt);
+        }
+    }
+
+    public function fueledAt($fueledAt)
+    {
+        $fueledAt = Utils::dateRange($fueledAt);
+
+        if (is_array($fueledAt)) {
+            $this->builder->whereBetween('fueled_at', $fueledAt);
+        } else {
+            $this->builder->whereDate('fueled_at', $fueledAt);
         }
     }
 
