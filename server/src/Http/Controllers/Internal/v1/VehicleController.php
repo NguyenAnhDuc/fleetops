@@ -8,6 +8,8 @@ use Fleetbase\FleetOps\Imports\VehicleImport;
 use Fleetbase\FleetOps\Models\Vehicle;
 use Fleetbase\Http\Requests\ExportRequest;
 use Fleetbase\Http\Requests\ImportRequest;
+use Fleetbase\Support\Http;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
@@ -20,6 +22,62 @@ class VehicleController extends FleetOpsController
      * @var string
      */
     public $resource = 'vehicle';
+
+    /**
+     * Override queryRecord to apply priority sorting:
+     * 1. Expired or near-expiry inspection date (within 30 days) – listed first
+     * 2. Vehicles with ⚠️ fuel warning – listed second
+     * 3. Everything else
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function queryRecord(Request $request)
+    {
+        $today    = now()->toDateString();
+        $in30days = now()->addDays(30)->toDateString();
+
+        // Use the parent queryFromRequest – it handles filters, pagination, search, sort
+        $results = $this->model->queryFromRequest($request);
+
+        // Sort in PHP:
+        // Priority 0 = inspection expired or within 30 days
+        // Priority 1 = has ⚠️ fuel warning
+        // Priority 2 = normal
+        $sorted = collect($results->items())->sortBy(function ($vehicle) use ($today, $in30days) {
+            $inspectionDate = $vehicle->inspection_expire_date;
+
+            if ($inspectionDate) {
+                $dateStr = $inspectionDate instanceof \Carbon\Carbon
+                    ? $inspectionDate->toDateString()
+                    : (string) $inspectionDate;
+
+                if ($dateStr <= $today || $dateStr <= $in30days) {
+                    $inspectionPriority = 0;
+                } else {
+                    $inspectionPriority = 2;
+                }
+            } else {
+                $inspectionPriority = 2;
+            }
+
+            $fuelStatus  = $vehicle->fuel_report_status ?? '';
+            $fuelPriority = Str::contains($fuelStatus, '⚠️') ? 1 : 2;
+
+            // Take the better (lower) priority between inspection and fuel
+            return min($inspectionPriority, $fuelPriority);
+        })->values();
+
+        // Rebuild paginator items with sorted result
+        $results->setCollection($sorted);
+
+        if (Http::isInternalRequest($request)) {
+            $this->resource::wrap($this->resourcePluralName);
+
+            return $this->resource::collection($results);
+        }
+
+        return $this->resource::collection($results);
+    }
 
     /**
      * Get all status options for an vehicle.

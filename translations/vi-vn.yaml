@@ -1308,7 +1308,7 @@ fleet-ops:
         locate-title: Vị trí Hiện Tại của {vehicleName}
         edit:
           body: Các thay đổi chưa được lưu cho xe này sẽ bị mất. Nhấp vào tiếp tục để tiếp tục.
-        title: Xe
+        title: Phương tiện
         delete-vehicles: Xóa Xe
     vendors:
       index:

@@ -435,72 +435,67 @@ class Driver extends Model
 
     public function getFuelReportStatusAttribute(): ?string
     {
-        $volume = 0;
-        $odometer = 0;
-        $odometer_1 = 0;
-        $odometer_2 = 0;
-        $metric_unit = "";
+        if (empty($this->vehicle_uuid)) {
+            return "";
+        }
 
         \Log::info('[FuelReportStatus] driver: ' . $this->public_id . ' | vehicle_uuid: ' . $this->vehicle_uuid);
 
-        if ($this->fuelReports()) {
-            $lastest_data = $this->fuelReports()
-                ->orderBy('created_at', 'desc')->first();
+        // Fetch only the 2 latest fuel reports for the current vehicle
+        $reports = $this->fuelReports()
+            ->where('vehicle_uuid', $this->vehicle_uuid)
+            ->whereNull('deleted_at')
+            ->orderBy('fueled_at', 'desc')
+            ->limit(2)
+            ->get();
 
-            \Log::info('[FuelReportStatus] latest_data: ', [
-                'data' => $lastest_data ? $lastest_data->toArray() : null,
-            ]);
-
-            if ($lastest_data) {
-                $volume = (int) $lastest_data->value('volume');
-                $metric_unit = $lastest_data->value('metric_unit');
-            }
-            #return (string) $volume;
-            #lấy 2 giá trị gần nhất
-            $arr_data = $this->fuelReports()
-                ->orderBy('created_at', 'desc')->get();
-
-            \Log::info('[FuelReportStatus] all fuel reports: ', [
-                'count' => $arr_data->count(),
-                'odometers' => $arr_data->pluck('odometer')->toArray(),
-                'volumes' => $arr_data->pluck('volume')->toArray(),
-                'created_at' => $arr_data->pluck('created_at')->toArray(),
-            ]);
-
-            if ($arr_data->count() >= 2) {
-                $odometer_1 = (int) $arr_data[0]->odometer;
-                $odometer_2 = (int) $arr_data[1]->odometer;
-            } elseif ($arr_data->count() === 1) {
-                $odometer_1 = (int) $arr_data[0]->odometer;
-            } else {
-                $odometer_1 = 0;
-            }
-            $odometer = abs($odometer_1 - $odometer_2);
-
-            \Log::info('[FuelReportStatus] calculation: ', [
-                'odometer_1' => $odometer_1,
-                'odometer_2' => $odometer_2,
-                'odometer' => $odometer,
-                'volume' => $volume,
-                'metric_unit' => $metric_unit,
-            ]);
-
-            if ($volume > 0) {
-                $result = $odometer / $volume;
-                $trimmed = floor($result * 100) / 100;
-                #return number_format($trimmed, 2, '.', '');
-                $plus_icon = '';
-                if ($trimmed > 0.4) { //2025-09-07 Chuyển từ 0.3 => 0.4
-                    $plus_icon = '⚠️ ';
-                }
-                $final = $plus_icon . number_format($trimmed, 2, '.', '') . $metric_unit . '/km';
-                \Log::info('[FuelReportStatus] result: ' . $final);
-                return $final;
-            } else {
-                \Log::info('[FuelReportStatus] volume = 0, returning empty');
-                return "";
-            }
+        if ($reports->count() === 0) {
+            return "";
         }
+
+        $latest_report = $reports->first();
+        $volume = (float) $latest_report->volume;
+        $volume_extra = (float) $latest_report->volume_extra;
+        $total_volume = $volume + $volume_extra;
+        $metric_unit = $latest_report->metric_unit ?: 'L';
+
+        $odometer_1 = 0;
+        $odometer_2 = 0;
+
+        if ($reports->count() >= 2) {
+            $odometer_1 = (float) $reports[0]->odometer;
+            $odometer_2 = (float) $reports[1]->odometer;
+        } elseif ($reports->count() === 1) {
+            $odometer_1 = (float) $reports[0]->odometer;
+        }
+
+        $odometer_diff = abs($odometer_1 - $odometer_2);
+
+        \Log::info('[FuelReportStatus] calculation: ', [
+            'odometer_1' => $odometer_1,
+            'odometer_2' => $odometer_2,
+            'odometer_diff' => $odometer_diff,
+            'volume' => $volume,
+            'volume_extra' => $volume_extra,
+            'total_volume' => $total_volume,
+            'metric_unit' => $metric_unit,
+        ]);
+
+        if ($total_volume > 0) {
+            $result = $odometer_diff / $total_volume;
+            $trimmed = floor($result * 100) / 100;
+            
+            $plus_icon = '';
+            if ($trimmed > 0.4) {
+                $plus_icon = '⚠️ ';
+            }
+            
+            $final = $plus_icon . number_format($trimmed, 2, '.', '') . $metric_unit . '/km';
+            \Log::info('[FuelReportStatus] result: ' . $final);
+            return $final;
+        }
+
+        \Log::info('[FuelReportStatus] volume = 0, returning empty');
         return "";
     }
 

@@ -113,7 +113,7 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.contacts',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.contacts'),
                 icon: 'address-book',
-                route: 'management.contacts',
+                route: 'management.contacts.customers',
                 permission: 'fleet-ops list contact',
                 visible: this.abilities.can('fleet-ops see contact'),
             },

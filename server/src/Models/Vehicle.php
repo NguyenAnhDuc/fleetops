@@ -56,7 +56,7 @@ class Vehicle extends Model
      *
      * @var array
      */
-    protected $searchableColumns = ['make', 'model', 'year', 'plate_number', 'vin', 'public_id'];
+    protected $searchableColumns = ['make', 'model', 'year', 'plate_number', 'vin', 'public_id', 'driver.user.name'];
 
     /**
      * Attributes that is filterable on this model.
@@ -135,11 +135,11 @@ class Vehicle extends Model
      * @var array
      */
     protected $appends = [
-        'display_name', 
-        'photo_url', 
-        'driver_name', 
-        'vendor_name', 
-        'driver_location', 
+        'display_name',
+        'photo_url',
+        'driver_name',
+        'vendor_name',
+        'driver_location',
         'outstanding_balance',
         'fuel_report_status',
         'inspection_expire_date'
@@ -168,12 +168,12 @@ class Vehicle extends Model
      * @var array
      */
     protected $casts = [
-        'location'   => Point::class,
-        'meta'       => Json::class,
+        'location' => Point::class,
+        'meta' => Json::class,
         'telematics' => Json::class,
         'model_data' => Json::class,
-        'vin_data'   => Json::class,
-        'online'     => 'boolean',
+        'vin_data' => Json::class,
+        'online' => 'boolean',
         'inspection_expire_date' => 'date',
     ];
 
@@ -214,18 +214,18 @@ class Vehicle extends Model
 
     public function fuelReports(): HasMany
     {
-        return $this->hasMany(FuelReport::class, 'vehicle_uuid');
+        return $this->hasMany(FuelReport::class, 'vehicle_uuid', 'uuid');
     }
-    
+
     public function getOutstandingBalanceAttribute(): string
     {
         // Tổng = advance_fee + earnings - approval_fees - remittance
         if ($this->relationLoaded('orders')) {
             $total = $this->orders->sum(function ($o) {
-                return (float)($o->driver_advance_fee ?? 0)
-                    + (float)($o->driver_earnings ?? 0)
-                    - (float)($o->approval_fees ?? 0)
-                    - (float)($o->driver_remittance ?? 0);
+                return (float) ($o->driver_advance_fee ?? 0)
+                    + (float) ($o->driver_earnings ?? 0)
+                    - (float) ($o->approval_fees ?? 0)
+                    - (float) ($o->driver_remittance ?? 0);
             });
         } else {
             $total = $this->orders()
@@ -241,49 +241,74 @@ class Vehicle extends Model
         }
 
         // Trả về dạng chuỗi tiền tệ: 1.234.567 VNĐ
-        return number_format((float)$total, 0, ',', '.');
+        return number_format((float) $total, 0, ',', '.');
     }
 
     public function getFuelReportStatusAttribute(): ?string
     {
-        $volume = 0;
-        $odometer = 0;
+        \Log::info('[FuelReportStatus] vehicle: ' . $this->public_id . ' | uuid: ' . $this->uuid);
+
+        // Fetch only the 2 latest fuel reports for this vehicle
+        $reports = $this->fuelReports()
+            ->whereNull('deleted_at')
+            ->orderBy('fueled_at', 'desc')
+            ->limit(2)
+            ->get();
+
+        \Log::info('[FuelReportStatus] vehicle fuel reports count: ' . $reports->count(), [
+            'odometers' => $reports->pluck('odometer')->toArray(),
+            'volumes' => $reports->pluck('volume')->toArray(),
+            'fueled_at' => $reports->pluck('fueled_at')->toArray(),
+        ]);
+
+        if ($reports->count() === 0) {
+            \Log::info('[FuelReportStatus] vehicle reports count is 0. returning empty.');
+            return "";
+        }
+
+        $latest_report = $reports->first();
+        $volume = (float) $latest_report->volume;
+        $volume_extra = (float) $latest_report->volume_extra;
+        $total_volume = $volume + $volume_extra;
+        $metric_unit = $latest_report->metric_unit ?: 'L';
+
         $odometer_1 = 0;
         $odometer_2 = 0;
-        $metric_unit = "";
-        if($this -> fuelReports()){
-            $lastest_data = $this -> fuelReports() 
-            -> orderBy('created_at', 'desc') ->first();
-            if($lastest_data){
-                $volume = (int) $lastest_data->value('volume');
-                $metric_unit = $lastest_data->value('metric_unit');
-            }
-            #return (string) $volume;
-            #lấy 2 giá trị gần nhất
-            $arr_data = $this -> fuelReports() 
-            -> orderBy('created_at', 'desc')-> get();
-            if ($arr_data->count() >= 2) {
-                $odometer_1 = (int) $arr_data[0]->odometer;
-                $odometer_2 = (int) $arr_data[1]->odometer;
-            } elseif ($arr_data->count() === 1) {
-                $odometer_1 = (int) $arr_data[0]->odometer;
-            } else {
-                $odometer_1 = 0;
-            }
-            $odometer = abs($odometer_1 - $odometer_2);
-            if ($volume > 0) {
-                $result = $odometer / $volume;
-                $trimmed = floor($result * 100) / 100;
-                #return number_format($trimmed, 2, '.', '');
-                $plus_icon = '';
-                if( $trimmed > 0.4) { //2025-09-07 Chuyển từ 0.3 => 0.4
-                    $plus_icon = '⚠️ ';
-                }
-                return $plus_icon . number_format($trimmed, 2, '.', '') .$metric_unit . '/km';
-            } else {
-                return "";
-            }
+
+        if ($reports->count() >= 2) {
+            $odometer_1 = (float) $reports[0]->odometer;
+            $odometer_2 = (float) $reports[1]->odometer;
+        } elseif ($reports->count() === 1) {
+            $odometer_1 = (float) $reports[0]->odometer;
         }
+
+        $odometer_diff = abs($odometer_1 - $odometer_2);
+
+        \Log::info('[FuelReportStatus] calculation: ', [
+            'odometer_1' => $odometer_1,
+            'odometer_2' => $odometer_2,
+            'odometer_diff' => $odometer_diff,
+            'volume' => $volume,
+            'volume_extra' => $volume_extra,
+            'total_volume' => $total_volume,
+            'metric_unit' => $metric_unit,
+        ]);
+
+        if ($total_volume > 0) {
+            $result = $odometer_diff / $total_volume;
+            $trimmed = floor($result * 100) / 100;
+
+            $plus_icon = '';
+            if ($trimmed > 0.4) {
+                $plus_icon = '⚠️ ';
+            }
+
+            $final = $plus_icon . number_format($trimmed, 2, '.', '') . $metric_unit . '/km';
+            \Log::info('[FuelReportStatus] result: ' . $final);
+            return $final;
+        }
+
+        \Log::info('[FuelReportStatus] volume = 0, returning empty');
         return "";
     }
 
@@ -384,7 +409,7 @@ class Vehicle extends Model
      */
     public function getModelDataAttribute()
     {
-        $attributes      = $this->getFillable();
+        $attributes = $this->getFillable();
         $modelAttributes = [];
         foreach ($attributes as $attr) {
             if (Str::startsWith($attr, 'model_')) {
@@ -531,7 +556,7 @@ class Vehicle extends Model
             'company_uuid' => session('company', $this->company_uuid),
             'subject_uuid' => $this->uuid,
             'subject_type' => get_class($this),
-            'coordinates'  => $this->location,
+            'coordinates' => $this->location,
         ];
 
         $this->loadMissing('driver');
@@ -547,7 +572,7 @@ class Vehicle extends Model
         }
 
         $isFirstPosition = is_null($lastPosition);
-        $isPast50Meters  = $lastPosition && Utils::vincentyGreatCircleDistance($this->location, $lastPosition->coordinates) > 50;
+        $isPast50Meters = $lastPosition && Utils::vincentyGreatCircleDistance($this->location, $lastPosition->coordinates) > 50;
 
         // Create a position if it's the first one or the vehicle has moved significantly
         return ($isFirstPosition || $isPast50Meters) ? Position::create($positionData) : null;
@@ -559,15 +584,15 @@ class Vehicle extends Model
         $row = array_filter($row);
 
         // Get vehicle columns
-        $vehicleName      = Utils::or($row, ['vehicle', 'vehicle_name', 'name']);
-        $make             = Utils::or($row, ['make', 'vehicle_make', 'manufacturer', 'brand']);
-        $model            = Utils::or($row, ['model', 'vehicle_model', 'brand_model']);
-        $year             = Utils::or($row, ['year', 'vehicle_year', 'build_year', 'release_year']);
-        $trim             = Utils::or($row, ['trim', 'vehicle_trim', 'brand_trim']);
-        $type             = Utils::or($row, ['type', 'vehicle_type'], 'vehicle');
-        $plateNumber      = Utils::or($row, ['plate_number', 'license_plate', 'license_place_number', 'vehicle_plate', 'registration_plate', 'tag_number', 'tail_number', 'head_number']);
-        $vin              = Utils::or($row, ['vin', 'vin_number', 'vin_id', 'vehicle_identification_number', 'serial_number']);
-        $driverAssigned   = Utils::or($row, ['driver', 'driver_name', 'driver_assigned', 'driver_assignee']);
+        $vehicleName = Utils::or($row, ['vehicle', 'vehicle_name', 'name']);
+        $make = Utils::or($row, ['make', 'vehicle_make', 'manufacturer', 'brand']);
+        $model = Utils::or($row, ['model', 'vehicle_model', 'brand_model']);
+        $year = Utils::or($row, ['year', 'vehicle_year', 'build_year', 'release_year']);
+        $trim = Utils::or($row, ['trim', 'vehicle_trim', 'brand_trim']);
+        $type = Utils::or($row, ['type', 'vehicle_type'], 'vehicle');
+        $plateNumber = Utils::or($row, ['plate_number', 'license_plate', 'license_place_number', 'vehicle_plate', 'registration_plate', 'tag_number', 'tail_number', 'head_number']);
+        $vin = Utils::or($row, ['vin', 'vin_number', 'vin_id', 'vehicle_identification_number', 'serial_number']);
+        $driverAssigned = Utils::or($row, ['driver', 'driver_name', 'driver_assigned', 'driver_assignee']);
 
         // Handle when only a vehicle name is provided
         if ($vehicleName && empty($make) && empty($model)) {
@@ -600,17 +625,17 @@ class Vehicle extends Model
 
         // Create vehicle
         $vehicle = new static([
-            'company_uuid'           => session('company'),
-            'make'                   => $make,
-            'model'                  => $model,
-            'year'                   => $year,
-            'trim'                   => $trim,
-            'plate_number'           => $plateNumber,
-            'vin'                    => $vin,
-            'type'                   => $type,
-            'status'                 => 'active',
-            'online'                 => 0,
-            'status'                 => 'active',
+            'company_uuid' => session('company'),
+            'make' => $make,
+            'model' => $model,
+            'year' => $year,
+            'trim' => $trim,
+            'plate_number' => $plateNumber,
+            'vin' => $vin,
+            'type' => $type,
+            'status' => 'active',
+            'online' => 0,
+            'status' => 'active',
         ]);
 
         // If driver was resolved assign driver to vehicle
@@ -634,10 +659,10 @@ class Vehicle extends Model
 
         return static::where(function ($query) use ($vehicleName) {
             $query->where('public_id', $vehicleName)
-                    ->orWhere('plate_number', $vehicleName)
-                    ->orWhere('vin', $vehicleName)
-                    ->orWhereRaw("CONCAT(make, ' ', model, ' ', year) LIKE ?", ["%{$vehicleName}%"])
-                    ->orWhereRaw("CONCAT(year, ' ', make, ' ', model) LIKE ?", ["%{$vehicleName}%"]);
+                ->orWhere('plate_number', $vehicleName)
+                ->orWhere('vin', $vehicleName)
+                ->orWhereRaw("CONCAT(make, ' ', model, ' ', year) LIKE ?", ["%{$vehicleName}%"])
+                ->orWhereRaw("CONCAT(year, ' ', make, ' ', model) LIKE ?", ["%{$vehicleName}%"]);
         })->first();
     }
 }
