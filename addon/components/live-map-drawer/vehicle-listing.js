@@ -212,6 +212,10 @@ export default class LiveMapDrawerVehicleListingComponent extends Component {
      */
     @action delete(vehicle, options = {}) {
         this.crud.delete(vehicle, {
+            title: 'Bạn có chắc chắn muốn xóa phương tiện này không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onSuccess: () => {
                 this._vehicles.removeObject(vehicle);
                 this.vehicles.removeObject(vehicle);

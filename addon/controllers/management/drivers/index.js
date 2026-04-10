@@ -294,16 +294,6 @@ export default class ManagementDriversIndexController extends BaseController {
             filterComponent: 'filter/string',
         },
         {
-            label: this.intl.t('fleet-ops.common.fuel-driver-status'),
-            valuePath: 'fuel_report_status',
-            cellComponent: 'table/cell/base',
-            width: '180px',
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/string',
-        },
-        {
             label: this.intl.t('fleet-ops.common.phone'),
             valuePath: 'phone',
             cellComponent: 'table/cell/base',
@@ -485,7 +475,10 @@ export default class ManagementDriversIndexController extends BaseController {
 
         this.crud.bulkDelete(selected, {
             modelNamePath: `name`,
-            acceptButtonText: this.intl.t('fleet-ops.management.drivers.index.delete-button'),
+            title: 'Bạn có chắc chắn muốn xóa các tài xế đã chọn không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onSuccess: async () => {
                 await this.hostRouter.refresh();
                 this.table.untoggleSelectAll();
@@ -559,6 +552,10 @@ export default class ManagementDriversIndexController extends BaseController {
      */
     @action deleteDriver(driver, options = {}) {
         this.driverActions.delete(driver, {
+            title: 'Bạn có chắc chắn muốn xóa tài xế này không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onSuccess: () => {
                 return this.hostRouter.refresh();
             },

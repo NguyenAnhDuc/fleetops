@@ -216,7 +216,7 @@
                         </ModelSelect>
                     </InputGroup>
 
-                    <InputGroup @name={{t "fleet-ops.common.city"}}>
+                    {{!-- <InputGroup @name={{t "fleet-ops.common.city"}}>
                         <Input @value={{this.driver.city}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.city"}} disabled={{cannot this.savePermission}} />
                     </InputGroup>
 
@@ -228,7 +228,7 @@
                             placeholder={{t "fleet-ops.common.country"}}
                             disabled={{cannot this.savePermission}}
                         />
-                    </InputGroup>
+                    </InputGroup> --}}
 
                     <InputGroup @name={{t "fleet-ops.common.status"}}>
                         <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
@@ -245,7 +245,7 @@
                             </PowerSelect>
                         </div>
                     </InputGroup>
-                    <InputGroup @name={{t "fleet-ops.common.coordinates"}} @wrapperClass="col-span-2">
+                    {{!-- <InputGroup @name={{t "fleet-ops.common.coordinates"}} @wrapperClass="col-span-2">
                         <CoordinatesInput
                             @value={{this.driver.location}}
                             @onChange={{this.onCoordinatesChanged}}
@@ -255,7 +255,7 @@
                             @renderInPlace={{false}}
                             @disabled={{cannot this.savePermission}}
                         />
-                    </InputGroup>
+                    </InputGroup> --}}
                     <RegistryYield @registry="fleet-ops:component:driver-form-panel:details" as |RegistryComponent|>
                         <RegistryComponent @driver={{this.driver}} @controller={{this.controller}} />
                     </RegistryYield>

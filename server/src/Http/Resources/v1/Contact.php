@@ -36,7 +36,7 @@ class Contact extends FleetbaseResource
             'place'                         => $this->whenLoaded('place', fn () => new Place($this->place)),
             'places'                        => $this->whenLoaded('places', fn () => Place::collection($this->places)),
             'user'                          => $this->when(Http::isInternalRequest(), fn () => new User($this->user), fn () => $this->user ? $this->user->public_id : null),
-            'address'                       => $this->when(Http::isInternalRequest(), data_get($this, 'place.address')),
+            'address'                       => $this->when(Http::isInternalRequest(), $this->address ?? data_get($this, 'place.address')),
             'address_street'                => $this->when(Http::isInternalRequest(), data_get($this, 'place.street1')),
             'type'                          => $this->type ?? null,
             'customer_type'                 => $this->when(isset($this->customer_type), $this->customer_type),

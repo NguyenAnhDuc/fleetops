@@ -62,7 +62,7 @@ class Contact extends Model
      *
      * @var array
      */
-    protected $searchableColumns = ['name', 'email', 'phone'];
+    protected $searchableColumns = ['name', 'email', 'phone', 'address'];
 
     /**
      * The attributes that are mass assignable.
@@ -78,12 +78,13 @@ class Contact extends Model
         'user_uuid', 
         'place_uuid', 
         'photo_uuid', 
-        'name', 
-        'title', 
-        'email', 
-        'phone', 
-        'type', 
-        'meta', 
+        'name',
+        'title',
+        'email',
+        'phone',
+        'address',
+        'type',
+        'meta',
         'slug'
     ];
 

@@ -94,7 +94,7 @@
 
     <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 pt-4 space-y-4">
         {{#let (cannot this.savePermission) as |unauthorized|}}
-            <ContentPanel
+            {{!-- <ContentPanel
                 @title={{t "fleet-ops.component.customer-form-panel.user-account"}}
                 @open={{true}}
                 @pad={{true}}
@@ -145,34 +145,38 @@
                         </InputGroup>
 
                         <InputGroup @name={{t "fleet-ops.common.phone"}} @wrapperClass="mb-0i">
-                            <PhoneInput 
-                                @value={{this.customer.user.phone}} 
-                                @onInput={{fn (mut this.customer.phone)}} 
-                                class="form-input w-full" 
-                                disabled={{true}} 
+                            <PhoneInput
+                                @value={{this.customer.user.phone}}
+                                @onInput={{fn (mut this.customer.phone)}}
+                                class="form-input w-full"
+                                disabled={{true}}
                             />
                         </InputGroup>
                     </div>
                 {{/if}}
-            </ContentPanel>
+            </ContentPanel> --}}
 
             <ContentPanel @title={{t "fleet-ops.component.customer-form-panel.customer-details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 <div class="grid grid-cols-2 gap-4 text-xs dark:text-gray-100 no-input-group-padding">
                     <InputGroup @name={{t "fleet-ops.common.name"}}>
                         <Input @value={{this.customer.name}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.name"}} disabled={{unauthorized}} />
                     </InputGroup>
-                    <InputGroup @name={{t "fleet-ops.common.title"}}>
+                    {{!-- <InputGroup @name={{t "fleet-ops.common.title"}}>
                         <Input @value={{this.customer.title}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.title"}} disabled={{unauthorized}} />
-                    </InputGroup>
+                    </InputGroup> --}}
                     <InputGroup @name={{t "fleet-ops.common.email"}}>
                         <Input @value={{this.customer.email}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.email"}} disabled={{unauthorized}} />
                     </InputGroup>
                     <InputGroup @name={{t "fleet-ops.common.phone"}}>
-                        <PhoneInput @value={{this.customer.phone}} @onInput={{fn (mut this.customer.phone)}} class="form-input w-full" disabled={{unauthorized}} />
+                        <Input @value={{this.customer.phone}} @type="text" class="w-full form-input" placeholder="097 483 194" disabled={{unauthorized}} />
                     </InputGroup>
-                    <InputGroup @name={{t "fleet-ops.common.internal-id"}}>
+                    {{!-- <InputGroup @name={{t "fleet-ops.common.internal-id"}}>
                         <Input @value={{this.customer.internal_id}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.internal-id"}} disabled={{unauthorized}} />
+                    </InputGroup> --}}
+                    <InputGroup @name={{t "fleet-ops.common.address"}} @wrapperClass="col-span-2">
+                        <Input @value={{this.customer.address}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.address"}} disabled={{unauthorized}} />
                     </InputGroup>
+                    {{!-- Address place selector (cũ - dùng ModelSelect liên kết place)
                     <InputGroup @wrapperClass="col-span-2">
                         <div class="flex items-center justify-between">
                             <label>
@@ -205,7 +209,7 @@
                                 <Badge @hideStatusDot={{true}} @status="info">{{model.public_id}}</Badge>
                             </div>
                         </ModelSelect>
-                    </InputGroup>
+                    </InputGroup> --}}
                     <RegistryYield @registry="fleet-ops:component:customer-form-panel:details" as |RegistryComponent|>
                         <RegistryComponent @customer={{this.customer}} @controller={{this.controller}} @permission={{this.savePermission}} />
                     </RegistryYield>

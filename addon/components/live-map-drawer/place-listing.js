@@ -199,6 +199,10 @@ export default class LiveMapDrawerPlaceListingComponent extends Component {
      */
     @action delete(place, options = {}) {
         this.crud.delete(place, {
+            title: 'Bạn có chắc chắn muốn xóa địa điểm này không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onSuccess: () => {
                 this._places.removeObject(place);
                 this.places.removeObject(place);

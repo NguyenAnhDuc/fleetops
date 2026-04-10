@@ -57,7 +57,7 @@ export default class DriverFormPanelComponent extends Component {
      */
     userAccountActionButtons = [
         {
-            text: 'Create new user',
+            text: 'Tạo tài khoản',
             icon: 'user-plus',
             size: 'xs',
             permission: 'iam create user',

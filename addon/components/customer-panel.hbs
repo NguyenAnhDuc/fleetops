@@ -77,6 +77,7 @@
         </div>
     </Overlay::Header>
     <Overlay::Body class="no-padding">
+        {{!-- Tab bar ẩn vì chỉ còn 1 tab Details
         <div class="section-header-actions w-full overflow-x-scroll lg:overflow-x-auto">
             <div class="ui-tabs mt-4">
                 <nav>
@@ -92,5 +93,7 @@
         <div class="tab-content tab-{{this.tab.slug}}">
             {{component this.tab.component customer=this.customer tabOptions=this.tab options=this.tab.componentParams}}
         </div>
+        --}}
+        <CustomerPanel::Details @customer={{this.customer}} />
     </Overlay::Body>
 </Overlay>

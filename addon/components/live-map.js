@@ -1636,7 +1636,12 @@ export default class LiveMapComponent extends Component {
             },
             {
                 text: this.intl.t('fleet-ops.component.live-map.delete-driver', { driverName: driver.name }),
-                callback: () => this.crud.delete(driver),
+                callback: () => this.crud.delete(driver, {
+                    title: 'Bạn có chắc chắn muốn xóa tài xế này không?',
+                    acceptButtonText: 'Xác nhận',
+                    acceptButtonIcon: 'trash',
+                    declineButtonText: 'Hủy',
+                }),
             },
             {
                 text: this.intl.t('fleet-ops.component.live-map.view-vehicle-for', { driverName: driver.name }),
@@ -1697,7 +1702,12 @@ export default class LiveMapComponent extends Component {
             },
             {
                 text: this.intl.t('fleet-ops.component.live-map.delete-vehicle', { vehicleName: vehicle.displayName }),
-                callback: () => this.crud.delete(vehicle),
+                callback: () => this.crud.delete(vehicle, {
+                    title: 'Bạn có chắc chắn muốn xóa phương tiện này không?',
+                    acceptButtonText: 'Xác nhận',
+                    acceptButtonIcon: 'trash',
+                    declineButtonText: 'Hủy',
+                }),
             },
         ];
 

@@ -236,6 +236,10 @@ export default class LiveMapDrawerDriverListingComponent extends Component {
      */
     @action delete(driver, options = {}) {
         this.crud.delete(driver, {
+            title: 'Bạn có chắc chắn muốn xóa tài xế này không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onSuccess: () => {
                 this._drivers.removeObject(driver);
                 this.drivers.removeObject(driver);

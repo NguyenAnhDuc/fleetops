@@ -335,7 +335,10 @@ export default class ManagementFleetsIndexController extends BaseController {
 
         this.crud.bulkDelete(selected, {
             modelNamePath: `name`,
-            acceptButtonText: this.intl.t('fleet-ops.management.fleets.index.delete-button'),
+            title: 'Bạn có chắc chắn muốn xóa các đội xe đã chọn không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onSuccess: async () => {
                 await this.hostRouter.refresh();
                 this.table.untoggleSelectAll();
@@ -414,6 +417,10 @@ export default class ManagementFleetsIndexController extends BaseController {
      */
     @action deleteFleet(fleet, options = {}) {
         this.crud.delete(fleet, {
+            title: 'Bạn có chắc chắn muốn xóa đội xe này không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onSuccess: () => {
                 return this.hostRouter.refresh();
             },

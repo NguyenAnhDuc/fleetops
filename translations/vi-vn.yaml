@@ -812,6 +812,7 @@ fleet-ops:
       driver-details: Chi tiết Tài xế
       user-account: Tài khoản Người dùng
       user-account-help-text: Mỗi hồ sơ tài xế cần phải liên kết với một tài khoản người dùng cụ thể. Mối liên kết này là cần thiết để xử lý quy trình xác thực, đảm bảo rằng mỗi tài xế có thể truy cập và quản lý hồ sơ của mình một cách an toàn.
+      select-user: Chọn Tài khoản
       success-message: Tài xế ({driverName}) đã được lưu thành công.
       driver-detail: Xem chi tiết tài xế
       save-driver: Lưu Tài xế

@@ -443,7 +443,10 @@ export default class ManagementIssuesIndexController extends BaseController {
      */
     @action deleteIssue(issue, options = {}) {
         this.crud.delete(issue, {
+            title: 'Bạn có chắc chắn muốn xóa mục này không?',
+            acceptButtonText: 'Xác nhận',
             acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onConfirm: () => {
                 this.hostRouter.refresh();
             },
@@ -462,7 +465,10 @@ export default class ManagementIssuesIndexController extends BaseController {
 
         this.crud.bulkDelete(selected, {
             modelNamePath: 'id',
-            acceptButtonText: this.intl.t('fleet-ops.management.issues.index.delete-button'),
+            title: 'Bạn có chắc chắn muốn xóa các mục đã chọn không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onSuccess: async () => {
                 await this.hostRouter.refresh();
                 this.table.untoggleSelectAll();

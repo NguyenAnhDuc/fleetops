@@ -216,6 +216,10 @@ export default class OperationsServiceRatesIndexController extends BaseControlle
      */
     @action deleteServiceRate(serviceRate, options = {}) {
         this.crud.delete(serviceRate, {
+            title: 'Bạn có chắc chắn muốn xóa mức giá này không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onSuccess: () => {
                 return this.hostRouter.refresh();
             },
@@ -233,7 +237,10 @@ export default class OperationsServiceRatesIndexController extends BaseControlle
 
         this.crud.bulkDelete(selected, {
             modelNamePath: `public_id`,
-            acceptButtonText: this.intl.t('fleet-ops.operations.service-rates.index.accept-button'),
+            title: 'Bạn có chắc chắn muốn xóa các mức giá đã chọn không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onSuccess: async () => {
                 await this.hostRouter.refresh();
                 this.table.untoggleSelectAll();

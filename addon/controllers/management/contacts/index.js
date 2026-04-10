@@ -319,7 +319,11 @@ export default class ManagementContactsIndexController extends BaseController {
      */
     @action deleteContact(contact, options = {}) {
         this.crud.delete(contact, {
+            title: 'Bạn có chắc chắn muốn xóa khách hàng này không?',
+            acceptButtonText: 'Xác nhận',
             acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
+            successNotification: `Khách hàng '${contact.name}' đã được xóa thành công.`,
             onConfirm: () => {
                 this.hostRouter.refresh();
             },
@@ -351,7 +355,10 @@ export default class ManagementContactsIndexController extends BaseController {
 
         this.crud.bulkDelete(selected, {
             modelNamePath: `name`,
-            acceptButtonText: this.intl.t('fleet-ops.management.contacts.index.delete-button'),
+            title: 'Bạn có chắc chắn muốn xóa các khách hàng đã chọn không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onSuccess: async () => {
                 await this.hostRouter.refresh();
                 this.table.untoggleSelectAll();

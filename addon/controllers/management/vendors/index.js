@@ -371,7 +371,10 @@ export default class ManagementVendorsIndexController extends BaseController {
      */
     @action deleteVendor(vendor, options = {}) {
         this.crud.delete(vendor, {
+            title: 'Bạn có chắc chắn muốn xóa nhà cung cấp này không?',
+            acceptButtonText: 'Xác nhận',
             acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onSuccess: () => {
                 return this.hostRouter.refresh();
             },
@@ -390,7 +393,10 @@ export default class ManagementVendorsIndexController extends BaseController {
 
         this.crud.bulkDelete(selected, {
             modelNamePath: `name`,
-            acceptButtonText: this.intl.t('fleet-ops.management.vendors.index.delete-button'),
+            title: 'Bạn có chắc chắn muốn xóa các nhà cung cấp đã chọn không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onSuccess: async () => {
                 await this.hostRouter.refresh();
                 this.table.untoggleSelectAll();

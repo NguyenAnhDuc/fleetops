@@ -364,6 +364,10 @@ export default class ManagementPlacesIndexController extends BaseController {
      */
     @action deletePlace(place, options = {}) {
         this.crud.delete(place, {
+            title: 'Bạn có chắc chắn muốn xóa địa điểm này không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onConfirm: () => {
                 return this.hostRouter.refresh();
             },
@@ -382,7 +386,10 @@ export default class ManagementPlacesIndexController extends BaseController {
 
         this.crud.bulkDelete(selected, {
             modelNamePath: `address`,
-            acceptButtonText: this.intl.t('fleet-ops.management.places.index.delete-button'),
+            title: 'Bạn có chắc chắn muốn xóa các địa điểm đã chọn không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onSuccess: async () => {
                 await this.hostRouter.refresh();
                 this.table.untoggleSelectAll();

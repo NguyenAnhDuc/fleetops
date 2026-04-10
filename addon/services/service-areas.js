@@ -461,6 +461,10 @@ export default class ServiceAreasService extends Service {
         this.triggerLiveMapFn('focusLayerBoundsByRecord', serviceArea);
 
         this.crud.delete(serviceArea, {
+            title: 'Bạn có chắc chắn muốn xóa khu vực dịch vụ này không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onConfirm: () => {
                 this.triggerLiveMapFn('blurServiceArea', serviceArea);
                 this.removeFromCache(serviceArea);
@@ -582,6 +586,10 @@ export default class ServiceAreasService extends Service {
      */
     @action deleteZone(zone, options = {}) {
         this.crud.delete(zone, {
+            title: 'Bạn có chắc chắn muốn xóa vùng này không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             ...options,
         });
     }

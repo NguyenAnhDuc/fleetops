@@ -1065,6 +1065,10 @@ export default class OperationsOrdersIndexController extends BaseController {
      */
     @action deleteOrder(order, options = {}) {
         this.crud.delete(order, {
+            title: 'Bạn có chắc chắn muốn xóa đơn hàng này không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onSuccess: () => {
                 return this.hostRouter.refresh();
             },
@@ -1083,7 +1087,10 @@ export default class OperationsOrdersIndexController extends BaseController {
 
         this.crud.bulkDelete(selected, {
             modelNamePath: `public_id`,
-            acceptButtonText: 'Delete Orders',
+            title: 'Bạn có chắc chắn muốn xóa các đơn hàng đã chọn không?',
+            acceptButtonText: 'Xác nhận',
+            acceptButtonIcon: 'trash',
+            declineButtonText: 'Hủy',
             onSuccess: async () => {
                 await this.hostRouter.refresh();
                 this.table.untoggleSelectAll();
