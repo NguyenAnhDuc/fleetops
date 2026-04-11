@@ -41,6 +41,7 @@ module.exports = buildEngine({
                     include: leafletAdddon.include,
                     exclude: leafletAdddon.exclude,
                     getDestinationPath: leafletAdddon.getDestinationPath,
+                    allowEmpty: true,
                 })
             );
         }
@@ -57,6 +58,7 @@ module.exports = buildEngine({
                 destDir: '/',
                 include: ['joint.min.js'],
                 exclude: [],
+                allowEmpty: true,
             })
         );
 
@@ -66,6 +68,7 @@ module.exports = buildEngine({
                 destDir: '/',
                 include: ['DirectedGraph.min.js'],
                 exclude: [],
+                allowEmpty: true,
             })
         );
 
@@ -78,6 +81,7 @@ module.exports = buildEngine({
         const assetsTree = [
             new Funnel(path.join(__dirname, 'assets'), {
                 destDir: '/',
+                allowEmpty: true,
             }),
             ...leafletTree,
             ...jointJsTree,

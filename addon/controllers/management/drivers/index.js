@@ -295,7 +295,7 @@ export default class ManagementDriversIndexController extends BaseController {
         },
         {
             label: this.intl.t('fleet-ops.common.phone'),
-            valuePath: 'phone',
+            valuePath: 'formattedPhone',
             cellComponent: 'table/cell/base',
             width: '150px',
             resizable: true,

@@ -148,7 +148,7 @@ export default class ManagementContactsIndexController extends BaseController {
         },
         {
             label: this.intl.t('fleet-ops.common.phone'),
-            valuePath: 'phone',
+            valuePath: 'formattedPhone',
             cellComponent: 'click-to-copy',
             width: '130px',
             resizable: true,
