@@ -20,7 +20,23 @@ class IssueFilter extends Filter
 
     public function query(?string $searchQuery)
     {
-        $this->builder->search($searchQuery);
+        $like = '%' . $searchQuery . '%';
+
+        $this->builder->where(function ($q) use ($searchQuery, $like) {
+            // Tìm theo phương tiện: plate_number, make, model là DB columns thực
+            $q->whereHas('vehicle', function ($vq) use ($like) {
+                $vq->where('plate_number', 'LIKE', $like)
+                   ->orWhere('make', 'LIKE', $like)
+                   ->orWhere('model', 'LIKE', $like);
+            });
+
+            // Tìm theo ngày tạo đơn
+            $q->orWhereRaw("DATE_FORMAT(car_repair_date, '%Y-%m-%d') LIKE ?", [$like]);
+
+            // Tìm theo tên hạng mục trong items JSON
+            $jsonPath = '$[*].name';
+            $q->orWhereRaw("JSON_SEARCH(items, 'one', ?, NULL, ?) IS NOT NULL", [$like, $jsonPath]);
+        });
     }
 
     public function publicId(?string $publicId)

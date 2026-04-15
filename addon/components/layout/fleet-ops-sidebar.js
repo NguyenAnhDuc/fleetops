@@ -136,7 +136,7 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
             {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.car_repair_supplies',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.car_repair_supplies'),
-                icon: 'screwdriver-wrench',
+                icon: 'file-invoice-dollar',
                 route: 'management.issues',
                 permission: 'fleet-ops list issue',
                 visible: this.abilities.can('fleet-ops see issue'),

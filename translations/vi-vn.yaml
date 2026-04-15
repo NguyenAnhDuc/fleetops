@@ -2,7 +2,7 @@ fleet-ops:
   extension-name: Fleet-Ops
   common:
     image: Hình ảnh
-    car_repair_date: Ngày sửa xe
+    car_repair_date: Ngày tạo đơn
     inspection-expire-date: Hạn Đăng kiểm
     action-car-repair-supplies: Hành động
     total_money: Tổng tiền
@@ -304,7 +304,7 @@ fleet-ops:
         loading-vehicle: Đang tải phương tiện đội xe...
     layout:
       fleet-ops-sidebar:
-        car_repair_supplies: Sửa xe & Vật tư
+        car_repair_supplies: Chi phí chung
         finance: 	Báo cáo thu chi
         report-debts: Báo cáo công nợ
         navigator-app: Ứng dụng Navigator
@@ -896,16 +896,28 @@ fleet-ops:
       price-breakdown: Chi tiết Giá
       metadata: Siêu dữ liệu
     issue-form-panel:
-      new-car-repair-supplies: Tạo mới Sửa xe & Vật tư
-      car-repair-supplies: Sửa xe & Vật tư
+      new-car-repair-supplies: Tạo mới Chi phí chung
+      car-repair-supplies: Chi phí chung
       save-car-repair-supplies: Lưu
       create-car-repair-supplies: Tạo mới
-      detail-car-repair-supplies: Xem chi tiết Sửa xe & Vật tư
+      detail-car-repair-supplies: Xem chi tiết Chi phí chung
       cancel-car-repair-supplies: Huỷ bỏ
-      report-car-repair-supplies: Báo cáo Sửa xe & Vật tư
+      report-car-repair-supplies: Chi phí chung
       note-car-repair-supplies: Ghi Chú
-      upload-image-help: Tải lên hình ảnh liên quan đến vấn đề này
-      success-message: Vấn đề ({publicId}) đã được lưu thành công.
+      upload-image-help: Tải lên hình ảnh liên quan đến chi phí này
+      success-message: Chi phí ({publicId}) đã được lưu thành công.
+      items-label: Hạng mục chi phí
+      add-item: Thêm hạng mục
+      no-items: Chưa có hạng mục nào. Nhấn "Thêm hạng mục" để bắt đầu.
+      item-name-placeholder: Tên hạng mục (VD. Thay lốp xe)
+      item-money-placeholder: Số tiền (VNĐ)
+      item-name-header: Tên hạng mục
+      item-money-header: Số tiền (VNĐ)
+      validation-vehicle-required: Vui lòng chọn phương tiện
+      validation-date-required: Vui lòng chọn ngày tạo đơn
+      validation-items-required: Vui lòng thêm ít nhất 1 hạng mục chi phí
+      validation-item-name-required: Nhập tên hạng mục
+      validation-item-money-required: Nhập số tiền lớn hơn 0
       issue: Vấn đề Mới
       save-issue: Lưu Vấn đề
       create-issue: Tạo Vấn đề
@@ -1277,7 +1289,7 @@ fleet-ops:
         delete-issues: Xóa Vấn Đề
     car-repair-supplies:
       index:
-        title: Sửa xe & Vật tư
+        title: Chi phí chung
         edit: Chỉnh sửa
         delete: Xoá
     contact-debt:

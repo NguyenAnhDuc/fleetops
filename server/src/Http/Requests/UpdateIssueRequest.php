@@ -12,10 +12,13 @@ class UpdateIssueRequest extends CreateIssueRequest
     public function rules()
     {
         return [
-            'report'       => ['required'],
+            'report'       => ['nullable'],
             'category'     => ['nullable'],
             'type'         => ['nullable'],
             'priority'     => ['nullable'],
+            'items'        => ['nullable', 'array'],
+            'items.*.name' => ['required_with:items', 'string'],
+            'items.*.money'=> ['required_with:items', 'numeric', 'min:0'],
         ];
     }
 }

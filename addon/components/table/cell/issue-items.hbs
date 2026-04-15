@@ -1,0 +1,15 @@
+<div class="flex items-center w-full min-w-0" ...attributes>
+    {{#if this.items.length}}
+        <span title={{this.tooltipText}} class="truncate cursor-help text-sm text-gray-800 dark:text-gray-200">
+            {{#each this.previewItems as |item index|}}
+                {{#if (gt index 0)}}<span class="text-gray-400 mx-1">•</span>{{/if}}
+                <span>{{item.name}}</span>
+            {{/each}}
+            {{#if this.extraCount}}
+                <span class="ml-1 text-xs text-blue-500 font-medium">(+{{this.extraCount}})</span>
+            {{/if}}
+        </span>
+    {{else}}
+        <span class="text-gray-400">—</span>
+    {{/if}}
+</div>

@@ -1,62 +1,95 @@
-<div class="p-4">
-    <ContentPanel @title={{t "fleet-ops.common.details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 text-xs md:mb-6 dark:text-gray-100">
-            {{!-- <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.reporter"}}</div>
-                <div class="field-value">{{n-a @issue.reporter_name}}</div>
-            </div> --}}
-            {{!-- <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.component.issue-panel.details.assigned"}}</div>
-                <div class="field-value">{{n-a @issue.assignee_name}}</div>
-            </div> --}}
-            <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.driver"}}</div>
-                <div class="field-value">{{n-a @issue.driver_name}}</div>
+<div class="p-4 flex flex-col gap-5">
+
+    {{!-- Row 1: Phương tiện + Ngày tạo đơn --}}
+    <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-1">
+            <div class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                {{t "fleet-ops.common.vehicle"}}
             </div>
-            <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.vehicle"}}</div>
-                <div class="field-value">{{n-a @issue.vehicle_name}}</div>
-            </div>
-            {{!-- <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.component.issue-panel.details.type"}}</div>
-                <div class="field-value">{{n-a @issue.type}}</div>
-            </div> --}}
-            {{!-- <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.component.issue-panel.details.category"}}</div>
-                <div class="field-value">{{n-a @issue.category}}</div>
-            </div> --}}
-            {{!-- <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.component.issue-panel.details.priority"}}</div>
-                <div class="field-value">
-                    <Badge @status={{@issue.priority}} />
-                </div>
-            </div> --}}
-            {{!-- <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.date-created"}}</div>
-                <div class="field-value">{{@issue.createdAtShort}}</div>
-            </div> --}}
-            <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.car_repair_date"}}</div>
-                <div class="field-value">{{@issue.carRepairDate}}</div>
-            </div>
-            <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.total_money"}}</div>
-                <div class="field-value">{{format-currency @issue.total_money @issue.currency}}</div>
-            </div>
-            <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.image"}}</div>
-                <div class="field-value">
-                    <Image src={{@issue.photo_url}} alt="Image" height="128" width="128" class="h-32 w-32 rounded-md" />
-                </div>
-            </div>
-            {{!-- <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.coordinates"}}</div>
-                <div class="field-value">{{point-coordinates @issue.location}}</div>
-            </div> --}}
-            <div class="field-info-container col-span-2">
-                <div class="field-name">{{t "fleet-ops.component.issue-form-panel.note-car-repair-supplies"}}</div>
-                <div class="field-value">{{n-a @issue.report}}</div>
-            </div>
+            <div class="text-sm font-medium dark:text-gray-100">{{n-a @issue.vehicle_name}}</div>
         </div>
-    </ContentPanel>
+        <div class="space-y-1">
+            <div class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                {{t "fleet-ops.common.car_repair_date"}}
+            </div>
+            <div class="text-sm font-medium dark:text-gray-100">{{n-a @issue.carRepairDate}}</div>
+        </div>
+    </div>
+
+    <div class="border-t border-gray-100 dark:border-gray-700"></div>
+
+    {{!-- Hạng mục chi phí --}}
+    <div>
+        <div class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
+            {{t "fleet-ops.component.issue-form-panel.items-label"}}
+        </div>
+
+        {{#if @issue.formattedItems.length}}
+            {{!-- Column headers --}}
+            <div class="flex items-center mb-1 px-3 gap-2">
+                <span class="flex-1 text-xs text-gray-400 dark:text-gray-500 min-w-0">
+                    {{t "fleet-ops.component.issue-form-panel.item-name-header"}}
+                </span>
+                <span class="w-32 text-xs text-gray-400 dark:text-gray-500 text-right flex-shrink-0">
+                    {{t "fleet-ops.component.issue-form-panel.item-money-header"}}
+                </span>
+            </div>
+
+            {{!-- Items list --}}
+            <div class="rounded-lg border border-gray-200 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-700 overflow-hidden">
+                {{#each @issue.formattedItems as |item|}}
+                    <div class="flex items-center px-3 py-2.5 gap-2">
+                        <div class="flex-1 min-w-0 text-sm text-gray-800 dark:text-gray-200">
+                            {{item.name}}
+                        </div>
+                        <div class="w-32 text-sm font-semibold text-right text-gray-700 dark:text-gray-200 flex-shrink-0 tabular-nums">
+                            {{item.moneyDisplay}}
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+
+            {{!-- Tổng tiền --}}
+            <div class="flex items-center justify-between mt-3 pt-3 border-t-2 border-gray-200 dark:border-gray-600 px-1">
+                <span class="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+                    {{t "fleet-ops.common.total_money"}}
+                </span>
+                <span class="text-base font-bold text-blue-600 dark:text-blue-400 tabular-nums">
+                    {{@issue.displayTotalMoney}}
+                </span>
+            </div>
+
+        {{else}}
+            <div class="text-xs text-gray-400 dark:text-gray-500 italic py-3 text-center border border-dashed border-gray-200 dark:border-gray-700 rounded-lg">
+                —
+            </div>
+        {{/if}}
+    </div>
+
+    {{!-- Ghi chú (chỉ hiện nếu có) --}}
+    {{#if @issue.report}}
+        <div class="border-t border-gray-100 dark:border-gray-700"></div>
+        <div class="space-y-1">
+            <div class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                {{t "fleet-ops.component.issue-form-panel.note-car-repair-supplies"}}
+            </div>
+            <div class="text-sm dark:text-gray-100 leading-relaxed whitespace-pre-line">{{@issue.report}}</div>
+        </div>
+    {{/if}}
+
+    {{!-- Hình ảnh --}}
+    <div class="border-t border-gray-100 dark:border-gray-700"></div>
+    <div class="space-y-2">
+        <div class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+            {{t "fleet-ops.common.image"}}
+        </div>
+        <Image
+            src={{@issue.photo_url}}
+            alt="Image"
+            height="120"
+            width="120"
+            class="h-28 w-28 rounded-lg border border-gray-200 dark:border-gray-700 object-cover"
+        />
+    </div>
+
 </div>

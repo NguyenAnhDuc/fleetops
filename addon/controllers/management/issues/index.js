@@ -62,7 +62,7 @@ export default class ManagementIssuesIndexController extends BaseController {
      *
      * @var {String}
      */
-    @tracked sort = '-created_at';
+    @tracked sort = '-car_repair_date';
 
     /**
      * The filterable param `public_id`
@@ -219,35 +219,23 @@ export default class ManagementIssuesIndexController extends BaseController {
         //     model: 'user',
         // },
         {
-            label: this.intl.t('fleet-ops.common.driver'),
-            valuePath: 'driver_name',
-            width: '100px',
-            cellComponent: 'table/cell/anchor',
-            permission: 'fleet-ops view driver',
-            onClick: async (issue) => {
-                let driver = await issue.loadDriver();
-
-                if (driver) {
-                    this.contextPanel.focus(driver);
-                }
-            },
+            label: this.intl.t('fleet-ops.common.car_repair_date'),
+            valuePath: 'carRepairDate',
+            sortParam: 'car_repair_date',
+            width: '130px',
             resizable: true,
             sortable: true,
             filterable: true,
-            filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select driver',
-            filterParam: 'driver',
-            model: 'driver',
+            filterComponent: 'filter/date',
         },
         {
             label: this.intl.t('fleet-ops.common.vehicle'),
             valuePath: 'vehicle_name',
-            width: '100px',
+            width: '140px',
             cellComponent: 'table/cell/anchor',
             permission: 'fleet-ops view vehicle',
             onClick: async (issue) => {
                 let vehicle = await issue.loadVehicle();
-
                 if (vehicle) {
                     this.contextPanel.focus(vehicle);
                 }
@@ -261,57 +249,23 @@ export default class ManagementIssuesIndexController extends BaseController {
             model: 'vehicle',
             modelNamePath: 'displayName',
         },
-        // {
-        //     label: this.intl.t('fleet-ops.common.status'),
-        //     valuePath: 'status',
-        //     cellComponent: 'table/cell/status',
-        //     width: '120px',
-        //     resizable: true,
-        //     sortable: true,
-        //     filterable: true,
-        //     filterComponent: 'filter/multi-option',
-        //     filterOptions: ['pending', 'in-progress', 'backlogged', 'requires-update', 'in-review', 're-opened', 'duplicate', 'pending-review', 'escalated', 'completed', 'canceled'],
-        // },
-        {
-            label: this.intl.t('fleet-ops.common.car_repair_date'),
-            valuePath: 'carRepairDate',
-            sortParam: 'car_repair_date',
-            width: '120px',
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/date',
-        },
         {
             label: this.intl.t('fleet-ops.common.total_money'),
             valuePath: 'displayTotalMoney',
             sortParam: 'total_money',
-            width: '120px',
+            width: '130px',
             resizable: true,
             sortable: true,
             filterable: true,
             filterComponent: 'filter/date',
         },
         {
-            label: this.intl.t('fleet-ops.common.created-at'),
-            valuePath: 'createdAt',
-            sortParam: 'created_at',
-            width: '120px',
+            label: this.intl.t('fleet-ops.component.issue-form-panel.items-label'),
+            valuePath: 'items',
+            cellComponent: 'table/cell/issue-items',
+            width: '250px',
             resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/date',
-        },
-        {
-            label: this.intl.t('fleet-ops.common.updated-at'),
-            valuePath: 'updatedAt',
-            sortParam: 'updated_at',
-            width: '120px',
-            resizable: true,
-            sortable: true,
-            hidden: true,
-            filterable: true,
-            filterComponent: 'filter/date',
+            sortable: false,
         },
         {
             label: '',
@@ -442,11 +396,14 @@ export default class ManagementIssuesIndexController extends BaseController {
      * @void
      */
     @action deleteIssue(issue, options = {}) {
+        const vehicleName = issue.vehicle_name || 'N/A';
+        const repairDate = issue.carRepairDate || 'N/A';
         this.crud.delete(issue, {
             title: 'Bạn có chắc chắn muốn xóa mục này không?',
             acceptButtonText: 'Xác nhận',
             acceptButtonIcon: 'trash',
             declineButtonText: 'Hủy',
+            successNotification: `Chi phí chung của phương tiện "${vehicleName}" ngày ${repairDate} đã được xoá.`,
             onConfirm: () => {
                 this.hostRouter.refresh();
             },

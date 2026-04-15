@@ -49,7 +49,8 @@ class Issue extends FleetbaseResource
             'updated_at'                 => $this->updated_at,
             'created_at'                 => $this->created_at,
             'currency'                   => $this->currency,
-            'total_money'                => (float)$this->total_money,   
+            'total_money'                => (float)$this->total_money,
+            'items'                      => $this->items ?? [],
             'car_repair_date'            => $this->car_repair_date,
             'image_uuid'                 => $this->image_uuid,
             'photo_url'                  => $this->photo_url

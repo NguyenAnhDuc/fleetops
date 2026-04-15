@@ -24,12 +24,15 @@ class CreateIssueRequest extends FleetbaseRequest
     public function rules()
     {
         return [
-            'driver'       => ['required'],
-            'location'     => ['required'],
-            'report'       => ['required'],
+            'driver'       => ['nullable'],
+            'location'     => ['nullable'],
+            'report'       => ['nullable'],
             'category'     => ['nullable'],
             'type'         => ['nullable'],
             'priority'     => ['nullable'],
+            'items'        => ['nullable', 'array'],
+            'items.*.name' => ['required_with:items', 'string'],
+            'items.*.money'=> ['required_with:items', 'numeric', 'min:0'],
         ];
     }
 }

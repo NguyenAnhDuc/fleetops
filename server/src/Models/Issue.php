@@ -70,6 +70,7 @@ class Issue extends Model
         'car_repair_date',
         'total_money',
         'currency',
+        'items',
     ];
 
     /**
@@ -89,8 +90,29 @@ class Issue extends Model
         'meta'            => Json::class,
         'resolved_at'     => 'date',
         'car_repair_date' => 'date',
+        'items'           => 'array',
     ];
     
+
+    /**
+     * Set items and automatically compute total_money from items array.
+     * Each item should have 'name' and 'money' keys.
+     * Example: [{"name": "Thay lốp", "money": 1200000}, ...]
+     *
+     * @param array|string $value
+     * @return void
+     */
+    public function setItemsAttribute($value)
+    {
+        $items = is_string($value) ? json_decode($value, true) : $value;
+        if (!is_array($items)) {
+            $items = [];
+        }
+        $this->attributes['items'] = json_encode($items);
+        // Auto-compute total_money from items
+        $total = collect($items)->sum(fn($item) => (int) ($item['money'] ?? 0));
+        $this->attributes['total_money'] = $total;
+    }
 
     /**
      * Set the total_money as only numbers.

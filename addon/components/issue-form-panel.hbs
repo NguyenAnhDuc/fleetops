@@ -7,7 +7,7 @@
     @noBackdrop={{true}}
     @fullHeight={{true}}
     @isResizable={{or this.isResizable @isResizable}}
-    @width={{or this.width @width "570px"}}
+    @width={{or this.width @width "600px"}}
 >
     <Overlay::Header
         @title={{if
@@ -15,7 +15,6 @@
             (concat (t "fleet-ops.component.issue-form-panel.car-repair-supplies") " : " (format-date this.issue.created_at "MMM dd, yyyy HH:mm"))
             (t "fleet-ops.component.issue-form-panel.new-car-repair-supplies")
         }}
-        {{!-- @status={{this.issue.status}} --}}
         @hideStatusDot={{true}}
         @titleWrapperClass="leading-5"
     >
@@ -42,71 +41,28 @@
             <Button
                 @type="default"
                 @icon="times"
-                @helpText={{if this.issue.id (t "fleet-ops.component.issue-form-panel.cancel-car-repair-supplies") (t "fleet-ops.component.issue-form-panel.cancel-car-repair-supplies")}}
+                @helpText={{t "fleet-ops.component.issue-form-panel.cancel-car-repair-supplies"}}
                 @onClick={{this.onPressCancel}}
             />
         </div>
     </Overlay::Header>
 
-    <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 pt-4">
+    <Overlay::Body @wrapperClass="px-4 pt-4">
         {{#let (cannot this.savePermission) as |unauthorized|}}
-            <ContentPanel @title={{t "fleet-ops.component.issue-form-panel.report-car-repair-supplies"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-                <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-2 no-input-group-padding text-xs">
-                    {{!-- <InputGroup @name={{t "fleet-ops.component.issue-form-panel.reported-by"}}>
-                        <ModelSelect
-                            @modelName="user"
-                            @selectedModel={{this.issue.reporter}}
-                            @placeholder={{t "fleet-ops.component.issue-form-panel.select-reporter"}}
-                            @triggerClass="form-select form-input"
-                            @infiniteScroll={{false}}
-                            @renderInPlace={{true}}
-                            @onChange={{this.setReporter}}
-                            @disabled={{unauthorized}}
-                            as |model|
-                        >
-                            {{model.name}}
-                        </ModelSelect>
-                    </InputGroup> --}}
+            <div class="flex flex-col gap-4 pb-8">
 
-                    {{!-- <InputGroup @name={{t "fleet-ops.component.issue-form-panel.assigned"}}>
-                        <ModelSelect
-                            @modelName="user"
-                            @selectedModel={{this.issue.assignee}}
-                            @placeholder={{t "fleet-ops.component.issue-form-panel.select-assign"}}
-                            @triggerClass="form-select form-input"
-                            @infiniteScroll={{false}}
-                            @renderInPlace={{true}}
-                            @onChange={{fn (mut this.issue.assignee)}}
-                            @onChangeId={{fn (mut this.issue.assigned_to_uuid)}}
-                            @disabled={{unauthorized}}
-                            as |model|
-                        >
-                            {{model.name}}
-                        </ModelSelect>
-                    </InputGroup> --}}
-
-                    <InputGroup @name={{t "fleet-ops.common.driver"}}>
-                        <ModelSelect
-                            @modelName="driver"
-                            @selectedModel={{this.issue.driver}}
-                            @placeholder={{t "fleet-ops.component.issue-form-panel.select-driver"}}
-                            @triggerClass="form-select form-input"
-                            @infiniteScroll={{false}}
-                            @renderInPlace={{true}}
-                            @onChange={{fn (mut this.issue.driver)}}
-                            @disabled={{unauthorized}}
-                            as |model|
-                        >
-                            {{model.name}}
-                        </ModelSelect>
-                    </InputGroup>
-
-                    <InputGroup @name={{t "fleet-ops.common.vehicle"}}>
+                {{!-- Line 1: Phương tiện + Ngày tạo đơn --}}
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            {{t "fleet-ops.common.vehicle"}}
+                            <span class="text-red-500 ml-0.5">*</span>
+                        </label>
                         <ModelSelect
                             @modelName="vehicle"
                             @selectedModel={{this.issue.vehicle}}
                             @placeholder={{t "fleet-ops.component.issue-form-panel.select-vehicle"}}
-                            @triggerClass="form-select form-input"
+                            @triggerClass="form-select form-input w-full"
                             @infiniteScroll={{false}}
                             @renderInPlace={{true}}
                             @onChange={{fn (mut this.issue.vehicle)}}
@@ -115,164 +71,164 @@
                         >
                             {{model.displayName}}
                         </ModelSelect>
-                    </InputGroup>
+                        {{#if this.validationErrors.vehicle}}
+                            <p class="mt-1 text-xs text-red-500">{{this.validationErrors.vehicle}}</p>
+                        {{/if}}
+                    </div>
 
-                    {{!-- <InputGroup @name={{t "fleet-ops.component.issue-form-panel.type"}}>
-                        <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
-                            <PowerSelect
-                                @options={{this.issueTypes}}
-                                @selected={{this.issue.type}}
-                                @onChange={{this.onSelectIssueType}}
-                                @placeholder={{t "fleet-ops.component.issue-form-panel.select-type"}}
-                                @triggerClass="form-select form-input"
-                                @disabled={{unauthorized}}
-                                as |type|
-                            >
-                                {{smart-humanize type}}
-                            </PowerSelect>
-                        </div>
-                    </InputGroup> --}}
-
-                    {{!-- <InputGroup @name={{t "fleet-ops.component.issue-form-panel.category"}}>
-                        <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
-                            <PowerSelect
-                                @options={{this.issueCategories}}
-                                @selected={{this.issue.category}}
-                                @onChange={{fn (mut this.issue.category)}}
-                                @placeholder={{t "fleet-ops.component.issue-form-panel.select-category"}}
-                                @triggerClass="form-select form-input"
-                                @disabled={{or unauthorized (not this.issueCategories)}}
-                                as |category|
-                            >
-                                {{smart-humanize category}}
-                            </PowerSelect>
-                        </div>
-                    </InputGroup> --}}
-
-                    <InputGroup @name={{t "fleet-ops.common.car_repair_date"}} @wrapperClass="col-span-1">
-                        <DateTimeInput
-                            class="form-input"
-                            @value={{this.issue.car_repair_date}}
-                            @onUpdate={{fn (mut this.issue.car_repair_date)}}
-                            @disabled={{unauthorized}}
-                            @options={{hash enableTime=false dateFormat="Y-m-d" altInput=false}}
-                        />
-                    </InputGroup>
-                    
-                    <InputGroup @name={{t "fleet-ops.common.total_money"}} @wrapperClass="col-span-1">
-                        <MoneyInput
-                            class="w-full"
-                            @value={{this.issue.total_money}}
-                            @currency={{this.issue.currency}}
-                            @canSelectCurrency={{true}}
-                            @onCurrencyChange={{fn (mut this.issue.currency)}}
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            {{t "fleet-ops.common.car_repair_date"}}
+                            <span class="text-red-500 ml-0.5">*</span>
+                        </label>
+                        <input
+                            type="date"
+                            class="form-input w-full"
+                            value={{this.issue.carRepairDate}}
                             disabled={{unauthorized}}
+                            {{on "change" (fn this.onDateChange)}}
                         />
-                    </InputGroup>
+                        {{#if this.validationErrors.car_repair_date}}
+                            <p class="mt-1 text-xs text-red-500">{{this.validationErrors.car_repair_date}}</p>
+                        {{/if}}
+                    </div>
+                </div>
 
-                    <InputGroup @name={{t "fleet-ops.component.issue-form-panel.note-car-repair-supplies"}} @wrapperClass="col-span-2">
-                        <Textarea
-                            @value={{this.issue.report}}
-                            aria-label="Issue Report"
-                            class="w-full form-input"
-                            disabled={{unauthorized}}
-                            placeholder={{t "fleet-ops.component.issue-form-panel.note-car-repair-supplies"}}
-                            rows={{5}}
-                        />
-                    </InputGroup>
-
-                    {{!-- <InputGroup @name={{t "fleet-ops.component.issue-form-panel.tags"}} @wrapperClass="col-span-2">
-                        <TagInput
-                            class="form-input"
-                            @placeholder={{t "fleet-ops.component.issue-form-panel.add-tags"}}
-                            @allowSpacesInTags={{true}}
-                            @tags={{this.issue.tags}}
-                            @addTag={{this.addTag}}
-                            @removeTagAtIndex={{this.removeTag}}
-                            @disabled={{unauthorized}}
-                            as |tag|
-                        >
-                            {{tag}}
-                        </TagInput>
-                    </InputGroup> --}}
-
-                    {{!-- <InputGroup @name={{t "fleet-ops.component.issue-form-panel.priority"}}>
-                        <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
-                            <PowerSelect
-                                @options={{this.issuePriorityOptions}}
-                                @selected={{this.issue.priority}}
-                                @onChange={{fn (mut this.issue.priority)}}
-                                @placeholder={{t "fleet-ops.component.issue-form-panel.select-priority"}}
-                                @triggerClass="form-select form-input"
-                                @disabled={{unauthorized}}
-                                as |priority|
-                            >
-                                {{smart-humanize priority}}
-                            </PowerSelect>
-                        </div>
-                    </InputGroup> --}}
-
-                    {{!-- <InputGroup @name={{t "fleet-ops.common.status"}}>
-                        <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
-                            <PowerSelect
-                                @options={{this.issueStatusOptions}}
-                                @selected={{this.issue.status}}
-                                @onChange={{fn (mut this.issue.status)}}
-                                @placeholder={{t "fleet-ops.component.issue-form-panel.select-status"}}
-                                @triggerClass="form-select form-input"
-                                @disabled={{unauthorized}}
-                                as |status|
-                            >
-                                {{smart-humanize status}}
-                            </PowerSelect>
-                        </div>
-                    </InputGroup> --}}
-
-                    {{!-- <InputGroup @name={{t "fleet-ops.common.coordinates"}} @wrapperClass="col-span-2">
-                        <CoordinatesInput @value={{this.issue.location}} @onChange={{fn (mut this.issue.location)}} @disabled={{unauthorized}} />
-                    </InputGroup> --}}
-
-                    <InputGroup @name={{t "fleet-ops.common.image"}} @helpText={{t "fleet-ops.component.issue-form-panel.upload-image-help"}} @wrapperClass="col-span-2">
-                        {{!-- <div class="flex items-center">
-                            <FileUpload
-                                @name="issue-image"
-                                @for="issue-image"
-                                @accept={{join "," this.acceptedImageTypes}}
-                                @multiple={{false}}
-                                @onFileAdded={{this.onImageFileAdded}}
-                                @disabled={{unauthorized}}
-                            >
-                                <a tabindex={{0}} class="btn btn-default btn-xs cursor-pointer">
-                                    <FaIcon @icon="upload" @size="sm" class="mr-2" />{{t "common.select-file"}}
-                                </a>
-                            </FileUpload>
-                            {{#if this.file}}
-                                <div class="ml-2 flex items-center text-sm">
-                                    <Spinner class="dark:text-blue-400 text-blue-900" />
-                                    <span class="ml-2 text-xs dark:text-blue-400 text-blue-900">{{round this.file.progress}}%</span>
-                                </div>
+                {{!-- Line 2+: Hạng mục chi phí (dynamic) --}}
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <div>
+                            <span class="text-xs font-medium text-gray-700 dark:text-gray-300">
+                                {{t "fleet-ops.component.issue-form-panel.items-label"}}
+                                <span class="text-red-500 ml-0.5">*</span>
+                            </span>
+                            {{#if this.validationErrors.items}}
+                                <span class="ml-2 text-xs text-red-500">{{this.validationErrors.items}}</span>
                             {{/if}}
                         </div>
-                        {{#if this.issue.image}}
-                            <div class="mt-2">
-                                <File @file={{this.issue.image}} @onDelete={{this.removeImage}} class="custom-field-file" />
-                            </div>
-                        {{/if}} --}}
-                        <Image src={{this.issue.photo_url}} alt="Image" height="128" width="128" class="h-32 w-32 rounded-md" />
-                        <UploadButton @name={{t "fleet-ops.common.photos"}} @accept="image/*" @onFileAdded={{this.onImageFileAdded}} class="w-32" />
-                    </InputGroup>
-                    
+                        <button
+                            type="button"
+                            class="flex items-center gap-1 px-2 py-1 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded transition-colors disabled:opacity-50"
+                            {{on "click" this.addItem}}
+                            disabled={{unauthorized}}
+                        >
+                            <FaIcon @icon="plus" @size="xs" />
+                            {{t "fleet-ops.component.issue-form-panel.add-item"}}
+                        </button>
+                    </div>
 
-                    <RegistryYield @registry="fleet-ops:component:issue-form-panel:details" as |RegistryComponent|>
-                        <RegistryComponent @issue={{this.issue}} @controller={{this.controller}} @permission={{this.savePermission}} />
-                    </RegistryYield>
+                    {{!-- Header row --}}
+                    {{#if this.items.length}}
+                        <div class="grid grid-cols-12 gap-2 mb-1 px-1">
+                            <span class="col-span-7 text-xs text-gray-500 dark:text-gray-400">{{t "fleet-ops.component.issue-form-panel.item-name-header"}}</span>
+                            <span class="col-span-4 text-xs text-gray-500 dark:text-gray-400">{{t "fleet-ops.component.issue-form-panel.item-money-header"}}</span>
+                            <span class="col-span-1"></span>
+                        </div>
+                    {{/if}}
+
+                    {{!-- Items list: max 4 rows, scroll khi > 4 --}}
+                    <div class="overflow-y-auto border border-gray-100 dark:border-gray-700 rounded-lg p-2" style="max-height: 184px;">
+                        {{#if this.items.length}}
+                            <div class="space-y-2 pr-1">
+                                {{#each this.items as |item index|}}
+                                    <div class="grid grid-cols-12 gap-2 items-start">
+                                        <div class="col-span-7">
+                                            <input
+                                                type="text"
+                                                class="form-input w-full text-xs {{if item.nameError "border-red-400"}}"
+                                                placeholder={{or item.namePlaceholder (t "fleet-ops.component.issue-form-panel.item-name-placeholder")}}
+                                                value={{item.name}}
+                                                disabled={{unauthorized}}
+                                                {{on "change" (fn this.updateItemField index "name")}}
+                                            />
+                                            {{#if item.nameError}}
+                                                <p class="text-xs text-red-500 mt-0.5">{{item.nameError}}</p>
+                                            {{/if}}
+                                        </div>
+                                        <div class="col-span-4">
+                                            <input
+                                                type="text"
+                                                inputmode="numeric"
+                                                class="form-input w-full text-xs {{if item.moneyError "border-red-400"}}"
+                                                placeholder="0"
+                                                value={{item.money}}
+                                                disabled={{unauthorized}}
+                                                {{on "change" (fn this.updateItemField index "money")}}
+                                            />
+                                            {{#if item.moneyError}}
+                                                <p class="text-xs text-red-500 mt-0.5">{{item.moneyError}}</p>
+                                            {{/if}}
+                                        </div>
+                                        <div class="col-span-1 flex justify-center pt-1">
+                                            <button
+                                                type="button"
+                                                class="w-6 h-6 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors disabled:opacity-50"
+                                                {{on "click" (fn this.removeItem index)}}
+                                                disabled={{unauthorized}}
+                                            >
+                                                <FaIcon @icon="trash" @size="xs" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        {{else}}
+                            <div class="text-xs text-gray-400 dark:text-gray-500 italic py-4 text-center border border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
+                                <FaIcon @icon="receipt" class="text-gray-300 dark:text-gray-600 mb-1" @size="lg" />
+                                <p>{{t "fleet-ops.component.issue-form-panel.no-items"}}</p>
+                            </div>
+                        {{/if}}
+                    </div>
+
+                    {{!-- Tổng tiền --}}
+                    {{#if this.items.length}}
+                        <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
+                            <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                {{t "fleet-ops.common.total_money"}}
+                            </span>
+                            <span class="text-sm font-bold text-blue-600 dark:text-blue-400">
+                                {{this.formattedTotalMoney}}
+                            </span>
+                        </div>
+                    {{/if}}
                 </div>
-            </ContentPanel>
+
+                {{!-- Ghi chú --}}
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        {{t "fleet-ops.component.issue-form-panel.note-car-repair-supplies"}}
+                    </label>
+                    <Textarea
+                        @value={{this.issue.report}}
+                        aria-label="Issue Report"
+                        class="w-full form-input text-xs"
+                        disabled={{unauthorized}}
+                        placeholder={{t "fleet-ops.component.issue-form-panel.note-car-repair-supplies"}}
+                        rows={{3}}
+                    />
+                </div>
+
+                {{!-- Hình ảnh --}}
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        {{t "fleet-ops.common.image"}}
+                        <span class="text-xs text-gray-400 ml-1">({{t "fleet-ops.component.issue-form-panel.upload-image-help"}})</span>
+                    </label>
+                    <div class="flex items-center gap-3">
+                        <Image src={{this.issue.photo_url}} alt="Image" height="80" width="80" class="h-20 w-20 rounded-md object-cover border border-gray-200 dark:border-gray-600" />
+                        <UploadButton @name={{t "fleet-ops.common.photos"}} @accept="image/*" @onFileAdded={{this.onImageFileAdded}} class="w-32" />
+                    </div>
+                </div>
+
+                <RegistryYield @registry="fleet-ops:component:issue-form-panel:details" as |RegistryComponent|>
+                    <RegistryComponent @issue={{this.issue}} @controller={{this.controller}} @permission={{this.savePermission}} />
+                </RegistryYield>
+
+            </div>
 
             <RegistryYield @registry="fleet-ops:component:issue-form-panel" as |RegistryComponent|>
                 <RegistryComponent @issue={{this.issue}} @controller={{this.controller}} @permission={{this.savePermission}} />
             </RegistryYield>
         {{/let}}
-        <Spacer @height="300px" />
     </Overlay::Body>
 </Overlay>
