@@ -135,6 +135,13 @@ export default class DriverFormPanelComponent extends Component {
      * @memberof DriverFormPanelComponent
      */
     @task *save() {
+        // Client-side validation
+        const userId = this.driver.belongsTo('user').id();
+        if (!userId && !this.driver.user_uuid) {
+            this.notifications.error('Vui lòng chọn Tài khoản Người dùng');
+            return;
+        }
+
         contextComponentCallback(this, 'onBeforeSave', this.driver);
 
         try {
