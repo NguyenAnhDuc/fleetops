@@ -918,15 +918,25 @@ export default class OperationsOrdersIndexController extends BaseController {
     @action viewBillingFeee(order, options = {}){
         options = options === null ? {} : options;
 
+        // Shared state object: component ghi vào đây, controller đọc lúc confirm
+        // => order model KHÔNG bị dirty cho đến khi bấm "Lưu thay đổi"
+        const state = { approvedFees: null, total: 0 };
+
         this.modalsManager.show('modals/order-approval-billing-form', {
             title: this.intl.t('fleet-ops.operations.orders.index.view.view-approval-Billing-title'),
             acceptButtonText: this.intl.t('fleet-ops.common.save-changes'),
             acceptButtonIcon: 'save',
             driversQuery: {},
             order,
+            state,
             confirm: async (modal) => {
                 modal.startLoading();
                 try {
+                    // Chỉ tại đây mới write vào order model và save
+                    if (state.approvedFees) {
+                        order.set('approved_fees', state.approvedFees);
+                        order.set('approval_fees', state.total);
+                    }
                     await order.save();
                     this.notifications.success(options.successNotification || this.intl.t('fleet-ops.operations.orders.index.view.update-success', { orderId: order.public_id }));
                     modal.done();

@@ -36,47 +36,61 @@ class VehicleController extends FleetOpsController
         $today    = now()->toDateString();
         $in30days = now()->addDays(30)->toDateString();
 
-        // Use the parent queryFromRequest – it handles filters, pagination, search, sort
-        $results = $this->model->queryFromRequest($request);
+        // Lấy Query Builder với các bộ lọc filter nhưng CHƯA phân trang
+        $builder = $this->model->searchBuilder($request);
+        
+        // Lấy tất cả collection phù hợp điều kiện ra để có thể custom sort toàn cục
+        $all = $builder->get();
 
-        // Sort in PHP:
+        // Sort in PHP (vì logic FuelReport phức tạp không query thẳng trên SQL được)
         // Priority 0 = inspection expired or within 30 days
         // Priority 1 = has ⚠️ fuel warning
         // Priority 2 = normal
-        $sorted = collect($results->items())->sortBy(function ($vehicle) use ($today, $in30days) {
+        $sorted = $all->sortBy(function ($vehicle) use ($today, $in30days) {
             $inspectionDate = $vehicle->inspection_expire_date;
 
+            $inspectionPriority = 2; // Mặc định là bình thường
             if ($inspectionDate) {
                 $dateStr = $inspectionDate instanceof \Carbon\Carbon
                     ? $inspectionDate->toDateString()
                     : (string) $inspectionDate;
 
                 if ($dateStr <= $today || $dateStr <= $in30days) {
-                    $inspectionPriority = 0;
-                } else {
-                    $inspectionPriority = 2;
+                    $inspectionPriority = 0; // Hết hạn hoặc gần hết hạn
                 }
-            } else {
-                $inspectionPriority = 2;
             }
 
+            // Mất chút thời gian chạy loop, nhưng cần thiết cho việc check nhiên liệu
             $fuelStatus  = $vehicle->fuel_report_status ?? '';
             $fuelPriority = Str::contains($fuelStatus, '⚠️') ? 1 : 2;
 
-            // Take the better (lower) priority between inspection and fuel
+            // Ưu tiên tốt nhất (số nhỏ nhất)
             return min($inspectionPriority, $fuelPriority);
         })->values();
 
-        // Rebuild paginator items with sorted result
-        $results->setCollection($sorted);
+        // Custom Pagination manually
+        $page  = $request->integer('page', 1);
+        $limit = $request->integer('limit', 20);
+        $total = $sorted->count();
+        
+        // Slice items based on page and limit
+        $items = $sorted->slice(($page - 1) * $limit, $limit)->values();
+
+        $paginator = new \Illuminate\Pagination\LengthAwarePaginator(
+            $items,
+            $total,
+            $limit,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
         if (Http::isInternalRequest($request)) {
             $this->resource::wrap($this->resourcePluralName);
 
-            return $this->resource::collection($results);
+            return $this->resource::collection($paginator);
         }
 
-        return $this->resource::collection($results);
+        return $this->resource::collection($paginator);
     }
 
     /**

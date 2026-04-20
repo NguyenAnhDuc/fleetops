@@ -1,89 +1,172 @@
 <Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
     <div class="modal-body-container space-y-4">
+
         <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.view-fees-driver-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-            <div class="grid grid-cols-2 gap-4 text-xs dark:text-gray-100">
-                <div class="field-info-container space-y-2">
-                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.roadLaw-fees"}}</div>
-                    <div class="field-value">{{n-a @options.order.getRoadLawFees}}</div>
+
+            {{!-- Header 2 cột --}}
+            <div class="grid grid-cols-2 gap-2 mb-3 px-1">
+                <div class="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                    {{t "fleet-ops.operations.orders.index.view.fees-driver-col"}}
                 </div>
-                <div class="field-info-container space-y-2">
-                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.food-fees"}}</div>
-                    <div class="field-value">{{n-a @options.order.getFoodFees}}</div>
-                </div>
-                <div class="field-info-container space-y-2">
-                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.handling-fees"}}</div>
-                    <div class="field-value">{{n-a @options.order.getHandlingFees}}</div>
-                </div>
-                 <div class="field-info-container space-y-2">
-                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.repair-fees"}}</div>
-                    <div class="field-value">{{n-a @options.order.getRepairFees}}</div>
-                </div>
-                <div class="field-info-container space-y-2">
-                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.external-fuel-fees"}}</div>
-                    <div class="field-value">{{n-a @options.order.getExternalFuelFees}}</div>
-                </div>
-                 <div class="field-info-container space-y-2">
-                    <div class="field-name">{{t "fleet-ops.operations.orders.index.view.other-fees"}}</div>
-                    <div class="field-value">{{n-a @options.order.getOtherFees}}</div>
+                <div class="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                    {{t "fleet-ops.operations.orders.index.view.fees-approved-col"}}
                 </div>
             </div>
 
-            {{!-- Hiển thị tổng chi phí --}}
-            <div class="col-span-2 border-t pt-3 mt-2">
-                <div class="flex justify-between items-center">
-                    <div class="text-white font-bold text-sm">
+            {{!-- Cầu đường --}}
+            <div class="grid grid-cols-2 gap-2 items-center py-2 border-b border-gray-700">
+                <div>
+                    <div class="text-xs text-gray-400">{{t "fleet-ops.operations.orders.index.view.roadLaw-fees"}}</div>
+                    <div class="text-sm font-medium text-white">{{get this.driverFeesFormatted "roadLaw_fee"}}</div>
+                </div>
+                <div class="flex items-center gap-1">
+                    <input
+                        type="text" inputmode="numeric"
+                        class="form-input w-full text-xs"
+                        value={{this.approvedFees.roadLaw_fee}}
+                        {{on "change" (fn this.updateFee "roadLaw_fee")}}
+                    />
+                    {{#if this.editedRoadLawFee}}
+                        <span style="color:#22c55e;font-size:16px;font-weight:bold;line-height:1;flex-shrink:0;">✓</span>
+                    {{/if}}
+                </div>
+            </div>
+
+            {{!-- Ăn uống --}}
+            <div class="grid grid-cols-2 gap-2 items-center py-2 border-b border-gray-700">
+                <div>
+                    <div class="text-xs text-gray-400">{{t "fleet-ops.operations.orders.index.view.food-fees"}}</div>
+                    <div class="text-sm font-medium text-white">{{get this.driverFeesFormatted "food_fee"}}</div>
+                </div>
+                <div class="flex items-center gap-1">
+                    <input
+                        type="text" inputmode="numeric"
+                        class="form-input w-full text-xs"
+                        value={{this.approvedFees.food_fee}}
+                        {{on "change" (fn this.updateFee "food_fee")}}
+                    />
+                    {{#if this.editedFoodFee}}
+                        <span style="color:#22c55e;font-size:16px;font-weight:bold;line-height:1;flex-shrink:0;">✓</span>
+                    {{/if}}
+                </div>
+            </div>
+
+            {{!-- Bốc vác --}}
+            <div class="grid grid-cols-2 gap-2 items-center py-2 border-b border-gray-700">
+                <div>
+                    <div class="text-xs text-gray-400">{{t "fleet-ops.operations.orders.index.view.handling-fees"}}</div>
+                    <div class="text-sm font-medium text-white">{{get this.driverFeesFormatted "handling_fee"}}</div>
+                </div>
+                <div class="flex items-center gap-1">
+                    <input
+                        type="text" inputmode="numeric"
+                        class="form-input w-full text-xs"
+                        value={{this.approvedFees.handling_fee}}
+                        {{on "change" (fn this.updateFee "handling_fee")}}
+                    />
+                    {{#if this.editedHandlingFee}}
+                        <span style="color:#22c55e;font-size:16px;font-weight:bold;line-height:1;flex-shrink:0;">✓</span>
+                    {{/if}}
+                </div>
+            </div>
+
+            {{!-- Sửa xe --}}
+            <div class="grid grid-cols-2 gap-2 items-center py-2 border-b border-gray-700">
+                <div>
+                    <div class="text-xs text-gray-400">{{t "fleet-ops.operations.orders.index.view.repair-fees"}}</div>
+                    <div class="text-sm font-medium text-white">{{get this.driverFeesFormatted "repair_fee"}}</div>
+                </div>
+                <div class="flex items-center gap-1">
+                    <input
+                        type="text" inputmode="numeric"
+                        class="form-input w-full text-xs"
+                        value={{this.approvedFees.repair_fee}}
+                        {{on "change" (fn this.updateFee "repair_fee")}}
+                    />
+                    {{#if this.editedRepairFee}}
+                        <span style="color:#22c55e;font-size:16px;font-weight:bold;line-height:1;flex-shrink:0;">✓</span>
+                    {{/if}}
+                </div>
+            </div>
+
+            {{!-- Nguyên liệu --}}
+            <div class="grid grid-cols-2 gap-2 items-center py-2 border-b border-gray-700">
+                <div>
+                    <div class="text-xs text-gray-400">{{t "fleet-ops.operations.orders.index.view.external-fuel-fees"}}</div>
+                    <div class="text-sm font-medium text-white">{{get this.driverFeesFormatted "external_fuel_fee"}}</div>
+                </div>
+                <div class="flex items-center gap-1">
+                    <input
+                        type="text" inputmode="numeric"
+                        class="form-input w-full text-xs"
+                        value={{this.approvedFees.external_fuel_fee}}
+                        {{on "change" (fn this.updateFee "external_fuel_fee")}}
+                    />
+                    {{#if this.editedExternalFuelFee}}
+                        <span style="color:#22c55e;font-size:16px;font-weight:bold;line-height:1;flex-shrink:0;">✓</span>
+                    {{/if}}
+                </div>
+            </div>
+
+            {{!-- Khác --}}
+            <div class="grid grid-cols-2 gap-2 items-center py-2">
+                <div>
+                    <div class="text-xs text-gray-400">{{t "fleet-ops.operations.orders.index.view.other-fees"}}</div>
+                    <div class="text-sm font-medium text-white">{{get this.driverFeesFormatted "other_fee"}}</div>
+                </div>
+                <div class="flex items-center gap-1">
+                    <input
+                        type="text" inputmode="numeric"
+                        class="form-input w-full text-xs"
+                        value={{this.approvedFees.other_fee}}
+                        {{on "change" (fn this.updateFee "other_fee")}}
+                    />
+                    {{#if this.editedOtherFee}}
+                        <span style="color:#22c55e;font-size:16px;font-weight:bold;line-height:1;flex-shrink:0;">✓</span>
+                    {{/if}}
+                </div>
+            </div>
+
+            {{!-- Tổng --}}
+            <div class="grid grid-cols-2 gap-2 items-center mt-3 pt-3 border-t-2 border-gray-600">
+                <div>
+                    <span class="text-xs font-bold text-gray-300 uppercase tracking-wide">
                         {{t "fleet-ops.operations.orders.index.view.total-fees-driver"}}
-                    </div>
-                    <div class="text-green-500 text-base font-bold">
-                        {{n-a @options.order.getFeesDriver}}
-                    </div>
+                    </span>
+                    <span class="text-sm font-bold text-white ml-2">{{get this.driverFeesFormatted "total"}}</span>
                 </div>
+                <div class="text-sm font-bold text-blue-400">{{this.formattedTotal}}</div>
             </div>
 
-            <div class="text-white font-bold text-sm col-span-2 border-t pt-3 mt-2 ">Hóa đơn</div>
-            <div class="flex overflow-x-auto space-x-4 py-2">
-                {{#each @options.order.image_billing_urls as |url|}}
-                    <div class="flex-none">
-                    <a href={{url}} target="_blank" rel="noopener noreferrer">
-                        <img
-                            src={{url}}
-                            alt="Billing Image"
-                            class="w-28 h-28 object-cover rounded-lg border border-gray-300 dark:border-gray-700 hover:scale-105 transition-transform"
-                        />
-                    </a>
+            {{!-- Hóa đơn --}}
+            {{#if @options.order.image_billing_urls.length}}
+                <div class="mt-3 pt-3 border-t border-gray-700">
+                    <div class="text-xs font-semibold text-gray-400 mb-2">Hóa đơn</div>
+                    <div class="flex overflow-x-auto space-x-4 py-1">
+                        {{#each @options.order.image_billing_urls as |url|}}
+                            <a href={{url}} target="_blank" rel="noopener noreferrer">
+                                <img src={{url}} alt="Billing" class="w-28 h-28 object-cover rounded-lg border border-gray-600 hover:scale-105 transition-transform" />
+                            </a>
+                        {{/each}}
                     </div>
-                {{/each}}
-            </div>
+                </div>
+            {{/if}}
         </ContentPanel>
 
-        <ContentPanel 
-            @title={{t "fleet-ops.operations.orders.index.view.approval-fees-title"}} 
-            @open={{true}} 
-            @pad={{true}} 
+        {{!-- Ghi chú duyệt --}}
+        <ContentPanel
+            @title={{t "fleet-ops.operations.orders.index.view.approval-fees-title"}}
+            @open={{true}}
+            @pad={{true}}
             @panelBodyClass="bg-white dark:bg-gray-800"
         >
-            <div class="col-span-2 pt-3 mt-2">
-                <div class="flex justify-between items-center">
-                    <div class="text-white font-bold text-sm">
-                        {{t "fleet-ops.operations.orders.index.view.approval-fees-money-title"}}
-                    </div>
-                    <MoneyInput
-                        class="w-full"
-                        @value={{@options.order.approval_fees}}
-                        @currency="VND"
-                        @canSelectCurrency={{false}}
-                    />
-                </div>
-            </div>
-            <div class="col-span-2 pt-3 mt-2">
-                <Textarea
-                    @value={{@options.order.note_approval_fees}}
-                    class="form-input w-full"
-                    placeholder={{t "fleet-ops.operations.orders.index.new.notes-approval-fees-placeholder"}}
-                    disabled={{cannot "fleet-ops create order"}}
-                    rows={{4}}
-                />
-            </div>
+            <Textarea
+                @value={{@options.order.note_approval_fees}}
+                class="form-input w-full text-xs"
+                placeholder={{t "fleet-ops.operations.orders.index.new.notes-approval-fees-placeholder"}}
+                rows={{3}}
+            />
         </ContentPanel>
+
     </div>
 </Modal::Default>

@@ -1547,7 +1547,9 @@ fleet-ops:
           edit-order-title: Chỉnh sửa Chi tiết Đơn Hàng
           view-approval-Billing-title: Phê duyệt Chi phí Đơn Hàng
           view-fees-driver-title: Chi tiết Chi Phí Lái Xe
-          approval-fees-title: Phệ Duyệt Chi Phí
+          fees-driver-col: Lái xe nhập
+          fees-approved-col: Duyệt
+          approval-fees-title: Phê Duyệt Chi Phí
           update-success: 'Chi tiết {orderId} đã được cập nhật.'
           order-metadata: Metadata Đơn Hàng
           unassign-title: Bạn có chắc chắn muốn gỡ tài xế ({driverName}) khỏi đơn hàng này không?

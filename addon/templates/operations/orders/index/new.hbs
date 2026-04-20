@@ -395,10 +395,11 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-2">
                     <InputGroup>
                         <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.quantity-fees"}} @helpText={{t "fleet-ops.operations.orders.index.new.quantity-fees-help-text"}} />
-                        <Input 
-                            @value={{this.order.quantity_fees}} 
+                        <Input
+                            @value={{this.order.quantity_fees}}
                             @type="number"
-                            min="1"
+                            min="0"
+                            step="0.01"
                             class="w-full form-input form-input-sm"
                             disabled={{this.order.is_fees_type_by_order}}
                         />

@@ -24,7 +24,12 @@ class VehicleFilter extends Filter
 
     public function display_name(?string $display_name)
     {
-        $this->builder->searchWhere(['year', 'make', 'model', 'plate_number'], $display_name);
+        $this->builder->where(function ($q) use ($display_name) {
+            $q->searchWhere(['year', 'make', 'model', 'plate_number'], $display_name)
+              ->orWhereHas('driver.user', function ($uq) use ($display_name) {
+                  $uq->where('name', 'like', '%' . $display_name . '%');
+              });
+        });
     }
 
     public function vin(?string $vin)
