@@ -584,6 +584,12 @@
                                 {{t "fleet-ops.operations.orders.index.new.invalid-coordinates"}}
                             </div>
                         {{/if}}
+                        {{#if (and this.payload.pickup (not this.payload.pickup.province))}}
+                            <div class="leading-5 text-xs text-amber-400 mt-1 flex items-center gap-1">
+                                <FaIcon @icon="exclamation-circle" class="text-xs" />
+                                Địa chỉ thiếu tỉnh/thành — không thể phân biệt vùng miền
+                            </div>
+                        {{/if}}
                     </InputGroup>
 
                     <InputGroup>
@@ -632,7 +638,22 @@
                                 {{t "fleet-ops.operations.orders.index.new.invalid-coordinates"}}
                             </div>
                         {{/if}}
+                        {{#if (and this.payload.dropoff (not this.payload.dropoff.province))}}
+                            <div class="leading-5 text-xs text-amber-400 mt-1 flex items-center gap-1">
+                                <FaIcon @icon="exclamation-circle" class="text-xs" />
+                                Địa chỉ thiếu tỉnh/thành — không thể phân biệt vùng miền
+                            </div>
+                        {{/if}}
                     </InputGroup>
+
+                    {{!-- Quãng đường --}}
+                    {{#if this.formattedRouteDistance}}
+                        <div class="flex items-center gap-2 mt-1 mb-2 px-1">
+                            <FaIcon @icon="road" class="text-gray-400 text-xs" />
+                            <span class="text-xs text-gray-400">Quãng đường:</span>
+                            <span class="text-xs font-semibold text-blue-400">{{this.formattedRouteDistance}}</span>
+                        </div>
+                    {{/if}}
 
                     {{!-- <InputGroup>
                         <div class="flex items-center justify-between">

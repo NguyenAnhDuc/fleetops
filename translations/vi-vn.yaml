@@ -1356,8 +1356,10 @@ fleet-ops:
         view-order: Xem Đơn Hàng
         view-billing-fees: Xem/Phê duyệt Chi phí
         finish-order-title: Hoàn thành Toàn bộ Đơn hàng
+        dispatch-order: Điều phối Đơn Hàng
         cancel-order: Hủy Đơn Hàng
         delete-order: Xóa Đơn Hàng
+        order-actions: Thao tác Đơn Hàng
         cancel-title: Bạn có chắc chắn muốn hủy đơn hàng này không?
         finish-title: Bạn có chắc chắn muốn HOÀN THÀNH đơn hàng không?
         cancel-body: Khi đơn hàng này bị hủy, bản ghi đơn hàng vẫn sẽ hiển thị nhưng không thể thêm hoạt động vào đơn hàng này.

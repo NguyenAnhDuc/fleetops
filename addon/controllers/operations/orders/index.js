@@ -51,7 +51,8 @@ export default class OperationsOrdersIndexController extends BaseController {
         'drawerOpen',
         'drawerTab',
         'orderPanelOpen',
-        'is_finish'
+        'is_finish',
+        'is_receive_cash_fees'
     ];
 
     /**
@@ -87,7 +88,14 @@ export default class OperationsOrdersIndexController extends BaseController {
      *
      * @var {String}
      */
-    @tracked sort = '-created_at';
+    @tracked sort = '-scheduled_at';
+
+    /**
+     * The search query param
+     *
+     * @var {String}
+     */
+    @tracked query;
 
     /**
      * The filterable param `public_id`
@@ -186,6 +194,13 @@ export default class OperationsOrdersIndexController extends BaseController {
      * @var {String}
      */
     @tracked type;
+
+    /**
+     * The filterable param `is_receive_cash_fees` - Thu tiền (1) / Công nợ (0).
+     *
+     * @var {String}
+     */
+    @tracked is_receive_cash_fees;
 
     /**
      * Flag to determine if the search is visible
@@ -298,6 +313,7 @@ export default class OperationsOrdersIndexController extends BaseController {
      * @var {Array}
      */
     @tracked columns = [
+        // --- Ẩn, giữ lại để filter/sort hoạt động ---
         {
             label: this.intl.t('fleet-ops.common.created-at'),
             valuePath: 'createdAtShort',
@@ -308,7 +324,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             sortable: true,
             filterable: true,
             filterComponent: 'filter/date',
-            hidden: false,
+            hidden: true,
         },
         {
             label: this.intl.t('fleet-ops.common.id'),
@@ -333,20 +349,8 @@ export default class OperationsOrdersIndexController extends BaseController {
             sortable: true,
             filterable: true,
             filterComponent: 'filter/string',
-            hidden: true
+            hidden: true,
         },
-        // {
-        //     label: this.intl.t('fleet-ops.operations.orders.index.payload'),
-        //     valuePath: 'payload.public_id',
-        //     cellComponent: 'click-to-copy',
-        //     resizable: true,
-        //     hidden: true,
-        //     width: '125px',
-        //     filterable: true,
-        //     filterLabel: 'Payload ID',
-        //     filterParam: 'payload',
-        //     filterComponent: 'filter/string',
-        // },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.payload'),
             valuePath: 'payload.entities',
@@ -359,64 +363,6 @@ export default class OperationsOrdersIndexController extends BaseController {
             filterParam: 'payload',
             filterComponent: 'filter/string',
         },
-        {
-            label: this.intl.t('fleet-ops.operations.orders.index.driver-assigned'),
-            cellComponent: 'cell/driver-name',
-            valuePath: 'driver_assigned',
-            modelPath: 'driver_assigned',
-            width: '210px',
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select driver for order',
-            filterParam: 'driver',
-            model: 'driver',
-        },
-        {
-            label: this.intl.t('fleet-ops.operations.orders.index.pickup'),
-            valuePath: 'pickupName',
-            cellComponent: 'table/cell/base',
-            width: '130px',
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/model',
-            filterOptionLabel: 'address',
-            filterComponentPlaceholder: 'Select order pickup location',
-            filterParam: 'pickup',
-            modelNamePath: 'address',
-            model: 'place',
-        },
-        {
-            label: this.intl.t('fleet-ops.operations.orders.index.dropoff'),
-            valuePath: 'dropoffName',
-            cellComponent: 'table/cell/base',
-            width: '130px',
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select order dropoff location',
-            filterParam: 'dropoff',
-            modelNamePath: 'address',
-            model: 'place',
-        },
-        {
-            label: this.intl.t('fleet-ops.operations.orders.index.customer'),
-            valuePath: 'customer.name',
-            cellComponent: 'table/cell/base',
-            width: '125px',
-            resizable: true,
-            sortable: true,
-            hidden: false,
-            filterable: true,
-            filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select order customer',
-            filterParam: 'customer',
-            model: 'customer',
-        },
-        
         {
             label: this.intl.t('fleet-ops.operations.orders.index.vehicle-assigned'),
             cellComponent: 'cell/vehicle-name',
@@ -435,27 +381,6 @@ export default class OperationsOrdersIndexController extends BaseController {
             modelNamePath: 'display_name',
         },
         {
-            label: this.intl.t('fleet-ops.operations.orders.index.fees-driver'),
-            valuePath: 'getFeesDriver',
-            cellComponent: 'table/cell/base',
-            width: '125px',
-            resizable: true,
-            sortable: true,
-            filterable: false,
-            filterComponent: 'filter/string',
-        },
-        {
-            label: this.intl.t('fleet-ops.operations.orders.index.approval-fees'),
-            valuePath: 'getApprovalFees',
-            cellComponent: 'table/cell/base',
-            width: '125px',
-            resizable: true,
-            sortable: true,
-            filterable: false,
-            filterComponent: 'filter/string',
-            filterParam: 'approval-fees'
-        },
-        {
             label: this.intl.t('fleet-ops.operations.orders.index.facilitator'),
             valuePath: 'facilitator.name',
             cellComponent: 'table/cell/base',
@@ -468,19 +393,6 @@ export default class OperationsOrdersIndexController extends BaseController {
             filterComponentPlaceholder: 'Select order facilitator',
             filterParam: 'facilitator',
             model: 'vendor',
-            hidden: true,
-        },
-        {
-            label: this.intl.t('fleet-ops.operations.orders.index.scheduled-at'),
-            valuePath: 'scheduledAt',
-            sortParam: 'scheduled_at',
-            filterParam: 'scheduled_at',
-            width: '150px',
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/date',
-            hidden: true,
         },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.items'),
@@ -525,18 +437,6 @@ export default class OperationsOrdersIndexController extends BaseController {
             filterComponentPlaceholder: 'Filter by order config',
         },
         {
-            label: this.intl.t('fleet-ops.common.status'),
-            valuePath: 'DisplayStatus',
-            cellComponent: 'table/cell/status',
-            width: '180px',
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/multi-option',
-            filterOptions: this.statusOptions,
-        },
-        
-        {
             label: this.intl.t('fleet-ops.common.updated-at'),
             valuePath: 'updatedAtShort',
             sortParam: 'updated_at',
@@ -572,13 +472,135 @@ export default class OperationsOrdersIndexController extends BaseController {
             filterParam: 'updated_by',
             model: 'user',
         },
+        // --- Hiển thị chính theo thứ tự yêu cầu ---
+        {
+            label: 'Ngày lên lịch',
+            valuePath: 'scheduledAt',
+            sortParam: 'scheduled_at',
+            filterParam: 'scheduled_at',
+            width: '130px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/date',
+            hidden: false,
+        },
+        {
+            label: this.intl.t('fleet-ops.operations.orders.index.driver-assigned'),
+            cellComponent: 'cell/driver-name',
+            valuePath: 'driver_assigned',
+            modelPath: 'driver_assigned',
+            width: '170px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/model',
+            filterComponentPlaceholder: 'Select driver for order',
+            filterParam: 'driver',
+            model: 'driver',
+        },
+        {
+            label: this.intl.t('fleet-ops.operations.orders.index.customer'),
+            valuePath: 'customer.name',
+            cellComponent: 'table/cell/base',
+            width: '120px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/model',
+            filterComponentPlaceholder: 'Select order customer',
+            filterParam: 'customer',
+            model: 'customer',
+        },
+        {
+            label: this.intl.t('fleet-ops.operations.orders.index.pickup'),
+            valuePath: 'pickupName',
+            cellComponent: 'table/cell/address-region',
+            width: '150px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/model',
+            filterOptionLabel: 'address',
+            filterComponentPlaceholder: 'Select order pickup location',
+            filterParam: 'pickup',
+            modelNamePath: 'address',
+            model: 'place',
+        },
+        {
+            label: this.intl.t('fleet-ops.operations.orders.index.dropoff'),
+            valuePath: 'dropoffName',
+            cellComponent: 'table/cell/address-region',
+            width: '150px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/model',
+            filterComponentPlaceholder: 'Select order dropoff location',
+            filterParam: 'dropoff',
+            modelNamePath: 'address',
+            model: 'place',
+        },
+        {
+            label: 'K.cách',
+            valuePath: 'routeDistance',
+            cellComponent: 'table/cell/base',
+            width: '75px',
+            resizable: true,
+            sortable: false,
+            filterable: false,
+        },
+        {
+            label: 'Chi phí',
+            cellComponent: 'table/cell/order-fees',
+            width: '130px',
+            resizable: true,
+            sortable: false,
+            filterable: false,
+        },
+        {
+            label: 'Thu tiền',
+            cellComponent: 'table/cell/payment-type',
+            width: '85px',
+            resizable: true,
+            sortable: false,
+            filterable: false,
+        },
+        {
+            label: 'K.lượng',
+            valuePath: 'quantity_fees',
+            cellComponent: 'table/cell/base',
+            width: '70px',
+            resizable: true,
+            sortable: true,
+            filterable: false,
+        },
+        {
+            label: 'Đơn giá',
+            cellComponent: 'table/cell/order-unit-price',
+            width: '110px',
+            resizable: true,
+            sortable: false,
+            filterable: false,
+        },
+        {
+            label: this.intl.t('fleet-ops.common.status'),
+            valuePath: 'DisplayStatus',
+            cellComponent: 'table/cell/order-status',
+            width: '160px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/multi-option',
+            filterOptions: this.statusOptions,
+        },
         {
             label: '',
             cellComponent: 'table/cell/dropdown',
             ddButtonText: false,
             ddButtonIcon: 'ellipsis-h',
             ddButtonIconPrefix: 'fas',
-            ddMenuLabel: 'Order Actions',
+            ddMenuLabel: this.intl.t('fleet-ops.operations.orders.index.order-actions'),
             cellClassNames: 'overflow-visible',
             wrapperClass: 'flex items-center justify-end mx-2',
             width: '12%',
@@ -647,6 +669,114 @@ export default class OperationsOrdersIndexController extends BaseController {
             this.statusOptions = yield this.fetch.get('orders/statuses');
         } catch (error) {
             this.notifications.serverError(error);
+        }
+    }
+
+    /**
+     * Bảng ánh xạ trạng thái order sang tiếng Việt.
+     * Key đã lowercase + bỏ prefix "order_" để match được nhiều biến thể.
+     *
+     * @type {Object<string, string>}
+     */
+    static ORDER_STATUS_VI = {
+        created: 'Đã tạo',
+        pending: 'Chờ xử lý',
+        preparing: 'Đang chuẩn bị',
+        ready: 'Sẵn sàng',
+        assigned: 'Đã giao tài xế',
+        driver_assigned: 'Đã giao tài xế',
+        dispatched: 'Đã điều phối',
+        started: 'Đang chạy',
+        order_started: 'Đang chạy',
+        enroute: 'Đang di chuyển',
+        driver_enroute: 'Đang di chuyển',
+        in_progress: 'Đang xử lý',
+        picked_up: 'Đã nhận hàng',
+        delivered: 'Đã giao hàng',
+        completed: 'Hoàn thành',
+        order_completed: 'Hoàn thành',
+        finished: 'Kết thúc',
+        canceled: 'Đã hủy',
+        cancelled: 'Đã hủy',
+        order_canceled: 'Đã hủy',
+        expired: 'Hết hạn',
+        failed: 'Thất bại',
+        approved: 'Đã duyệt',
+        rejected: 'Từ chối',
+    };
+
+    /**
+     * Status options dùng cho combobox (đã prepend "Tất cả").
+     *
+     * @return {Array<{label: string, value: string}>}
+     */
+    get statusFilterOptions() {
+        const toVietnamese = (s) => {
+            if (!s) return s;
+            // Chuẩn hoá key: lowercase, replace space/dash → underscore
+            const key = String(s).trim().toLowerCase().replace(/[\s-]+/g, '_');
+            const map = OperationsOrdersIndexController.ORDER_STATUS_VI;
+
+            if (map[key]) return map[key];
+
+            // Match "order completed", "order canceled", ...
+            const stripped = key.replace(/^order_/, '');
+            if (map[stripped]) return map[stripped];
+
+            // Fallback: humanize thô
+            return String(s)
+                .replace(/[_-]+/g, ' ')
+                .replace(/\b\w/g, (c) => c.toUpperCase());
+        };
+
+        const base = [{ label: 'Tất cả trạng thái', value: '' }];
+        const list = (this.statusOptions || []).map((s) => ({
+            label: toVietnamese(s),
+            value: s,
+        }));
+
+        return [...base, ...list];
+    }
+
+    /**
+     * Đổi trạng thái filter từ combobox.
+     *
+     * @param {string} value
+     */
+    @action setStatusFilter(value) {
+        // "" => xóa filter
+        this.status = value && value.length ? value : null;
+        // reset page về 1 khi đổi filter
+        if (this.page > 1) {
+            this.page = 1;
+        }
+    }
+
+    /**
+     * Options cho combobox thu tiền (Tất cả / Công nợ / Thu tiền).
+     *
+     * @return {Array<{label: string, value: string}>}
+     */
+    get paymentTypeFilterOptions() {
+        // Lưu ý: dùng 'false' / 'true' thay vì '0' / '1'.
+        // Base Filter dispatcher (Filter.php) check `empty($value)` trước khi gọi method,
+        // mà trong PHP `empty('0') === true` → filter bị bỏ qua khi gửi '0'.
+        return [
+            { label: 'Tất cả thu tiền', value: '' },
+            { label: 'Công nợ', value: 'false' },
+            { label: 'Thu tiền', value: 'true' },
+        ];
+    }
+
+    /**
+     * Đổi filter thu tiền từ combobox.
+     *
+     * @param {string} value
+     */
+    @action setPaymentTypeFilter(value) {
+        this.is_receive_cash_fees = value && value.length ? value : null;
+        if (this.page > 1) {
+            this.page = 1;
         }
     }
 

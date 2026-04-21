@@ -64,7 +64,27 @@
 {{/if}}
 
 {{#if this.isTableLayout}}
-    <Layout::Section::Header @title={{t "fleet-ops.common.orders"}} @onSearch={{perform this.search}}>
+    <Layout::Section::Header @title={{t "fleet-ops.common.orders"}} @onSearch={{perform this.search}} @searchPlaceholder="Tìm kiếm ...">
+        <Select
+            @options={{this.statusFilterOptions}}
+            @optionLabel="label"
+            @optionValue="value"
+            @value={{this.status}}
+            @onSelect={{this.setStatusFilter}}
+            class="form-input form-input-sm mr-2"
+            style="min-width: 180px;"
+            aria-label="Lọc theo trạng thái"
+        />
+        <Select
+            @options={{this.paymentTypeFilterOptions}}
+            @optionLabel="label"
+            @optionValue="value"
+            @value={{this.is_receive_cash_fees}}
+            @onSelect={{this.setPaymentTypeFilter}}
+            class="form-input form-input-sm mr-2"
+            style="min-width: 150px;"
+            aria-label="Lọc theo thu tiền"
+        />
         <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "fleet-ops.common.reload-data"}} class="mr-2" />
         <FiltersPicker
             @columns={{this.columns}}
@@ -129,7 +149,7 @@
 {{/if}}
 
 {{#if this.isKanbanView}}
-    <Layout::Section::Header @title={{t "fleet-ops.common.orders"}} @onSearch={{perform this.search}}>
+    <Layout::Section::Header @title={{t "fleet-ops.common.orders"}} @onSearch={{perform this.search}} @searchPlaceholder="Tìm kiếm ...">
         <Button @icon="cogs" @text={{t "fleet-ops.common.config"}} class="mr-2" @onClick={{fn (transition-to "operations.orders.index.config")}} />
         <FiltersPicker
             @columns={{this.columns}}

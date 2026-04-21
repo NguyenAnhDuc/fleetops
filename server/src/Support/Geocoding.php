@@ -38,7 +38,7 @@ class Geocoding
     {
         $httpClient = new Client();
         $provider   = new GoogleMaps($httpClient, null, config('services.google_maps.api_key', env('GOOGLE_MAPS_API_KEY')));
-        $geocoder   = new StatefulGeocoder($provider, 'en');
+        $geocoder   = new StatefulGeocoder($provider, 'vi');
 
         try {
             if ($latitude && $longitude) {
@@ -47,11 +47,15 @@ class Geocoding
                         ->withData('mode', GoogleMapsPlaces::GEOCODE_MODE_SEARCH)
                         ->withData('location', "$latitude, $longitude")
                         ->withData('radius', self::SEARCH_RADIUS)
+                        ->withData('region', 'vn')
+                        ->withData('components', 'country:VN')
                 );
             } else {
                 $geoResults = $geocoder->geocodeQuery(
                     GeocodeQuery::create($searchQuery)
                         ->withData('mode', GoogleMapsPlaces::GEOCODE_MODE_SEARCH)
+                        ->withData('region', 'vn')
+                        ->withData('components', 'country:VN')
                 );
             }
 
@@ -83,7 +87,7 @@ class Geocoding
     {
         $httpClient = new Client();
         $provider   = new GoogleMaps($httpClient, null, config('services.google_maps.api_key', env('GOOGLE_MAPS_API_KEY')));
-        $geocoder   = new StatefulGeocoder($provider, 'en');
+        $geocoder   = new StatefulGeocoder($provider, 'vi');
 
         if (empty($searchQuery)) {
             return collect();
@@ -99,6 +103,8 @@ class Geocoding
                     ->withData('mode', GoogleMapsPlaces::GEOCODE_MODE_NEARBY)
                     ->withData('keyword', $searchQuery)
                     ->withData('radius', self::SEARCH_RADIUS)
+                    ->withData('region', 'vn')
+                    ->withData('components', 'country:VN')
             );
 
             return collect($geoResults->all())->map(
@@ -129,7 +135,7 @@ class Geocoding
     {
         $httpClient = new Client();
         $provider   = new GoogleMaps($httpClient, null, config('services.google_maps.api_key', env('GOOGLE_MAPS_API_KEY')));
-        $geocoder   = new StatefulGeocoder($provider, 'en');
+        $geocoder   = new StatefulGeocoder($provider, 'vi');
 
         if (empty($latitude) && empty($longitude)) {
             return collect();
@@ -142,12 +148,16 @@ class Geocoding
                         ->withData('mode', GoogleMapsPlaces::GEOCODE_MODE_NEARBY)
                         ->withData('keyword', $searchQuery)
                         ->withData('radius', self::SEARCH_RADIUS)
+                        ->withData('region', 'vn')
+                        ->withData('components', 'country:VN')
                 );
             } else {
                 $geoResults = $geocoder->reverseQuery(
                     ReverseQuery::fromCoordinates($latitude, $longitude)
                         ->withData('mode', GoogleMapsPlaces::GEOCODE_MODE_NEARBY)
                         ->withData('radius', self::SEARCH_RADIUS)
+                        ->withData('region', 'vn')
+                        ->withData('components', 'country:VN')
                 );
             }
 

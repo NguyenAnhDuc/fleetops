@@ -32,6 +32,7 @@ class Issue extends FleetbaseResource
             'driver'                     => $this->whenLoaded('driver', fn () => new Driver($this->driver)),
             'driver_name'                => $this->driver_name,
             'vehicle_name'               => $this->vehicle_name,
+            'vehicle_plate_number'       => $this->when(Http::isInternalRequest(), data_get($this, 'vehicle.plate_number')),
             'vehicle_id'                 => $this->vehicle_id,
             'assignee_name'              => $this->assignee_name,
             'assignee_id'                => $this->assignee_id,

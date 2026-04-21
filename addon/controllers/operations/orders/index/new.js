@@ -150,6 +150,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     @tracked leafletRoute;
     @tracked leafletOptimizedRoute;
     @tracked currentLeafletRoute;
+    @tracked routeDistanceMeters = null;
     @tracked leafletLayers = [];
     @tracked routeProfile = 'driving';
     @tracked routeProfileOptions = ['driving', 'bycicle', 'walking'];
@@ -275,6 +276,15 @@ export default class OperationsOrdersIndexNewController extends BaseController {
 
     @computed('payloadCoordinates.length', 'waypoints.[]') get isServicable() {
         return this.payloadCoordinates.length >= 2;
+    }
+
+    get formattedRouteDistance() {
+        const meters = this.routeDistanceMeters;
+        if (!meters) return null;
+        if (meters >= 1000) {
+            return (meters / 1000).toFixed(1) + ' km';
+        }
+        return Math.round(meters) + ' m';
     }
 
     @computed('routePreviewArray.[]') get routePreviewCoordinates() {
@@ -973,6 +983,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 const { routes } = event;
                 const leafletRoute = routes.firstObject;
                 this.currentLeafletRoute = event;
+                this.routeDistanceMeters = leafletRoute?.summary?.totalDistance ?? null;
 
                 this.setProperties({ leafletRoute });
             });

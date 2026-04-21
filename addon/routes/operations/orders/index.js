@@ -34,6 +34,7 @@ export default class OperationsOrdersIndexRoute extends Route {
         endDate: {refreshModel: true},
         vehicle_id: {refreshModel: true},
         customer_id: {refreshModel: true},
+        is_receive_cash_fees: { refreshModel: true },
     };
 
     @action willTransition(transition) {

@@ -2,6 +2,7 @@
 
 namespace Fleetbase\FleetOps\Http\Filter;
 
+use Carbon\Carbon;
 use Fleetbase\FleetOps\Support\Utils;
 use Fleetbase\Http\Filter\Filter;
 use Fleetbase\Support\Http;
@@ -46,24 +47,150 @@ class OrderFilter extends Filter
 
     public function query(?string $query)
     {
-        $this->builder->search($query, function ($builder, $query) {
-            // also query for payload addresses
-            $builder->orWhere(function ($builder) use ($query) {
-                $builder->whereHas('payload', function ($builder) use ($query) {
-                    $builder->where(function ($builder) use ($query) {
-                        $builder->orWhereHas('pickup', function ($builder) use ($query) {
-                            $builder->search($query);
-                        });
-                        $builder->orWhereHas('dropoff', function ($builder) use ($query) {
-                            $builder->search($query);
-                        });
-                        $builder->orWhereHas('waypoints', function ($builder) use ($query) {
-                            $builder->search($query);
-                        });
+        if (!$query) {
+            return;
+        }
+
+        $query = trim($query);
+        // Chuẩn hoá khoảng trắng giữa 2 ngày (nhiều space, tab → 1 space)
+        $normalized = preg_replace('/\s+/', ' ', $query);
+
+        // 1) Detect full date range: "2025-10-01 2025-11-01" hoặc single "2025-10-01"
+        // Format: yyyy-MM-dd
+        $fullDatePattern = '/^(\d{4}-\d{1,2}-\d{1,2})(?:\s+(\d{4}-\d{1,2}-\d{1,2}))?$/';
+        if (preg_match($fullDatePattern, $normalized, $matches)) {
+            try {
+                $date1 = Carbon::parse($matches[1])->startOfDay();
+
+                if (!empty($matches[2])) {
+                    $date2 = Carbon::parse($matches[2])->endOfDay();
+                    // Đảm bảo date1 <= date2
+                    if ($date1->gt($date2)) {
+                        [$date1, $date2] = [$date2->startOfDay(), $date1->endOfDay()];
+                    }
+                    $this->builder->whereBetween('scheduled_at', [$date1, $date2]);
+                } else {
+                    $this->builder->whereDate('scheduled_at', $date1->toDateString());
+                }
+            } catch (\Exception $e) {
+                // Không parse được → fallback về text search
+            }
+            return;
+        }
+
+        // 2) Detect short date range: "04-06 07-06" hoặc single date "04-06"
+        // Format: dd-MM (ngày-tháng), năm lấy hiện tại
+        $datePattern = '/^(\d{1,2}-\d{1,2})(?:\s+(\d{1,2}-\d{1,2}))?$/';
+        if (preg_match($datePattern, $normalized, $matches)) {
+            $year = (int) date('Y');
+            try {
+                [$d1, $m1] = explode('-', $matches[1]);
+                $date1 = Carbon::createFromDate($year, (int) $m1, (int) $d1)->startOfDay();
+
+                if (!empty($matches[2])) {
+                    // Khoảng ngày
+                    [$d2, $m2] = explode('-', $matches[2]);
+                    $date2 = Carbon::createFromDate($year, (int) $m2, (int) $d2)->endOfDay();
+                    if ($date1->gt($date2)) {
+                        [$date1, $date2] = [$date2->startOfDay(), $date1->endOfDay()];
+                    }
+                    $this->builder->whereBetween('scheduled_at', [$date1, $date2]);
+                } else {
+                    // Ngày đơn
+                    $this->builder->whereDate('scheduled_at', $date1->toDateString());
+                }
+            } catch (\Exception $e) {
+                // Không parse được → fallback về text search
+            }
+            return;
+        }
+
+        // Multi-field text search
+        $like = '%' . $query . '%';
+        $this->builder->where(function ($builder) use ($like) {
+            // Tài xế — search qua user name (drivers join users)
+            $builder->orWhereHas('driverAssigned', function ($q) use ($like) {
+                $q->whereHas('user', function ($q) use ($like) {
+                    $q->where('users.name', 'LIKE', $like);
+                });
+            });
+
+            // Khách hàng — search thẳng vào contacts và vendors
+            $builder->orWhereExists(function ($sub) use ($like) {
+                $sub->from('contacts')
+                    ->whereColumn('contacts.uuid', 'orders.customer_uuid')
+                    ->where('contacts.name', 'LIKE', $like);
+            });
+            $builder->orWhereExists(function ($sub) use ($like) {
+                $sub->from('vendors')
+                    ->whereColumn('vendors.uuid', 'orders.customer_uuid')
+                    ->where('vendors.name', 'LIKE', $like);
+            });
+
+            // Địa chỉ nhận/giao hàng — prefix places. để tránh ambiguous
+            $builder->orWhereHas('payload', function ($q) use ($like) {
+                $q->where(function ($q) use ($like) {
+                    $q->orWhereHas('pickup', function ($q) use ($like) {
+                        $q->where('places.name', 'LIKE', $like)
+                          ->orWhere('places.street1', 'LIKE', $like)
+                          ->orWhere('places.street2', 'LIKE', $like)
+                          ->orWhere('places.city', 'LIKE', $like)
+                          ->orWhere('places.province', 'LIKE', $like)
+                          ->orWhere('places.district', 'LIKE', $like)
+                          ->orWhere('places.neighborhood', 'LIKE', $like)
+                          ->orWhere('places.postal_code', 'LIKE', $like);
+                    });
+                    $q->orWhereHas('dropoff', function ($q) use ($like) {
+                        $q->where('places.name', 'LIKE', $like)
+                          ->orWhere('places.street1', 'LIKE', $like)
+                          ->orWhere('places.street2', 'LIKE', $like)
+                          ->orWhere('places.city', 'LIKE', $like)
+                          ->orWhere('places.province', 'LIKE', $like)
+                          ->orWhere('places.district', 'LIKE', $like)
+                          ->orWhere('places.neighborhood', 'LIKE', $like)
+                          ->orWhere('places.postal_code', 'LIKE', $like);
+                    });
+                    $q->orWhereHas('waypoints', function ($q) use ($like) {
+                        $q->where('places.name', 'LIKE', $like)
+                          ->orWhere('places.street1', 'LIKE', $like)
+                          ->orWhere('places.city', 'LIKE', $like)
+                          ->orWhere('places.province', 'LIKE', $like);
                     });
                 });
             });
+
+            // Ngày lên lịch dạng text
+            $builder->orWhereRaw("DATE_FORMAT(orders.scheduled_at, '%Y-%m-%d') LIKE ?", [$like]);
+            $builder->orWhereRaw("DATE_FORMAT(orders.scheduled_at, '%d-%m-%Y') LIKE ?", [$like]);
         });
+    }
+
+    /**
+     * Filter theo loại thu tiền (Thu tiền mặt / Công nợ).
+     * Truyền `1` / `true` để lấy đơn Thu tiền; `0` / `false` để lấy đơn Công nợ.
+     */
+    public function isReceiveCashFees($value)
+    {
+        // Bỏ qua nếu không truyền hoặc truyền chuỗi rỗng
+        if ($value === null || $value === '' || (is_string($value) && strtolower($value) === 'all')) {
+            return;
+        }
+
+        // Chuẩn hoá về boolean
+        $bool = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        if ($bool === null) {
+            return;
+        }
+
+        if ($bool) {
+            // Thu tiền: coi NULL như true (vì default DB là true)
+            $this->builder->where(function ($q) {
+                $q->where('is_receive_cash_fees', true)
+                  ->orWhereNull('is_receive_cash_fees');
+            });
+        } else {
+            $this->builder->where('is_receive_cash_fees', false);
+        }
     }
 
     public function unassigned(bool $unassigned)

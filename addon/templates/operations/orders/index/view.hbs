@@ -638,8 +638,9 @@
                     </div>
                      <div class="field-info-container">
                         <div class="field-name">Quãng đường</div>
-                        {{!-- <p class="text-gray-700 dark:text-gray-300 leading-5 text-sm">{{@model.distance}}</p> --}}
-                        <div class="field-value">{{ format-meters @model.distance}}</div>
+                        {{!-- Dùng routeDistance (pickup → dropoff, Haversine) để thống nhất với màn list.
+                               @model.distance từ DB có thể = driver_current → dropoff nếu đã assign tài xế. --}}
+                        <div class="field-value">{{@model.routeDistance}}</div>
                     </div>
 
                     {{!-- <div class="field-info-container">

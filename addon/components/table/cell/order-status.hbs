@@ -1,0 +1,19 @@
+{{!-- Status badge --}}
+<div class="inline-flex items-center">
+    <Badge
+        @status={{lowercase @row.status}}
+        @text={{@value}}
+    />
+
+    {{!-- Cảnh báo: đơn đã hoàn thành nhưng tài xế chưa nhập chi phí thu tiền --}}
+    {{#if this.showFeesWarning}}
+        <span
+            class="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full cursor-help"
+            style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;"
+            title="Tài xế chưa nhập chi phí thu tiền cho đơn hàng đã hoàn thành"
+            aria-label="Cảnh báo: Tài xế chưa nhập chi phí"
+        >
+            <FaIcon @icon="triangle-exclamation" @prefix="fas" @size="xs" />
+        </span>
+    {{/if}}
+</div>
