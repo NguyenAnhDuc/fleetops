@@ -279,6 +279,14 @@ class Place extends Model
             $this->setAttribute('city', $address->getLocality());
         }
 
+        if (empty($this->province) && $address) {
+            $adminLevels = $address->getAdminLevels();
+            if ($adminLevels && $adminLevels->count() > 0) {
+                $level1 = $adminLevels->has(1) ? $adminLevels->get(1) : null;
+                $this->setAttribute('province', $level1 ? $level1->getName() : null);
+            }
+        }
+
         if (empty($this->building) && $address) {
             $this->setAttribute('building', $address->getStreetNumber());
         }

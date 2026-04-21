@@ -52,7 +52,8 @@ class Utils extends FleetbaseUtils
             $value = data_get($place, $key);
 
             if (is_string($value)) {
-                $value = strtoupper($value);
+                // Title case cho tiếng Việt: lowercase trước rồi capitalize từng chữ đầu
+                $value = mb_convert_case(mb_strtolower($value, 'UTF-8'), MB_CASE_TITLE, 'UTF-8');
             }
 
             // if value empty skip or value equal to last value skip
@@ -72,7 +73,7 @@ class Utils extends FleetbaseUtils
                 $seperator = '<br>';
             }
 
-            $address .= strtoupper($value) . $seperator;
+            $address .= $value . $seperator;
             $seperator = ', ';
         }
 
