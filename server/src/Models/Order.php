@@ -1589,6 +1589,12 @@ class Order extends Model
             return $this;
         }
 
+        // Bỏ qua nếu tọa độ là (0,0) – tức chưa được geocode, tránh tính sai ~12,000km
+        $isInvalidPoint = fn($p) => abs($p->getLat()) < 0.001 && abs($p->getLng()) < 0.001;
+        if ($isInvalidPoint($origin) || $isInvalidPoint($destination)) {
+            return $this;
+        }
+
         $matrix = Utils::getPreliminaryDistanceMatrix($origin, $destination);
 
         $this->update(['distance' => $matrix->distance, 'time' => $matrix->time]);

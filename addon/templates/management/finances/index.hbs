@@ -8,7 +8,7 @@
                     <label class="text-[10px] font-medium text-gray-500 dark:text-gray-400 mb-0.5 leading-none">Từ ngày</label>
                     <input
                         type="date"
-                        class="form-input h-7 text-xs py-0 w-[140px]"
+                        class="form-input h-9 text-xs w-[140px]"
                         value={{this.startDate}}
                         {{on "change" this.updateStartDate}}
                     />
@@ -18,7 +18,7 @@
                     <label class="text-[10px] font-medium text-gray-500 dark:text-gray-400 mb-0.5 leading-none">Đến ngày</label>
                     <input
                         type="date"
-                        class="form-input h-7 text-xs py-0 w-[140px]"
+                        class="form-input h-9 text-xs w-[140px]"
                         value={{this.endDate}}
                         {{on "change" this.updateEndDate}}
                     />
@@ -26,21 +26,19 @@
 
                 <div class="flex flex-col">
                     <label class="text-[10px] font-medium text-gray-500 dark:text-gray-400 mb-0.5 leading-none">Phương tiện</label>
-                    <div class="w-[240px]">
+                    <div class="w-[320px]">
                         <ModelSelect
                             @modelName="vehicle"
                             @selectedModel={{this.selectedVehicle}}
                             @placeholder="-- Chọn xe --"
-                            @triggerClass="form-select form-input h-7 text-xs py-0 w-full !align-middle"
+                            @triggerClass="form-select form-input h-9 text-xs w-full !align-middle truncate"
                             @allowClear={{true}}
                             @renderInPlace={{false}}
                             @infiniteScroll={{false}}
                             @onChange={{this.updateSelectedVehicle}}
                             as |model|
                         >
-                            <div class="flex items-center space-x-2">
-                                <span class="uppercase text-xs">{{model.display_name}}</span>
-                            </div>
+                            <span class="uppercase text-xs truncate">{{model.display_name}}</span>
                         </ModelSelect>
                     </div>
                 </div>
@@ -261,13 +259,27 @@
             </div>
 
             {{!-- Pagination bar (dùng component <Pagination> chuẩn của Fleetbase) --}}
-            <div class="finance-pagination-bar px-3 py-1 border-t border-gray-200 dark:border-gray-700/80 bg-gray-100 dark:bg-gray-800/70">
-                <Pagination
-                    @meta={{this.meta}}
-                    @currentPage={{this.page}}
-                    @onPageChange={{this.gotoPage}}
-                    @isLoading={{this.isLoading}}
-                />
+            <div class="finance-pagination-bar px-3 py-1 border-t border-gray-200 dark:border-gray-700/80 bg-gray-100 dark:bg-gray-800/70 flex items-center">
+                <span style="font-size:12px; color:#f3f4f6; white-space:nowrap;">
+                    Đang hiển thị
+                    <strong style="color:#ffffff;">{{this.pageStartIndex}}</strong>
+                    đến
+                    <strong style="color:#ffffff;">{{this.pageEndIndex}}</strong>
+                    trong tổng số
+                    <strong style="color:#ffffff;">{{this.results.length}}</strong>
+                    bản ghi
+                </span>
+                <div style="margin-left:auto; display:flex; align-items:center; gap:3px;">
+                    <button type="button" {{on "click" this.prevPage}} disabled={{lte this.page 1}} class="page-nav-btn">&#8249;</button>
+                    {{#each this.pageItems as |item|}}
+                        {{#if item.isEllipsis}}
+                            <span class="page-nav-btn" style="cursor:default;">…</span>
+                        {{else}}
+                            <button type="button" {{on "click" (fn this.gotoPage item.page)}} class="page-nav-btn {{if item.isCurrent 'active'}}">{{item.label}}</button>
+                        {{/if}}
+                    {{/each}}
+                    <button type="button" {{on "click" this.nextPage}} disabled={{gte this.page this.totalPages}} class="page-nav-btn">&#8250;</button>
+                </div>
             </div>
         {{else}}
             <div class="flex-1 min-h-0 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500">
@@ -383,6 +395,38 @@
         border-color: #d1d5db;
     }
 
+    /* ---------- Page nav buttons ---------- */
+    .finance-management .page-nav-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 24px;
+        height: 22px;
+        padding: 0 6px;
+        font-size: 12px;
+        border-radius: 4px;
+        border: 1px solid rgba(75, 85, 99, 0.5);
+        background: rgba(55, 65, 81, 0.5);
+        color: #d1d5db;
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s;
+    }
+    .finance-management .page-nav-btn:hover:not(:disabled) {
+        background: rgba(59, 130, 246, 0.3);
+        border-color: rgba(59, 130, 246, 0.6);
+        color: #fff;
+    }
+    .finance-management .page-nav-btn.active {
+        background: #2563eb;
+        border-color: #1d4ed8;
+        color: #fff;
+        font-weight: 600;
+    }
+    .finance-management .page-nav-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+
     /* ---------- Pagination bar wrapper ---------- */
     .finance-management .finance-pagination-bar {
         min-height: 32px;
@@ -394,20 +438,22 @@
     .finance-management .fleetbase-pagination {
         @apply py-0;
     }
-    .finance-management .fleetbase-pagination .pagination-showing,
-    .finance-management .fleetbase-pagination .fleetbase-pagination-meta-info-content {
-        font-size: 11px;
-        color: #9ca3af; /* gray-400 – dễ đọc trên nền tối */
+    /* Override Tailwind text-gray-700 trên <p> */
+    .finance-management #fleetbase-pagination .fleetbase-pagination-meta-info-content {
+        font-size: 12px !important;
+        color: #d1d5db !important;
     }
-    html:not(.dark) .finance-management .fleetbase-pagination .pagination-showing,
-    html:not(.dark) .finance-management .fleetbase-pagination .fleetbase-pagination-meta-info-content {
-        color: #374151; /* gray-700 */
+    html:not(.dark) .finance-management #fleetbase-pagination .fleetbase-pagination-meta-info-content {
+        color: #374151 !important;
     }
-    .finance-management .fleetbase-pagination .pagination-showing .font-medium {
-        color: #e5e7eb;
+    /* Số trang trong <span class="font-medium"> */
+    .finance-management #fleetbase-pagination .fleetbase-pagination-meta-info-content .font-medium {
+        color: #ffffff !important;
+        font-weight: 700 !important;
     }
-    html:not(.dark) .finance-management .fleetbase-pagination .pagination-showing .font-medium {
-        color: #111827;
+    html:not(.dark) .finance-management #fleetbase-pagination .fleetbase-pagination-meta-info-content .font-medium {
+        color: #111827 !important;
+        font-weight: 700 !important;
     }
     /* Inner wrapper */
     .finance-management .fleetbase-pagination .fleetbase-pagination-meta-info-paging-inner {

@@ -1,121 +1,485 @@
-<Layout::Section::Header @title="Báo cáo Công Nợ">
-    {{!-- <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "fleet-ops.common.reload-data"}} class="mr-2" /> --}}
-    <Button @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.openCreateOverlay}} @permission="fleet-ops create debt-reports" />
-    
-</Layout::Section::Header>
+<div class="finance-management w-full h-full p-3 flex flex-col gap-3">
 
-<div class="finance-management w-full flex flex-col items-center mt-6">
-  <div class="w-full space-y-3">
-    <form {{on "submit" this.search}} class="w-full px-4 mb-4 mx-auto">
-        <div class="flex flex-wrap gap-4 items-center">
-            {{!-- Ngày bắt đầu --}}
-            <input
-                type="date"
-                class="form-input h-9 w-[160px]"
-                value={{this.startDate}}
-                {{on "change" this.updateStartDate}}
-            />
-
-            {{!-- Ngày kết thúc --}}
-            <input
-                type="date"
-                class="form-input h-9 w-[160px]"
-                value={{this.endDate}}
-                {{on "change" this.updateEndDate}}
-            />
-            {{!-- Chọn khách hàng --}}
-            <div class="w-[320px]">
-                <ModelSelect
-                    @modelName="customer"
-                    @selectedModel={{this.selectedCustomer}}
-                    @placeholder="-- Chọn khách hàng --"
-                    @triggerClass="form-select form-input h-9 w-full !align-middle"
-                    @allowClear={{true}}
-                    @renderInPlace={{false}}
-                    @infiniteScroll={{false}}
-                    @onChange={{this.updateSelectedCustomer}}
-                    as |model|
-                >
-                    <div class="flex items-center space-x-2">
-                    <span class="uppercase">{{model.name}}</span>
+    {{!-- ============== Filter Card ============== --}}
+    <div class="rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm px-3 py-2">
+        <form {{on "submit" this.search}}>
+            <div class="flex items-end justify-between gap-2">
+                {{!-- Nhóm trái: bộ lọc + tìm kiếm --}}
+                <div class="flex flex-wrap gap-2 items-end">
+                    <div class="flex flex-col">
+                        <label class="text-[10px] font-medium text-gray-500 dark:text-gray-400 mb-0.5 leading-none">Từ ngày</label>
+                        <input
+                            type="date"
+                            class="form-input h-9 text-xs w-[140px]"
+                            value={{this.startDate}}
+                            {{on "change" this.updateStartDate}}
+                        />
                     </div>
-                </ModelSelect>
+
+                    <div class="flex flex-col">
+                        <label class="text-[10px] font-medium text-gray-500 dark:text-gray-400 mb-0.5 leading-none">Đến ngày</label>
+                        <input
+                            type="date"
+                            class="form-input h-9 text-xs w-[140px]"
+                            value={{this.endDate}}
+                            {{on "change" this.updateEndDate}}
+                        />
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label class="text-[10px] font-medium text-gray-500 dark:text-gray-400 mb-0.5 leading-none">Khách hàng</label>
+                        <div class="w-[320px]">
+                            <ModelSelect
+                                @modelName="customer"
+                                @selectedModel={{this.selectedCustomer}}
+                                @placeholder="-- Chọn khách hàng --"
+                                @triggerClass="form-select form-input h-9 text-xs w-full !align-middle truncate"
+                                @allowClear={{true}}
+                                @renderInPlace={{false}}
+                                @infiniteScroll={{false}}
+                                @onChange={{this.updateSelectedCustomer}}
+                                as |model|
+                            >
+                                <span class="uppercase text-xs truncate">{{model.name}}</span>
+                            </ModelSelect>
+                        </div>
+                    </div>
+
+                    <Button
+                        @buttonType="submit"
+                        @type="primary"
+                        @size="sm"
+                        @icon={{if this.isLoading "spinner" "magnifying-glass"}}
+                        @iconPrefix="fas"
+                        @iconSpin={{this.isLoading}}
+                        @text={{if this.isLoading "Đang tải..." "Tìm kiếm"}}
+                        @disabled={{this.isLoading}}
+                        @isLoading={{this.isLoading}}
+                    />
+                </div>
+
+                {{!-- Nhóm phải: button Mới --}}
+                <Button
+                    @icon="plus"
+                    @iconPrefix="fas"
+                    @type="primary"
+                    @size="sm"
+                    @text={{t "fleet-ops.common.new"}}
+                    @onClick={{this.openCreateOverlay}}
+                    @permission="fleet-ops create debt-reports"
+                />
             </div>
-
-            {{!-- Nút tìm kiếm --}}
-            <button
-            type="submit"
-            class="h-9 px-4 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-            Tìm kiếm
-            </button>
-        </div>
-    </form>
-  </div>
-
-  {{!-- Dòng 4: Kết quả thu chi - full màn hình --}}
-  <div class="results w-full px-4 mt-6 overflow-auto">
-  {{#if this.results.length}}
-    <!-- Tổng hợp thu chi -->
-    <div class="flex justify-end mb-2 text-sm text-gray-700 dark:text-gray-200 px-4">
-        <div class="grid grid-cols-[auto,auto] gap-x-4 text-right">
-            <span class="text-red-400">Dự thu:</span>
-            <span class="font-semibold text-red-400">{{this.totalIncome}}</span>
-
-            <span class="text-green-400">Đã nhận:</span>
-            <span class="font-semibold text-green-400">{{this.totalExpense}}</span>
-
-            <span class="text-yellow-400">Còn nợ:</span>
-            <span class="font-semibold text-yellow-400">{{this.totalProfit}}</span>
-        </div>
+        </form>
     </div>
 
-    <table class="w-full table-auto text-sm">
-      <thead>
-        <tr class="text-gray-400 text-xs uppercase border-b border-gray-700">
-          <th class="text-left py-2 pl-2">Ngày tháng</th>
-          <th class="text-left py-2 pl-2">Số xe</th>
-          <th class="text-left py-2 pl-2">Tên hàng</th>
-          <th class="text-left py-2 pl-2">Chủ Hàng</th>
-          <th class="text-left py-2 pl-2">Nơi nhận hàng</th>
-          <th class="text-left py-2 pl-2">Nơi giao hàng</th>
-          {{!-- <th class="text-left py-2 pl-2">ĐVT</th> --}}
-          <th class="text-left py-2 pl-2">Số lượng</th>
-          <th class="text-left py-2 pl-2">Đơn giá</th>
-          <th class="text-left py-2 pl-2">Thành tiền</th>
-          <th class="text-left py-2 pl-2">Trạng thái</th>
-          <th class="text-left py-2 pl-2">Ghi Chú</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each this.results as |item|}}
-          <tr class="border-b border-gray-700 hover:bg-gray-800 transition">
-            <td class="py-2 pl-2 text-white">{{item.date}}</td>
-            <td class="py-2 pl-2 text-white">{{item.plate_number}}</td>
-            <td class="py-2 pl-2 text-white">{{item.sku_name}}</td>
-            <td class="py-2 pl-2 text-white">{{item.customerName}}</td>
-            <td class="py-2 pl-2 text-white">{{item.pickup}}</td>
-            <td class="py-2 pl-2 text-white">{{item.dropoff}}</td>
-            {{!-- <td class="py-2 pl-2 text-white">{{item.weight_unit}}</td> --}}
-            <td class="py-2 pl-2 text-white">{{item.quantity_fees}}</td>
-            <td class="py-2 pl-2 text-white">{{item.unit_price_fees_display}}</td>
-            <td class="py-2 pl-2 text-white">{{item.amount_display}}</td>
-            <td class="py-2">
-              {{#if (eq item.type "debt_estimate")}}
-                <span class="text-red-400 pl-2 font-medium">Dự thu</span>
-              {{else}}
-                <span class="text-green-400 pl-2 font-medium">Đã nhận</span>
-              {{/if}}
-            </td>
-            <td class="py-2 pl-2 text-white">{{item.note}}</td>
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  {{else}}
-    <p class="text-gray-500 italic text-center">Không có dữ liệu.</p>
-  {{/if}}
+    {{!-- ============== Summary Stats ============== --}}
+    {{#if this.results.length}}
+        <div class="rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm flex divide-x divide-gray-200 dark:divide-gray-700 overflow-hidden">
+
+            {{!-- Dự thu --}}
+            <div class="flex-1 min-w-0 px-3 py-2">
+                <div class="flex items-center text-[10px] font-medium text-red-400 leading-none">
+                    <FaIcon @icon="coins" @prefix="fas" @size="xs" class="mr-1" />
+                    <span class="uppercase tracking-wide">Dự thu</span>
+                </div>
+                <div class="text-sm font-semibold text-red-400 tabular-nums truncate mt-1" title={{this.totalIncome}}>{{this.totalIncome}}</div>
+            </div>
+
+            {{!-- Đã nhận --}}
+            <div class="flex-1 min-w-0 px-3 py-2">
+                <div class="flex items-center text-[10px] font-medium text-green-400 leading-none">
+                    <FaIcon @icon="hand-holding-dollar" @prefix="fas" @size="xs" class="mr-1" />
+                    <span class="uppercase tracking-wide">Đã nhận</span>
+                </div>
+                <div class="text-sm font-semibold text-green-400 tabular-nums truncate mt-1" title={{this.totalExpense}}>{{this.totalExpense}}</div>
+            </div>
+
+            {{!-- Còn nợ --}}
+            <div class="flex-1 min-w-0 px-3 py-2">
+                <div class="flex items-center text-[10px] font-medium {{if (gt this.totalProfitValue 0) 'text-yellow-400' 'text-emerald-400'}} leading-none">
+                    <FaIcon @icon="scale-balanced" @prefix="fas" @size="xs" class="mr-1" />
+                    <span class="uppercase tracking-wide">Còn nợ</span>
+                </div>
+                <div class="text-sm font-semibold tabular-nums truncate mt-1 {{if (gt this.totalProfitValue 0) 'text-yellow-400' 'text-emerald-400'}}" title={{this.totalProfit}}>{{this.totalProfit}}</div>
+            </div>
+        </div>
+    {{/if}}
+
+    {{!-- ============== Results Table Card ============== --}}
+    <div class="rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm flex flex-col overflow-hidden flex-1 min-h-0">
+
+        {{!-- Card header --}}
+        <div class="flex flex-wrap items-center justify-between gap-2 px-3 py-2 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-xs font-semibold text-gray-800 dark:text-gray-100">
+                Danh sách công nợ
+                {{#if this.results.length}}
+                    <span class="ml-1 inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-blue-500/10 text-blue-400">
+                        {{this.results.length}}
+                    </span>
+                {{/if}}
+            </h3>
+
+            {{#if this.results.length}}
+                <div class="flex items-center gap-1.5 text-[11px] text-gray-600 dark:text-gray-300">
+                    <span class="whitespace-nowrap">Hiển thị</span>
+                    <select
+                        class="finance-pagesize-select"
+                        {{on "change" this.setPageSize}}
+                    >
+                        {{#each this.pageSizeOptions as |opt|}}
+                            <option value={{opt}} selected={{eq opt this.pageSize}}>{{opt}}</option>
+                        {{/each}}
+                    </select>
+                    <span class="whitespace-nowrap">dòng / trang</span>
+                </div>
+            {{/if}}
+        </div>
+
+        {{!-- Table --}}
+        {{#if this.results.length}}
+            <div class="finance-table-scroll overflow-auto flex-1 min-h-0">
+                <table class="finance-table w-full text-xs" style="table-layout: fixed;">
+                    <colgroup>
+                        {{#each this.colStyles as |s|}}
+                            <col style={{s}}>
+                        {{/each}}
+                    </colgroup>
+                    <thead class="sticky top-0 z-10 bg-gray-100 dark:bg-gray-900 shadow-sm">
+                        <tr class="text-gray-500 dark:text-gray-400 text-[10px] uppercase tracking-wide">
+                            <th class="relative text-left py-2 px-2 font-semibold truncate">
+                                Ngày
+                                <span class="col-resizer" {{on "mousedown" (fn this.startColumnResize 0)}}></span>
+                            </th>
+                            <th class="relative text-left py-2 px-2 font-semibold truncate">
+                                Số xe
+                                <span class="col-resizer" {{on "mousedown" (fn this.startColumnResize 1)}}></span>
+                            </th>
+                            <th class="relative text-left py-2 px-2 font-semibold truncate">
+                                Tên hàng
+                                <span class="col-resizer" {{on "mousedown" (fn this.startColumnResize 2)}}></span>
+                            </th>
+                            <th class="relative text-left py-2 px-2 font-semibold truncate">
+                                Khách hàng
+                                <span class="col-resizer" {{on "mousedown" (fn this.startColumnResize 3)}}></span>
+                            </th>
+                            <th class="relative text-left py-2 px-2 font-semibold truncate">
+                                Nơi nhận
+                                <span class="col-resizer" {{on "mousedown" (fn this.startColumnResize 4)}}></span>
+                            </th>
+                            <th class="relative text-left py-2 px-2 font-semibold truncate">
+                                Nơi giao
+                                <span class="col-resizer" {{on "mousedown" (fn this.startColumnResize 5)}}></span>
+                            </th>
+                            <th class="relative text-right py-2 px-2 font-semibold truncate">
+                                Số lượng
+                                <span class="col-resizer" {{on "mousedown" (fn this.startColumnResize 6)}}></span>
+                            </th>
+                            <th class="relative text-right py-2 px-2 font-semibold truncate">
+                                Đơn giá
+                                <span class="col-resizer" {{on "mousedown" (fn this.startColumnResize 7)}}></span>
+                            </th>
+                            <th class="relative text-right py-2 px-2 font-semibold truncate">
+                                Thành tiền
+                                <span class="col-resizer" {{on "mousedown" (fn this.startColumnResize 8)}}></span>
+                            </th>
+                            <th class="relative text-left py-2 px-2 font-semibold truncate">
+                                Trạng thái
+                                <span class="col-resizer" {{on "mousedown" (fn this.startColumnResize 9)}}></span>
+                            </th>
+                            <th class="relative text-left py-2 px-2 font-semibold truncate">
+                                Ghi chú
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each this.paginatedResults as |item|}}
+                            <tr class="finance-row border-t border-gray-100 dark:border-gray-700/60 hover:bg-blue-500/5 dark:hover:bg-gray-700/40 transition
+                                {{if (eq item.type 'debt_estimate') 'row-type-estimate' 'row-type-received'}}"
+                                title={{if (eq item.type "debt_estimate") "Dự thu (công nợ)" "Đã nhận"}}
+                            >
+                                <td class="py-1.5 px-2 text-gray-700 dark:text-gray-200 truncate row-indicator" title={{item.date}}>{{item.date}}</td>
+                                <td class="py-1.5 px-2 text-gray-700 dark:text-gray-200 truncate font-mono text-[11px]" title={{item.plate_number}}>{{item.plate_number}}</td>
+                                <td class="py-1.5 px-2 text-gray-700 dark:text-gray-200 truncate" title={{item.sku_name}}>{{item.sku_name}}</td>
+                                <td class="py-1.5 px-2 text-gray-700 dark:text-gray-200 truncate" title={{item.customerName}}>{{item.customerName}}</td>
+                                <td class="py-1.5 px-2 text-gray-700 dark:text-gray-200 truncate" title={{item.pickup}}>{{item.pickup}}</td>
+                                <td class="py-1.5 px-2 text-gray-700 dark:text-gray-200 truncate" title={{item.dropoff}}>{{item.dropoff}}</td>
+                                <td class="py-1.5 px-2 text-right text-gray-700 dark:text-gray-200 tabular-nums truncate">{{item.quantity_fees}}</td>
+                                <td class="py-1.5 px-2 text-right text-gray-700 dark:text-gray-200 tabular-nums truncate">{{item.unit_price_fees_display}}</td>
+                                <td class="py-1.5 px-2 text-right tabular-nums truncate font-medium
+                                    {{if (eq item.type 'debt_estimate') 'text-red-500 dark:text-red-300' 'text-green-600 dark:text-green-300'}}">
+                                    {{item.amount_display}}
+                                </td>
+                                <td class="py-1.5 px-2 truncate">
+                                    {{#if (eq item.type "debt_estimate")}}
+                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-500/10 text-red-400">Dự thu</span>
+                                    {{else}}
+                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-500/10 text-green-400">Đã nhận</span>
+                                    {{/if}}
+                                </td>
+                                <td class="py-1.5 px-2 text-gray-700 dark:text-gray-200 truncate" title={{item.note}}>
+                                    {{#if item.record_public_id}}
+                                        <button
+                                            type="button"
+                                            class="finance-detail-btn mr-1"
+                                            title="Xem chi tiết đơn hàng"
+                                            {{on "click" (fn this.viewDetail item)}}
+                                        >
+                                            <FaIcon @icon="arrow-up-right-from-square" @prefix="fas" @size="xs" />
+                                        </button>
+                                    {{/if}}
+                                    {{item.note}}
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+            {{!-- Pagination bar --}}
+            <div class="finance-pagination-bar px-3 py-1 border-t border-gray-200 dark:border-gray-700/80 bg-gray-100 dark:bg-gray-800/70 flex items-center">
+                <span style="font-size:12px; color:#f3f4f6; white-space:nowrap;">
+                    Đang hiển thị
+                    <strong style="color:#ffffff;">{{this.pageStartIndex}}</strong>
+                    đến
+                    <strong style="color:#ffffff;">{{this.pageEndIndex}}</strong>
+                    trong tổng số
+                    <strong style="color:#ffffff;">{{this.results.length}}</strong>
+                    bản ghi
+                </span>
+                <div style="margin-left:auto; display:flex; align-items:center; gap:3px;">
+                    <button type="button" {{on "click" this.prevPage}} disabled={{lte this.page 1}} class="page-nav-btn">&#8249;</button>
+                    {{#each this.pageItems as |item|}}
+                        {{#if item.isEllipsis}}
+                            <span class="page-nav-btn" style="cursor:default;">…</span>
+                        {{else}}
+                            <button type="button" {{on "click" (fn this.gotoPage item.page)}} class="page-nav-btn {{if item.isCurrent 'active'}}">{{item.label}}</button>
+                        {{/if}}
+                    {{/each}}
+                    <button type="button" {{on "click" this.nextPage}} disabled={{gte this.page this.totalPages}} class="page-nav-btn">&#8250;</button>
+                </div>
+            </div>
+        {{else}}
+            <div class="flex-1 min-h-0 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500">
+                <FaIcon @icon="inbox" @prefix="fas" @size="2x" class="mb-2 opacity-60" />
+                <p class="text-xs italic">Không có dữ liệu.</p>
+                <p class="text-[11px] mt-1">Chọn khoảng thời gian và nhấn <span class="font-medium">Tìm kiếm</span> để xem báo cáo.</p>
+            </div>
+        {{/if}}
+    </div>
 </div>
-</div>
+
+{{!-- Styles dành riêng cho Báo cáo Công Nợ --}}
+<style>
+    .finance-table th {
+        position: relative;
+        overflow: hidden;
+    }
+    .finance-table .col-resizer {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 6px;
+        height: 100%;
+        cursor: col-resize;
+        user-select: none;
+        background: transparent;
+        z-index: 20;
+    }
+    .finance-table .col-resizer:hover,
+    .finance-table .col-resizer:active {
+        background: rgba(59, 130, 246, 0.4);
+    }
+    .finance-table td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Colored indicator ở đầu row */
+    .finance-table tr.finance-row td.row-indicator {
+        position: relative;
+    }
+    .finance-table tr.finance-row td.row-indicator::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+    }
+    .finance-table tr.row-type-estimate td.row-indicator::before {
+        background: #ef4444; /* red-500 = Dự thu */
+    }
+    .finance-table tr.row-type-received td.row-indicator::before {
+        background: #22c55e; /* green-500 = Đã nhận */
+    }
+
+    /* ---------- Detail link button ---------- */
+    .finance-management .finance-detail-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        border-radius: 3px;
+        color: #6b7280;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        vertical-align: middle;
+        transition: color 0.15s, background 0.15s;
+        padding: 0;
+    }
+    .finance-management .finance-detail-btn:hover {
+        color: #3b82f6;
+        background: rgba(59, 130, 246, 0.1);
+    }
+
+    /* ---------- Dropdown "Hiển thị N dòng/trang" ---------- */
+    .finance-management .finance-pagesize-select {
+        height: 24px;
+        min-width: 72px;
+        padding: 0 22px 0 8px;
+        font-size: 12px;
+        line-height: 1;
+        color: #e5e7eb;
+        background-color: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(75, 85, 99, 0.6);
+        border-radius: 4px;
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 20 20' fill='%239ca3af'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 6px center;
+        background-size: 10px 10px;
+        cursor: pointer;
+    }
+    .finance-management .finance-pagesize-select:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.4);
+    }
+    html:not(.dark) .finance-management .finance-pagesize-select {
+        color: #1f2937;
+        background-color: #fff;
+        border-color: #d1d5db;
+    }
+
+    /* ---------- Page nav buttons ---------- */
+    .finance-management .page-nav-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 24px;
+        height: 22px;
+        padding: 0 6px;
+        font-size: 12px;
+        border-radius: 4px;
+        border: 1px solid rgba(75, 85, 99, 0.5);
+        background: rgba(55, 65, 81, 0.5);
+        color: #d1d5db;
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s;
+    }
+    .finance-management .page-nav-btn:hover:not(:disabled) {
+        background: rgba(59, 130, 246, 0.3);
+        border-color: rgba(59, 130, 246, 0.6);
+        color: #fff;
+    }
+    .finance-management .page-nav-btn.active {
+        background: #2563eb;
+        border-color: #1d4ed8;
+        color: #fff;
+        font-weight: 600;
+    }
+    .finance-management .page-nav-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+
+    /* ---------- Pagination bar wrapper ---------- */
+    .finance-management .finance-pagination-bar {
+        min-height: 32px;
+        display: flex;
+        align-items: center;
+    }
+
+    /* ---------- Pagination component (compact) ---------- */
+    .finance-management .fleetbase-pagination {
+        @apply py-0;
+    }
+    /* Override Tailwind text-gray-700 trên <p> */
+    .finance-management #fleetbase-pagination .fleetbase-pagination-meta-info-content {
+        font-size: 12px !important;
+        color: #d1d5db !important;
+    }
+    html:not(.dark) .finance-management #fleetbase-pagination .fleetbase-pagination-meta-info-content {
+        color: #374151 !important;
+    }
+    /* Số trang trong <span class="font-medium"> */
+    .finance-management #fleetbase-pagination .fleetbase-pagination-meta-info-content .font-medium {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+    }
+    html:not(.dark) .finance-management #fleetbase-pagination .fleetbase-pagination-meta-info-content .font-medium {
+        color: #111827 !important;
+        font-weight: 700 !important;
+    }
+    .finance-management .fleetbase-pagination .fleetbase-pagination-meta-info-paging-inner {
+        box-shadow: none;
+        gap: 2px;
+    }
+    .finance-management .fleetbase-pagination .page-item,
+    .finance-management .fleetbase-pagination .page-item-arrow,
+    .finance-management .fleetbase-pagination .direction-button {
+        background-color: rgba(55, 65, 81, 0.5) !important;
+        background-image: none !important;
+        border: 1px solid rgba(75, 85, 99, 0.4);
+        color: #d1d5db;
+        min-width: 22px;
+        height: 20px;
+        padding: 0 5px;
+        margin: 0;
+        font-size: 10px;
+        line-height: 1;
+        border-radius: 3px;
+        box-shadow: none;
+    }
+    .finance-management .fleetbase-pagination .page-item-arrow svg {
+        width: 10px;
+        height: 10px;
+    }
+    .finance-management .fleetbase-pagination .page-item:hover,
+    .finance-management .fleetbase-pagination .page-item-arrow:hover,
+    .finance-management .fleetbase-pagination .direction-button:hover {
+        background-color: rgba(59, 130, 246, 0.25) !important;
+        border-color: rgba(59, 130, 246, 0.5);
+        color: #fff;
+    }
+    .finance-management .fleetbase-pagination .page-item.active,
+    .finance-management .fleetbase-pagination .page-item:active {
+        background-color: #2563eb !important;
+        border-color: #1d4ed8;
+        color: #fff;
+    }
+    .finance-management .fleetbase-pagination .page-item[disabled],
+    .finance-management .fleetbase-pagination .page-item-arrow[disabled],
+    .finance-management .fleetbase-pagination .direction-button[disabled] {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+    html:not(.dark) .finance-management .fleetbase-pagination .page-item,
+    html:not(.dark) .finance-management .fleetbase-pagination .page-item-arrow,
+    html:not(.dark) .finance-management .fleetbase-pagination .direction-button {
+        background-color: #fff !important;
+        border-color: #d1d5db;
+        color: #374151;
+    }
+    html:not(.dark) .finance-management .fleetbase-pagination .page-item:hover,
+    html:not(.dark) .finance-management .fleetbase-pagination .page-item-arrow:hover {
+        background-color: rgba(59, 130, 246, 0.1) !important;
+        border-color: #93c5fd;
+        color: #1d4ed8;
+    }
+</style>
 
 {{outlet}}

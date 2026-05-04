@@ -1030,6 +1030,41 @@ class OrderController extends Controller
         return new OrderResource($order);
     }
 
+    public function getFeesForDriver($id, Request $request)
+    {
+        try {
+            $order = Order::findRecordOrFail($id);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(
+                [
+                    'error' => 'Order resource not found.',
+                ],
+                404
+            );
+        }
+
+        return response()->json([
+            // Chi phí lái xe đã nhập
+            'fees_driver'           => $order->fees_driver ?? [],
+            'driver_advance_fee'    => (float) $order->driver_advance_fee,
+            'driver_earnings'       => (float) $order->driver_earnings,
+            'driver_remittance'     => (float) $order->driver_remittance,
+
+            // Chi phí được admin duyệt
+            'approved_fees'         => $order->approved_fees ?? null,
+            'approval_fees'         => (float) $order->approval_fees,
+            'note_approval_fees'    => $order->note_approval_fees,
+
+            // Thông tin phí đơn hàng
+            'is_fees_type_by_order' => (bool) $order->is_fees_type_by_order,
+            'quantity_fees'         => (int) $order->quantity_fees,
+            'unit_price_fees'       => (float) $order->unit_price_fees,
+            'is_receive_cash_fees'  => (bool) $order->is_receive_cash_fees,
+            'fees'                  => (int) $order->fees,
+            'is_finish'             => (bool) $order->is_finish,
+        ]);
+    }
+
     public function updateFeesForDriver($id, Request $request)
     {
         try {

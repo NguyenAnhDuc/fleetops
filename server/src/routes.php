@@ -97,6 +97,7 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                     $router->match(['post', 'patch'], '{id}/collected-fees', 'OrderController@collectedFees');
                     $router->match(['post', 'patch'], '{id}/assign-driver', 'OrderController@assignDriver');
                     $router->match(['post', 'patch'], '{id}/billing-images', 'OrderController@updateBillingImages');
+                    $router->get('{id}/fees-driver', 'OrderController@getFeesForDriver');
                     $router->match(['post', 'patch'], '{id}/fees-driver', 'OrderController@updateFeesForDriver');
                     $router->match(['post', 'patch'], '{id}/dispatch', 'OrderController@dispatchOrder');
                     $router->match(['post', 'patch'], '{id}/finish', 'OrderController@finishOrder');

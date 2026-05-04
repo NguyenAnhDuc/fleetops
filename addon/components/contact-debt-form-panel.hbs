@@ -68,11 +68,12 @@
                     </InputGroup>
 
                     <InputGroup @name={{t "fleet-ops.component.contact-debt-form-panel.received-at"}} @wrapperClass="col-span-1">
-                        <DateTimeInput
-                            class="form-input"
-                            @value={{this.contactDebt.received_at}}
-                            @onUpdate={{fn (mut this.contactDebt.received_at)}}
-                            @disabled={{unauthorized}}
+                        <input
+                            type="date"
+                            class="form-input w-full"
+                            value={{this.receivedAtDate}}
+                            disabled={{unauthorized}}
+                            {{on "change" this.updateReceivedAt}}
                         />
                     </InputGroup>
                     

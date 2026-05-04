@@ -3,97 +3,227 @@ import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { computed } from '@ember/object';
-import { format as formatDate, isValid as isValidDate, formatDistanceToNow } from 'date-fns';
-import formatCurrency from '@fleetbase/ember-ui/utils/format-currency';
+import { htmlSafe } from '@ember/template';
+import { format as formatDate } from 'date-fns';
 import { isEmpty } from '@ember/utils';
 
-export default class ManagementFinanceController extends BaseController {
+// Helper: format VND – "19.829.000 đ"
+const fmtVND = (amount) => {
+    const num = parseFloat(amount) || 0;
+    const abs = Math.abs(num);
+    const formatted = Math.round(abs).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return (num < 0 ? '-' : '') + formatted + ' đ';
+};
+
+export default class ManagementDebtReportController extends BaseController {
     @service store;
     @service fetch;
     @service intl;
     @service notifications;
 
-    @tracked vehicles = [];
     @tracked customers = [];
-    @tracked selectedVehicle = null;
     @tracked selectedCustomer = null;
-    @tracked startDate = null;
-    @tracked endDate = null;
-    @tracked results = [];
     @tracked startDate = this.formatDateToInput(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
     @tracked endDate = this.formatDateToInput(new Date());
+    @tracked results = [];
+    @tracked isLoading = false;
 
-    constructor() {
-        super(...arguments);
-        //this.loadVehicles();
-        this.loadCustomers();
+    // ---------------- Pagination (client-side) ----------------
+    @tracked page = 1;
+    @tracked pageSize = 20;
+    pageSizeOptions = [10, 20, 50, 100];
+
+    // ---------------- Column resize (client-side) ----------------
+    @tracked columnWidths = [
+        6,   // Ngày
+        7,   // Số xe
+        9,   // Tên hàng
+        10,  // Khách hàng
+        12,  // Nơi nhận
+        12,  // Nơi giao
+        5,   // Số lượng
+        8,   // Đơn giá
+        9,   // Thành tiền
+        8,   // Trạng thái
+        14,  // Ghi chú
+    ];
+
+    _resizeState = null;
+
+    @computed('columnWidths.[]')
+    get colStyles() {
+        return (this.columnWidths || []).map((w) => htmlSafe(`width:${w}%;`));
     }
 
-    async loadVehicles() {
-        try {
-            this.vehicles = await this.store.findAll('vehicle');
-        } catch (error) {
-            this.notifications.error('Không thể tải danh sách xe');
-        }
+    @action startColumnResize(index, event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const th = event.target.closest('th');
+        const tableEl = th?.closest('table');
+        const tableWidth = tableEl?.getBoundingClientRect().width || 1000;
+        const startX = event.clientX;
+        const startWidth = this.columnWidths[index] || 5;
+        this._resizeState = { index, startX, startWidth, tableWidth };
+
+        const onMove = (e) => {
+            if (!this._resizeState) return;
+            const dx = e.clientX - this._resizeState.startX;
+            const dxPct = (dx / this._resizeState.tableWidth) * 100;
+            const next = Math.max(3, this._resizeState.startWidth + dxPct);
+            const widths = [...this.columnWidths];
+            widths[this._resizeState.index] = next;
+            this.columnWidths = widths;
+        };
+
+        const onUp = () => {
+            this._resizeState = null;
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+            document.body.classList.remove('select-none', 'cursor-col-resize');
+        };
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+        document.body.classList.add('select-none', 'cursor-col-resize');
     }
 
-    async loadCustomers(){
-        try{
-            this.customers = await this.store.findAll('contact');
-        }catch(error){
-            this.notifications.error('Không thể tải danh sách Khách hàng');
-        }
+    // ---------------- Pagination computed ----------------
+    @computed('results', 'pageSize')
+    get totalPages() {
+        return Math.max(1, Math.ceil((this.results?.length || 0) / this.pageSize));
     }
 
-    formatDateToInput(date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() là 0-11
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+    @computed('results', 'page', 'pageSize')
+    get paginatedResults() {
+        const start = (this.page - 1) * this.pageSize;
+        return (this.results || []).slice(start, start + this.pageSize);
     }
 
+    @computed('results', 'page', 'pageSize')
+    get pageStartIndex() {
+        if (!this.results?.length) return 0;
+        return (this.page - 1) * this.pageSize + 1;
+    }
+
+    @computed('results', 'page', 'pageSize')
+    get pageEndIndex() {
+        return Math.min(this.page * this.pageSize, this.results?.length || 0);
+    }
+
+    @computed('results', 'page', 'pageSize', 'totalPages', 'pageStartIndex', 'pageEndIndex')
+    get meta() {
+        return {
+            from: this.pageStartIndex,
+            to: this.pageEndIndex,
+            total: this.results?.length || 0,
+            current_page: this.page,
+            last_page: this.totalPages,
+            per_page: this.pageSize,
+        };
+    }
+
+    // ---------------- Summary computed ----------------
     @computed('results')
     get totalIncomeValue() {
-        return this.results
+        return (this.results || [])
             .filter((r) => r.type === 'debt_estimate')
             .reduce((sum, r) => sum + parseFloat(r.amount || 0), 0);
     }
 
     @computed('results')
     get totalExpenseValue() {
-        return this.results
+        return (this.results || [])
             .filter((r) => r.type === 'debt_received')
             .reduce((sum, r) => sum + parseFloat(r.amount || 0), 0);
     }
 
+    @computed('totalIncomeValue', 'totalExpenseValue')
+    get totalProfitValue() {
+        return this.totalIncomeValue - this.totalExpenseValue;
+    }
+
     @computed('totalIncomeValue')
     get totalIncome() {
-        return formatCurrency(this.totalIncomeValue, 'VND').replace('₫', '');
+        return fmtVND(this.totalIncomeValue);
     }
 
     @computed('totalExpenseValue')
     get totalExpense() {
-        return formatCurrency(this.totalExpenseValue, 'VND').replace('₫', '');
+        return fmtVND(this.totalExpenseValue);
     }
 
-    @computed('totalIncomeValue', 'totalExpenseValue')
+    @computed('totalProfitValue')
     get totalProfit() {
-        return formatCurrency(this.totalIncomeValue - this.totalExpenseValue, 'VND').replace('₫', '');
+        return fmtVND(this.totalProfitValue);
     }
 
-    @action
-    updateSelectedVehicle(vehicle) {
-        if(vehicle){
-            this.selectedVehicle = vehicle;
+    // ---------------- Actions ----------------
+    @computed('page', 'totalPages')
+    get pageItems() {
+        const total = this.totalPages;
+        const current = this.page;
+        const items = [];
+        const push = (p) => items.push({ label: p, page: p, isCurrent: p === current, isEllipsis: false });
+        const ellipsis = () => items.push({ label: '…', page: null, isCurrent: false, isEllipsis: true });
+        if (total <= 7) {
+            for (let i = 1; i <= total; i++) push(i);
+            return items;
         }
+        push(1);
+        if (current > 4) ellipsis();
+        const from = Math.max(2, current - 2);
+        const to = Math.min(total - 1, current + 2);
+        for (let i = from; i <= to; i++) push(i);
+        if (current < total - 3) ellipsis();
+        push(total);
+        return items;
+    }
+
+    @action gotoPage(p) {
+        const n = Number(p);
+        if (!n || n < 1 || n > this.totalPages) return;
+        this.page = n;
+    }
+
+    @action nextPage() {
+        if (this.page < this.totalPages) this.page += 1;
+    }
+
+    @action prevPage() {
+        if (this.page > 1) this.page -= 1;
+    }
+
+    @action setPageSize(event) {
+        const v = parseInt(event.target.value, 10);
+        if (!Number.isNaN(v) && v > 0) {
+            this.pageSize = v;
+            this.page = 1;
+        }
+    }
+
+    constructor() {
+        super(...arguments);
+        this.loadCustomers();
+    }
+
+    async loadCustomers() {
+        try {
+            this.customers = await this.store.findAll('contact');
+        } catch (error) {
+            this.notifications.error('Không thể tải danh sách Khách hàng');
+        }
+    }
+
+    formatDateToInput(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 
     @action
     updateSelectedCustomer(customer) {
-        if(customer){
-            this.selectedCustomer = customer;
-            console.log(this.selectedCustomer);
-        }
+        this.selectedCustomer = customer || null;
     }
 
     @action
@@ -107,6 +237,21 @@ export default class ManagementFinanceController extends BaseController {
     }
 
     @action
+    async viewDetail(record) {
+        if (!record?.record_public_id) return;
+        try {
+            const model = await this.store.queryRecord('order', {
+                public_id: record.record_public_id,
+                single: true,
+                with: ['payload', 'driverAssigned', 'orderConfig', 'customer', 'trackingStatuses', 'trackingNumber'],
+            });
+            return this.transitionToRoute('operations.orders.index.view', model);
+        } catch (error) {
+            this.notifications.error('Không thể mở chi tiết đơn hàng: ' + error.message);
+        }
+    }
+
+    @action
     openCreateOverlay() {
         return this.transitionToRoute('management.debt-reports.index.new');
     }
@@ -114,96 +259,107 @@ export default class ManagementFinanceController extends BaseController {
     @action
     async search(event) {
         event.preventDefault();
+        return this.doSearch();
+    }
 
-        // if (!this.selectedVehicleId) {
-        //     this.notifications.error(this.intl.t('Vui lòng chọn xe'));
-        //     return;
-        // }
+    async doSearch() {
+        this.page = 1;
+        this.isLoading = true;
 
-        // Giả sử có API hoặc model để lấy dữ liệu thu chi theo xe và khoảng thời gian
-        // Mình sẽ lấy dữ liệu đơn hàng (thu) và chi phí (chi) rồi gộp lại
-        // Hiển thị thông báo đang load
-        let loadingNotice = this.notifications.info("Đang lấy dữ liệu công nợ ...", { autoClear: false });
+        let loadingNotice = this.notifications.info('Đang lấy dữ liệu công nợ ...', { autoClear: false });
         try {
             var orders = null;
             var contactDebts = null;
+
             try {
-                // Lấy đơn hàng (thu)
-                orders = await this.fetch.get(`orders/finance`,{
-                    //vehicle_id: this.selectedVehicle ? this.selectedVehicle.uuid : '',
-                    customer_id: this.selectedCustomer? this.selectedCustomer.uuid : '',
-                    is_receive_cash_fees: 0, //Chỉ lấy những đơn hàng là công nợ
+                orders = await this.fetch.get(`orders/finance`, {
+                    customer_id: this.selectedCustomer ? this.selectedCustomer.uuid : '',
+                    is_receive_cash_fees: 0,
                     is_finish: 1,
                     start_date: this.startDate,
                     end_date: this.endDate,
                 });
-
-            }catch (error) {
-                this.notifications.error("Lỗi order:" + error);
+            } catch (error) {
+                this.notifications.error('Lỗi order: ' + error);
             }
 
-            //Lấy thông tin công nợ
-            try{
-                contactDebts = await this.fetch.get(`contact-debts/get`,{
-                    contact_uuid: this.selectedCustomer? this.selectedCustomer.uuid : '',
+            try {
+                contactDebts = await this.fetch.get(`contact-debts/get`, {
+                    contact_uuid: this.selectedCustomer ? this.selectedCustomer.uuid : '',
                     start_date: this.startDate,
                     end_date: this.endDate,
                 });
-            }catch(error){
-                this.notifications.error("Lỗi lấy thông tin công nợ:" + error);
+            } catch (error) {
+                this.notifications.error('Lỗi lấy thông tin công nợ: ' + error);
             }
-            
-            console.log("contactDebts:" + contactDebts);
 
-            // Gộp dữ liệu thu chi
             const results = [];
             orders = orders?.data ?? [];
+            contactDebts = contactDebts?.data ?? [];
+
             orders.forEach((order) => {
                 results.push({
                     date: formatDate(new Date(order.started_at), 'yyyy-MM-dd'),
                     type: 'debt_estimate',
-                    plate_number: order.vehicle_assigned ? order.vehicle_assigned.display_name : "",
-                    sku_name: order.payload.entities ? (order.payload.entities.length > 0 ? order.payload.entities[0].name : "") : "",
-                    customerName: order.customer? order.customer.name : "",
-                    pickup: order.payload.pickup? (isEmpty(order.payload.pickup.city)? order.payload.pickup.address : "") : "",
-                    dropoff: order.payload.dropoff? (isEmpty(order.payload.dropoff.city)?  order.payload.dropoff.address : "") : "",
-                    // weight_unit: order.payload.entities ? (order.payload.entities.length > 0 ? order.payload.entities[0].weight_unit : "") : "",
+                    plate_number: order.vehicle_assigned
+                        ? order.vehicle_assigned.plate_number || order.vehicle_assigned.display_name || ''
+                        : '',
+                    sku_name: order.payload.entities?.length > 0 ? order.payload.entities[0].name : '',
+                    customerName: order.customer ? order.customer.name : '',
+                    pickup: order.payload.pickup
+                        ? isEmpty(order.payload.pickup.city)
+                            ? order.payload.pickup.address
+                            : ''
+                        : '',
+                    dropoff: order.payload.dropoff
+                        ? isEmpty(order.payload.dropoff.city)
+                            ? order.payload.dropoff.address
+                            : ''
+                        : '',
                     quantity_fees: order.quantity_fees,
-                    unit_price_fees: order.unit_price_fees,
-                    unit_price_fees_display: formatCurrency(order.unit_price_fees, "VND").replace('₫', ''),
+                    unit_price_fees_display: fmtVND(order.unit_price_fees),
                     amount: order.quantity_fees * order.unit_price_fees,
-                    amount_display: formatCurrency(order.quantity_fees * order.unit_price_fees, "VND").replace('₫', ''),
-                    note: `Đơn hàng # ${order.public_id.replace('order_','')}`,
+                    amount_display: fmtVND(order.quantity_fees * order.unit_price_fees),
+                    record_type: 'order',
+                    record_public_id: order.public_id,
+                    note: `Đơn hàng # ${order.public_id.replace('order_', '')}`,
                 });
             });
 
-            contactDebts = contactDebts?.data ?? [];
             contactDebts.forEach((debt) => {
+                // Map contact_uuid → tên khách hàng từ danh sách đã load
+                const matchedCustomer = (this.customers || []).find((c) => c.uuid === debt.contact_uuid || c.id === debt.contact_uuid);
+                const customerName = matchedCustomer?.name || this.selectedCustomer?.name || '';
+
                 results.push({
                     date: formatDate(new Date(debt.received_at), 'yyyy-MM-dd'),
                     type: 'debt_received',
-                    note: debt.note,
+                    plate_number: '',
+                    sku_name: '',
+                    customerName,
+                    pickup: '',
+                    dropoff: '',
+                    quantity_fees: '',
+                    unit_price_fees_display: '',
                     amount: debt.amount,
-                    amount_display: formatCurrency(debt.amount, "VND").replace('₫', ''),
-                    plate_number: "",
-                    customerName: ""
+                    amount_display: fmtVND(debt.amount),
+                    note: debt.note,
                 });
             });
-            
-            // Sắp xếp theo ngày
+
             results.sort((a, b) => new Date(a.date) - new Date(b.date));
-
             this.results = results;
-            // Clear hoặc update thông báo khi xong
-            this.notifications.removeNotification(loadingNotice);
 
-            if(this.results.length === 0){
-                this.notifications.success("Đã tổng hợp dữ liệu thành công nhưng không có data phù hợp!");
-            }else{
-                this.notifications.success("Đã tổng hợp dữ liệu thành công!");
+            this.notifications.removeNotification(loadingNotice);
+            if (this.results.length === 0) {
+                this.notifications.success('Đã tổng hợp dữ liệu thành công nhưng không có data phù hợp!');
+            } else {
+                this.notifications.success('Đã tổng hợp dữ liệu thành công!');
             }
         } catch (error) {
-            this.notifications.error("Lỗi khi tìm kiếm dữ liệu công nợ: "+ error);
+            this.notifications.error('Lỗi khi tìm kiếm dữ liệu công nợ: ' + error);
+        } finally {
+            this.isLoading = false;
         }
     }
 }

@@ -441,7 +441,7 @@ export default class ManagementFinanceController extends BaseController {
                     laixe_nop_display: fmtVND(order.driver_remittance),
                     do_dau: 0,
                     do_dau_display: "",
-                    note: (order.is_receive_cash_fees ? 'Tiền mặt' : 'Công Nợ') + ` # ${order.public_id.replace('order_','')}`,
+                    note: `Đơn hàng (${order.is_receive_cash_fees ? 'Tiền mặt' : 'Công nợ'}) # ${order.public_id.replace('order_','')}`,
 
                 });
             });

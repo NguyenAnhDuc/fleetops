@@ -2,6 +2,7 @@ import BaseController from '@fleetbase/fleetops-engine/controllers/base-controll
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
+import { getOwner } from '@ember/application';
 
 export default class ManagementContactDebtIndexNewController extends BaseController {
     /**
@@ -85,14 +86,26 @@ export default class ManagementContactDebtIndexNewController extends BaseControl
      * @return {Promise}
      * @memberof ManagementContactDebtIndexNewController
      */
-    @action onAfterSave(contactDebt) {
+    @action onAfterSave() {
         if (this.overlay) {
             this.overlay.close();
         }
 
-        this.hostRouter.refresh();
-        return this.transitionToRoute('management.debt-reports.index.details', contactDebt).then(() => {
-            this.resetForm();
+        // Reset form ngay lập tức để lần mở tiếp theo sạch data
+        this.resetForm();
+
+        // Quay về màn hình list
+        this.transitionToRoute('management.debt-reports.index').then(() => {
+            // Re-trigger search để load lại list với filter đang nhập
+            try {
+                const owner = getOwner(this);
+                const indexController = owner.lookup('controller:management/debt-reports/index');
+                if (indexController && indexController.results.length > 0) {
+                    indexController.doSearch();
+                }
+            } catch (_) {
+                // ignore nếu lookup thất bại
+            }
         });
     }
 

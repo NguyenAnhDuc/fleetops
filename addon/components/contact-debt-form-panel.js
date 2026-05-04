@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
+import { computed } from '@ember/object';
 import { isArray } from '@ember/array';
 import { task } from 'ember-concurrency';
 import contextComponentCallback from '@fleetbase/ember-core/utils/context-component-callback';
@@ -93,6 +94,31 @@ export default class ContactDebtFormPanelComponent extends Component {
 
         if (!isActionOverrided) {
             this.contextPanel.focus(this.contactDebt, 'viewing');
+        }
+    }
+
+    /**
+     * Returns received_at as yyyy-MM-dd string for date input.
+     */
+    @computed('contactDebt.received_at')
+    get receivedAtDate() {
+        const d = this.contactDebt?.received_at;
+        if (!d) return '';
+        const date = d instanceof Date ? d : new Date(d);
+        if (isNaN(date.getTime())) return '';
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    /**
+     * Updates received_at from date input change.
+     */
+    @action updateReceivedAt(event) {
+        const val = event.target.value;
+        if (val) {
+            this.contactDebt.received_at = new Date(val + 'T00:00:00');
         }
     }
 
