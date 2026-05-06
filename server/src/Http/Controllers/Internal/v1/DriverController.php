@@ -94,6 +94,9 @@ class DriverController extends FleetOpsController
                         ->filter()
                         ->toArray();
 
+                    // Default status to active
+                    $input['status'] = 'active';
+
                     // Get current session company
                     $company               = Auth::getCompany();
                     $input['company_uuid'] = session('company', $company->uuid);
@@ -175,6 +178,9 @@ class DriverController extends FleetOpsController
                             ->except(['name', 'password', 'email', 'phone', 'meta', 'avatar_uuid', 'photo_uuid', 'status'])
                             ->filter()
                             ->toArray();
+
+                    // Default status to active
+                    $input['status'] = 'active';
 
                     // Assign user to company and send invite
                     if (!$isOrganizationMember && $company) {

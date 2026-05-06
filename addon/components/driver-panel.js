@@ -77,8 +77,8 @@ export default class DriverPanelComponent extends Component {
         const registeredTabs = this.universe.getMenuItemsFromRegistry('fleet-ops:component:driver-panel');
         // this.universe._createMenuItem('Tracking', null, { icon: 'satellite-dish', component: DriverPanelTrackingComponent }),
         const defaultTabs = [
-            this.universe._createMenuItem('Details', null, { icon: 'circle-info', component: DriverPanelDetailComponent }),
-            this.universe._createMenuItem('Orders', null, { icon: 'bars-progress', component: DriverPanelOrdersComponent }),
+            this.universe._createMenuItem('Chi tiết', null, { icon: 'circle-info', component: DriverPanelDetailComponent }),
+            this.universe._createMenuItem('Đơn hàng', null, { icon: 'bars-progress', component: DriverPanelOrdersComponent }),
         ];
         if (isArray(registeredTabs)) {
             return [...defaultTabs, ...registeredTabs];

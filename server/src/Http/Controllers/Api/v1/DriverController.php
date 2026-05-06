@@ -509,6 +509,10 @@ class DriverController extends Controller
         )->whereHas('driver')->first();
 
         // Check password to authenticate driver
+        if (!$user) {
+            return response()->apiError('No driver account found with the provided credentials.', 401);
+        }
+
         if (!Hash::check($password, $user->password)) {
             return response()->apiError('Authentication failed using password provided.', 401);
         }

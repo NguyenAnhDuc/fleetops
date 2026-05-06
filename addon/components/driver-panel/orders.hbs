@@ -1,4 +1,4 @@
-<Layout::Section::Header @title={{t "fleet-ops.common.orders"}} @onSearch={{this.search}}>
+<Layout::Section::Header @title={{t "fleet-ops.common.orders"}} @searchPlaceholder="Tìm kiếm" @onSearch={{this.search}}>
     {{#unless this.queryOrders.isIdle}}
         <div>
             <Spinner class="dark:text-blue-400 text-blue-900" />

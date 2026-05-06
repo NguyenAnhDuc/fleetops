@@ -380,29 +380,44 @@ class Driver extends Model
 
     /**
      * Specifies the user's FCM tokens.
+     * Ưu tiên lấy từ bảng user_devices (platform=android).
+     * Nếu không có, fallback về users.notify_token (lưu bởi /fcm-token API).
      */
     public function routeNotificationForFcm(): array
     {
-        return $this->devices
-            ->where('platform', 'android')->map(
-                function ($userDevice) {
-                    return $userDevice->token;
-                }
-            )
+        $tokens = $this->devices
+            ->where('platform', 'android')
+            ->map(fn($userDevice) => $userDevice->token)
+            ->filter()
             ->toArray();
+
+        // Fallback: app gọi updateFcmToken() lưu token vào users.notify_token
+        if (empty($tokens) && $this->user && $this->user->notify_token) {
+            $tokens[] = $this->user->notify_token;
+        }
+
+        return $tokens;
     }
 
     /**
      * Specifies the user's APNS tokens.
+     * Ưu tiên lấy từ bảng user_devices (platform=ios).
+     * Nếu không có, fallback về users.notify_token khi device_type_login = 0 (iOS).
      */
     public function routeNotificationForApn(): array
     {
-        return $this->devices
-            ->where('platform', 'ios')->map(
-                function ($userDevice) {
-                    return $userDevice->token;
-                }
-            )->toArray();
+        $tokens = $this->devices
+            ->where('platform', 'ios')
+            ->map(fn($userDevice) => $userDevice->token)
+            ->filter()
+            ->toArray();
+
+        // Fallback: nếu driver login bằng iOS (device_type_login = 0) thì dùng notify_token
+        if (empty($tokens) && $this->user && $this->user->notify_token && $this->user->device_type_login == 0) {
+            $tokens[] = $this->user->notify_token;
+        }
+
+        return $tokens;
     }
 
     /**
