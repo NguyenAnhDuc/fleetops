@@ -252,6 +252,28 @@ export default class ManagementDebtReportController extends BaseController {
     }
 
     @action
+    async exportExcel() {
+        if (!this.results || this.results.length === 0) {
+            this.notifications.warning('Không có dữ liệu để xuất. Vui lòng tìm kiếm trước.');
+            return;
+        }
+        const fileName = `Bao_cao_cong_no_${this.startDate || ''}_${this.endDate || ''}.xlsx`;
+        try {
+            await this.fetch.download(
+                'contact-debts/debt-export',
+                {
+                    contact_uuid: this.selectedCustomer ? this.selectedCustomer.uuid : '',
+                    start_date: this.startDate,
+                    end_date: this.endDate,
+                },
+                { fileName, method: 'GET' }
+            );
+        } catch (e) {
+            this.notifications.error('Lỗi xuất Excel: ' + (e.message || e));
+        }
+    }
+
+    @action
     openCreateOverlay() {
         return this.transitionToRoute('management.debt-reports.index.new');
     }

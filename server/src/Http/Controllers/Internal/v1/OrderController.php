@@ -6,7 +6,10 @@ use Fleetbase\Exceptions\FleetbaseRequestValidationException;
 use Fleetbase\FleetOps\Events\OrderDispatchFailed;
 use Fleetbase\FleetOps\Events\OrderReady;
 use Fleetbase\FleetOps\Events\OrderStarted;
+use Fleetbase\FleetOps\Exports\FinanceExport;
 use Fleetbase\FleetOps\Exports\OrderExport;
+use Fleetbase\FleetOps\Models\FuelReport;
+use Fleetbase\FleetOps\Models\Issue;
 use Fleetbase\FleetOps\Flow\Activity;
 use Fleetbase\FleetOps\Http\Controllers\FleetOpsController;
 use Fleetbase\FleetOps\Http\Requests\BulkDispatchRequest;
@@ -948,6 +951,42 @@ class OrderController extends FleetOpsController
         });
 
         return OrderResource::collection($results);
+    }
+
+    public function financeExport(Request $request)
+    {
+        $vehicleId = $request->input('vehicle_id', '');
+        $startDate = $request->input('start_date');
+        $endDate   = $request->input('end_date');
+
+        // Query orders
+        $orders = Order::where('company_uuid', session('company'))
+            ->where('is_finish', 1)
+            ->when($vehicleId, fn($q) => $q->where('vehicle_assigned_uuid', $vehicleId))
+            ->when($startDate,  fn($q) => $q->whereDate('started_at', '>=', $startDate))
+            ->when($endDate,    fn($q) => $q->whereDate('started_at', '<=', $endDate))
+            ->with(['vehicleAssigned', 'payload.pickup', 'payload.dropoff', 'payload.entities', 'customer'])
+            ->get();
+
+        // Query fuel reports
+        $fuelReports = FuelReport::where('company_uuid', session('company'))
+            ->when($vehicleId, fn($q) => $q->where('vehicle_uuid', $vehicleId))
+            ->when($startDate,  fn($q) => $q->whereDate('created_at', '>=', $startDate))
+            ->when($endDate,    fn($q) => $q->whereDate('created_at', '<=', $endDate))
+            ->with(['vehicle'])
+            ->get();
+
+        // Query issues
+        $issues = Issue::where('company_uuid', session('company'))
+            ->when($vehicleId, fn($q) => $q->where('vehicle_uuid', $vehicleId))
+            ->when($startDate,  fn($q) => $q->whereDate('created_at', '>=', $startDate))
+            ->when($endDate,    fn($q) => $q->whereDate('created_at', '<=', $endDate))
+            ->with(['vehicle'])
+            ->get();
+
+        $fileName = 'Bao_cao_thu_chi_' . ($startDate ?? '') . '_' . ($endDate ?? '') . '.xlsx';
+
+        return Excel::download(new FinanceExport($orders, $fuelReports, $issues), $fileName);
     }
 
     public function finishOrder(string $id)

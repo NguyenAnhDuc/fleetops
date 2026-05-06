@@ -54,6 +54,17 @@
                     @disabled={{this.isLoading}}
                     @isLoading={{this.isLoading}}
                 />
+
+                {{#if this.results.length}}
+                    <Button
+                        @type="default"
+                        @size="sm"
+                        @icon="file-excel"
+                        @iconPrefix="fas"
+                        @text="Xuất Excel"
+                        @onClick={{this.exportExcel}}
+                    />
+                {{/if}}
             </div>
         </form>
     </div>

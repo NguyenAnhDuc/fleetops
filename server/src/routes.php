@@ -371,6 +371,7 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                             'contact-debts',
                             function ($router, $controller) {
                                 $router->get('get', $controller('get'));
+                                $router->get('debt-export', $controller('debtExport'))->middleware([Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]);
                             }
                         );
 
@@ -414,6 +415,7 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                                 $router->delete('bulk-delete', $controller('bulkDelete'));
                                 $router->match(['get', 'post'], 'export', $controller('export'))->middleware([Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]);
                                 $router->get('finance', $controller('finance'));
+                                $router->get('finance-export', $controller('financeExport'))->middleware([Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]);
                             }
                         );
                         $router->fleetbaseRoutes('order-configs');

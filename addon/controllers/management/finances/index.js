@@ -360,6 +360,28 @@ export default class ManagementFinanceController extends BaseController {
     }
 
     @action
+    async exportExcel() {
+        if (!this.results || this.results.length === 0) {
+            this.notifications.warning('Không có dữ liệu để xuất. Vui lòng tìm kiếm trước.');
+            return;
+        }
+        const fileName = `Bao_cao_thu_chi_${this.startDate || ''}_${this.endDate || ''}.xlsx`;
+        try {
+            await this.fetch.download(
+                'orders/finance-export',
+                {
+                    vehicle_id: this.selectedVehicle ? this.selectedVehicle.uuid : '',
+                    start_date: this.startDate,
+                    end_date: this.endDate,
+                },
+                { fileName, method: 'GET' }
+            );
+        } catch (e) {
+            this.notifications.error('Lỗi xuất Excel: ' + (e.message || e));
+        }
+    }
+
+    @action
     async search(event) {
         event.preventDefault();
 

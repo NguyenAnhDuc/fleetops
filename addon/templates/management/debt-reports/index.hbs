@@ -58,16 +58,28 @@
                     />
                 </div>
 
-                {{!-- Nhóm phải: button Mới --}}
-                <Button
-                    @icon="plus"
-                    @iconPrefix="fas"
-                    @type="primary"
-                    @size="sm"
-                    @text={{t "fleet-ops.common.new"}}
-                    @onClick={{this.openCreateOverlay}}
-                    @permission="fleet-ops create debt-reports"
-                />
+                {{!-- Nhóm phải: Xuất Excel + Mới --}}
+                <div class="flex items-center gap-2">
+                    {{#if this.results.length}}
+                        <Button
+                            @type="default"
+                            @size="sm"
+                            @icon="file-excel"
+                            @iconPrefix="fas"
+                            @text="Xuất Excel"
+                            @onClick={{this.exportExcel}}
+                        />
+                    {{/if}}
+                    <Button
+                        @icon="plus"
+                        @iconPrefix="fas"
+                        @type="primary"
+                        @size="sm"
+                        @text={{t "fleet-ops.common.new"}}
+                        @onClick={{this.openCreateOverlay}}
+                        @permission="fleet-ops create debt-reports"
+                    />
+                </div>
             </div>
         </form>
     </div>
