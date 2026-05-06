@@ -1247,6 +1247,10 @@ class OrderController extends Controller
 
             $order->dispatch();
 
+            // FIX: Phải gọi updateActivity để set status = 'dispatched' và record tracking
+            // Nếu không, getNextActivity() sẽ luôn trả về 'dispatched' vì status vẫn là 'created'
+            $order->updateActivity($activity, $proof);
+
             return new OrderResource($order);
         }
 
