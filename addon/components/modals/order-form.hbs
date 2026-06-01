@@ -10,7 +10,7 @@
                     class="form-input"
                     @value={{@options.order.scheduled_at}}
                     @minDate={{format-date (now) "yyyy-MM-d"}}
-                    {{!-- @minTime={{format-date (now) "HH:mm"}} --}}
+                    @onlyDate={{true}}
                     @onUpdate={{@options.scheduleOrder}}
                     @disabled={{@options.order.isIntegratedVendorOrder}}
                 />
@@ -23,7 +23,7 @@
                     class="form-input"
                     @value={{@options.order.estimate_date}}
                     @minDate={{format-date (now) "yyyy-MM-d"}}
-                    @minTime={{format-date (now) "HH:mm"}}
+                    @onlyDate={{true}}
                     @onUpdate={{@options.estimateDateOrder}}
                     @disabled={{@options.order.isIntegratedVendorOrder}}
                 />

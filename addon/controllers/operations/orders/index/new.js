@@ -723,7 +723,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
 
         // Nếu không chọn time: 00:00:00 → set mặc định 01:00:00
         if (d.getHours() === 0 && d.getMinutes() === 0 && d.getSeconds() === 0) {
-            d.setHours(1, 0, 0, 0); // 01:01:00.000 (theo local time GMT+7)
+            d.setHours(12, 0, 0, 0); // 12:00:00.000 (theo local time GMT+7 = 05:00 UTC, an toàn cùng ngày)
         }
 
         // Tuỳ bạn dùng field nào
@@ -742,7 +742,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
 
         // Nếu không chọn time: 00:00:00 → set mặc định 01:00:00
         if (d.getHours() === 0 && d.getMinutes() === 0 && d.getSeconds() === 0) {
-            d.setHours(1, 0, 0, 0); // 01:01:00.000 (theo local time GMT+7)
+            d.setHours(12, 0, 0, 0); // 12:00:00.000 (theo local time GMT+7 = 05:00 UTC, an toàn cùng ngày)
         }
         this.order.estimate_date = d;
         console.log("estimateDateOrder:" , this.order.estimate_date);

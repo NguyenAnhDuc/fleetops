@@ -57,7 +57,7 @@ return [
     'providers' => [
         Chain::class => [
             GoogleMaps::class => [
-                config('services.google_maps.locale', env('GOOGLE_MAPS_LOCALE', 'us')),
+                config('services.google_maps.locale', env('GOOGLE_MAPS_LOCALE', 'vn')),
                 config('services.google_maps.api_key', env('GOOGLE_MAPS_API_KEY')),
             ]
         ],

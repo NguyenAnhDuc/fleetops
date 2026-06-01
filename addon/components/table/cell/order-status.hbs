@@ -1,7 +1,7 @@
 {{!-- Status badge --}}
 <div class="inline-flex items-center">
     <Badge
-        @status={{lowercase @row.status}}
+        @status={{if (or @row.is_finish (eq (lowercase @row.status) "finished")) "finished" (lowercase @row.status)}}
         @text={{@value}}
     />
 
@@ -10,10 +10,13 @@
         <span
             class="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full cursor-help"
             style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;"
-            title="Tài xế chưa nhập chi phí thu tiền cho đơn hàng đã hoàn thành"
-            aria-label="Cảnh báo: Tài xế chưa nhập chi phí"
         >
             <FaIcon @icon="triangle-exclamation" @prefix="fas" @size="xs" />
+            <Attach::Tooltip @class="clean" @animation="scale" @placement="top" @showDelay={{0}}>
+                <div style="background:#92400e; color:#fef3c7; font-size:0.75rem; padding:0.4rem 0.7rem; border-radius:0.375rem; border:1px solid #b45309; white-space:nowrap;">
+                    Tài xế chưa nhập chi phí thu tiền cho đơn hàng đã hoàn thành
+                </div>
+            </Attach::Tooltip>
         </span>
     {{/if}}
 </div>

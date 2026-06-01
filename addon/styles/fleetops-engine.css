@@ -1623,3 +1623,17 @@ body[data-theme='dark']
 .justify-end-i {
     justify-content: end !important;
 }
+
+.ember-attacher-tooltip.warning-fees-tooltip {
+    background-color: #92400e;
+    color: #fef3c7;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 0.375rem;
+    border: 1px solid #b45309;
+}
+
+.ember-attacher-tooltip.warning-fees-tooltip > div[x-arrow] {
+    background-color: #92400e;
+    border-color: transparent transparent #92400e #92400e;
+}

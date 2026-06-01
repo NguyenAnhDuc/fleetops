@@ -5,6 +5,7 @@ import { action } from '@ember/object';
 import { equal } from '@ember/object/computed';
 import { isArray } from '@ember/array';
 import { isBlank } from '@ember/utils';
+import { htmlSafe } from '@ember/template';
 import { timeout } from 'ember-concurrency';
 import { task } from 'ember-concurrency-decorators';
 import fromStore from '@fleetbase/ember-core/decorators/from-store';
@@ -584,10 +585,18 @@ export default class OperationsOrdersIndexController extends BaseController {
             filterable: false,
         },
         {
+            label: 'Thành tiền',
+            cellComponent: 'table/cell/order-total-fees',
+            width: '120px',
+            resizable: true,
+            sortable: false,
+            filterable: false,
+        },
+        {
             label: this.intl.t('fleet-ops.common.status'),
             valuePath: 'DisplayStatus',
             cellComponent: 'table/cell/order-status',
-            width: '160px',
+            width: '200px',
             resizable: true,
             sortable: true,
             filterable: true,
@@ -635,7 +644,7 @@ export default class OperationsOrdersIndexController extends BaseController {
                     icon: 'check-circle',
                     fn: this.finishOrder,
                     permission: 'fleet-ops finish order',
-                    isVisible: (order) => order.canBeFinished,
+                    isVisible: (order) => !order.is_finish && order.status !== 'finished',
                 },
                 {
                     separator: true,
@@ -1109,6 +1118,33 @@ export default class OperationsOrdersIndexController extends BaseController {
     }
 
     @action finishOrder(order, options = {}) {
+        // Validate điều kiện trước khi cho phép hoàn thành
+        const errors = [];
+
+        // Nếu đã kết thúc rồi thì chỉ hiện 1 lỗi, không check tiếp
+        if (order.is_finish || order.status === 'finished') {
+            errors.push('• Đơn hàng đã được kết thúc trước đó');
+        } else {
+            if (order.status !== 'completed') {
+                errors.push('• Tài xế chưa hoàn thành chuyến (trạng thái phải là "Tài xế đã hoàn thành")');
+            }
+
+            if (!order.approval_fees || Number(order.approval_fees) <= 0) {
+                errors.push('• Chưa có phí duyệt (approval fees) cho đơn hàng');
+            }
+        }
+
+        if (errors.length > 0) {
+            this.modalsManager.confirm({
+                title: 'Không thể hoàn thành đơn hàng',
+                body: htmlSafe(`Đơn hàng chưa đáp ứng đủ điều kiện:<br><br>${errors.join('<br>')}`),
+                acceptButtonText: 'Đã hiểu',
+                hideDeclineButton: true,
+                confirm: (modal) => modal.done(),
+            });
+            return;
+        }
+
         this.modalsManager.confirm({
             title: this.intl.t('fleet-ops.operations.orders.index.finish-title'),
             body: this.intl.t('fleet-ops.operations.orders.index.finish-body'),
@@ -1118,7 +1154,8 @@ export default class OperationsOrdersIndexController extends BaseController {
 
                 try {
                     await this.fetch.post(`orders/${order.public_id}/finish`);
-                    // order.set('status', 'finished');
+                    order.set('status', 'finished');
+                    order.set('is_finish', true);
                     this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.finish-success', { orderId: order.public_id }));
                     modal.done();
                 } catch (error) {

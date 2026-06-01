@@ -1057,7 +1057,7 @@ class OrderController extends Controller
 
             // Thông tin phí đơn hàng
             'is_fees_type_by_order' => (bool) $order->is_fees_type_by_order,
-            'quantity_fees'         => (int) $order->quantity_fees,
+            'quantity_fees'         => (float) $order->quantity_fees,
             'unit_price_fees'       => (float) $order->unit_price_fees,
             'is_receive_cash_fees'  => (bool) $order->is_receive_cash_fees,
             'fees'                  => (int) $order->fees,

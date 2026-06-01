@@ -229,7 +229,7 @@ class Order extends Model
         'fees_driver'       => Json::class,
         'approved_fees'     => Json::class,
         'is_fees_type_by_order'         => 'boolean',
-        'quantity_fees'     => 'integer',
+        'quantity_fees'     => 'float',
         'unit_price_fees'   => 'double',
         'is_receive_cash_fees'     => 'boolean',
         'approval_fees'     => 'double',
