@@ -14,7 +14,7 @@ class ChangeQuantityFeesToDecimalInOrdersTable extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->decimal('quantity_fees', 10, 2)->default(1)->change();
+            $table->double('quantity_fees')->default(1)->change();
         });
     }
 
