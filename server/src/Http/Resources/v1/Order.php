@@ -75,10 +75,10 @@ class Order extends FleetbaseResource
             'is_collected_fees'     => (bool) $this->is_collected_fees,
             'dispatched_at'         => $this->dispatched_at,
             'started_at'            => $this->started_at,
-            'scheduled_at'          => $this->scheduled_at,
+            'scheduled_at'          => $this->scheduled_at ? \Carbon\Carbon::parse($this->scheduled_at)->toDateString() : null,
             'updated_at'            => $this->updated_at,
             'created_at'            => $this->created_at,
-            'estimate_date'         => $this->estimate_date, //2025-05-08 QuyenPN
+            'estimate_date'         => $this->estimate_date ? \Carbon\Carbon::parse($this->estimate_date)->toDateString() : null, //2025-05-08 QuyenPN
             'image_billing_uuid'    => $this->image_billing_uuid ?? [],
             'image_billing_urls'    => $this->image_billing_urls ?? [],
             'fees_driver'           => data_get($this, 'fees_driver', []),
@@ -160,10 +160,10 @@ class Order extends FleetbaseResource
             'is_collected_fees' => (bool) $this->is_collected_fees,
             'dispatched_at'     => $this->dispatched_at,
             'started_at'        => $this->started_at,
-            'scheduled_at'      => $this->scheduled_at,
+            'scheduled_at'      => $this->scheduled_at ? \Carbon\Carbon::parse($this->scheduled_at)->toDateString() : null,
             'updated_at'        => $this->updated_at,
             'created_at'        => $this->created_at,
-            'estimate_date'     => $this->estimate_date, //2025-05-08 QuyenPN
+            'estimate_date'     => $this->estimate_date ? \Carbon\Carbon::parse($this->estimate_date)->toDateString() : null, //2025-05-08 QuyenPN
             'image_billing_uuid'    => $this->image_billing_uuid ?? [],
             'image_billing_urls'    => $this->image_billing_urls ?? [],
             'fees_driver'       => $this->fees_driver ?? [],

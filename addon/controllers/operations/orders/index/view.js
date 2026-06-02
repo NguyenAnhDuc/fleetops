@@ -486,34 +486,23 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 }
             },
             scheduleOrder: (dateInstance) => {
-                // Phòng trường hợp nhận string hoặc null
                 if (!dateInstance) return;
-
-                // Chuẩn hóa về Date
-                const d = dateInstance instanceof Date ? new Date(dateInstance) : new Date(dateInstance);
+                const d = new Date(dateInstance);
                 if (isNaN(d)) return;
-
-                // Nếu không chọn time: 00:00:00 → set mặc định 01:01:00
-                if (d.getHours() === 0 && d.getMinutes() === 0 && d.getSeconds() === 0) {
-                    d.setHours(1, 0, 0, 0); // 01:01:00.000 (theo local time GMT+7)
-                }
-                order.scheduled_at = d;
+                // Lấy ngày/tháng/năm theo local time → tạo midnight UTC
+                // VD: chọn 20/6 (GMT+7) → "2026-06-20T00:00:00.000Z"
+                // Backend lưu "2026-06-20", trả về "2026-06-20" → không bao giờ lệch ngày
+                const dateOnly = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+                order.set('scheduled_at', dateOnly);
             },
 
             //2025-05-08 QuyenPN Add for estimate_date
             estimateDateOrder: (dateInstance) => {
-                // Phòng trường hợp nhận string hoặc null
                 if (!dateInstance) return;
-
-                // Chuẩn hóa về Date
-                const d = dateInstance instanceof Date ? new Date(dateInstance) : new Date(dateInstance);
+                const d = new Date(dateInstance);
                 if (isNaN(d)) return;
-
-                // Nếu không chọn time: 00:00:00 → set mặc định 01:01:00
-                if (d.getHours() === 0 && d.getMinutes() === 0 && d.getSeconds() === 0) {
-                    d.setHours(1, 0, 0, 0); // 01:01:00.000 (theo local time GMT+7)
-                }
-                order.estimate_date = d;
+                const dateOnly = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+                order.set('estimate_date', dateOnly);
             },
 
             driversQuery: {},
@@ -531,6 +520,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 }
             },
             decline: () => {
+                order.rollbackAttributes();
                 order.payload.rollbackAttributes();
                 this.modalsManager.done();
             },

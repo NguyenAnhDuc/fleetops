@@ -714,38 +714,23 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     }
 
     @action scheduleOrder(dateInstance) {
-        // Phòng trường hợp nhận string hoặc null
         if (!dateInstance) return;
-
-        // Chuẩn hóa về Date
-        const d = dateInstance instanceof Date ? new Date(dateInstance) : new Date(dateInstance);
+        const d = new Date(dateInstance);
         if (isNaN(d)) return;
-
-        // Nếu không chọn time: 00:00:00 → set mặc định 01:00:00
-        if (d.getHours() === 0 && d.getMinutes() === 0 && d.getSeconds() === 0) {
-            d.setHours(12, 0, 0, 0); // 12:00:00.000 (theo local time GMT+7 = 05:00 UTC, an toàn cùng ngày)
-        }
-
-        // Tuỳ bạn dùng field nào
-        this.order.scheduled_at = d;
-        console.log("scheduleOrder:" , this.order.scheduled_at);
+        // Lấy ngày/tháng/năm theo local time → tạo midnight UTC
+        // VD: chọn 20/6 (GMT+7) → Date.UTC(2026,5,20) = "2026-06-20T00:00:00.000Z"
+        // Backend nhận → lưu "2026-06-20", trả về "2026-06-20" → không bao giờ lệch ngày
+        const dateOnly = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        this.order.set('scheduled_at', dateOnly);
     }
 
     //2025-04-30 QuyenPN
     @action estimateDateOrder(dateInstance) {
-        // Phòng trường hợp nhận string hoặc null
         if (!dateInstance) return;
-
-        // Chuẩn hóa về Date
-        const d = dateInstance instanceof Date ? new Date(dateInstance) : new Date(dateInstance);
+        const d = new Date(dateInstance);
         if (isNaN(d)) return;
-
-        // Nếu không chọn time: 00:00:00 → set mặc định 01:00:00
-        if (d.getHours() === 0 && d.getMinutes() === 0 && d.getSeconds() === 0) {
-            d.setHours(12, 0, 0, 0); // 12:00:00.000 (theo local time GMT+7 = 05:00 UTC, an toàn cùng ngày)
-        }
-        this.order.estimate_date = d;
-        console.log("estimateDateOrder:" , this.order.estimate_date);
+        const dateOnly = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        this.order.set('estimate_date', dateOnly);
     }
 
     @action setupInterface() {
