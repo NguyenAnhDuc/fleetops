@@ -89,7 +89,7 @@ class Issue extends Model
         'location'        => Point::class,
         'meta'            => Json::class,
         'resolved_at'     => 'date',
-        'car_repair_date' => 'date',
+        'car_repair_date' => 'datetime',
         'items'           => 'array',
     ];
     

@@ -64,11 +64,11 @@ class IssueController extends FleetOpsController
             }
 
             if($request->filled('start_date')){
-                $query->whereDate('created_at', '>=', $request->input('start_date'));
+                $query->whereDate('car_repair_date', '>=', $request->input('start_date'));
             }
 
             if($request->filled('end_date')){
-                $query->whereDate('created_at', '<=', $request->input('end_date'));
+                $query->whereDate('car_repair_date', '<=', $request->input('end_date'));
             }
         });
 

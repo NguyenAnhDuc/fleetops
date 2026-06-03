@@ -27,7 +27,7 @@ class FinanceExport implements WithMultipleSheets
 
         foreach ($this->orders as $order) {
             $plate = $this->plateName($order->vehicleAssigned);
-            $date  = $order->started_at;
+            $date  = $order->scheduled_at;
             if (!$date) continue;
 
             $month    = (int) $date->format('n');

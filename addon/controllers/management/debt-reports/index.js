@@ -321,7 +321,7 @@ export default class ManagementDebtReportController extends BaseController {
 
             orders.forEach((order) => {
                 results.push({
-                    date: formatDate(new Date(order.started_at), 'yyyy-MM-dd'),
+                    date: order.scheduled_at ? formatDate(new Date(order.scheduled_at), 'yyyy-MM-dd') : '',
                     type: 'debt_estimate',
                     plate_number: order.vehicle_assigned
                         ? order.vehicle_assigned.plate_number || order.vehicle_assigned.display_name || ''

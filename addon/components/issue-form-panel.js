@@ -326,9 +326,8 @@ export default class IssueFormPanelComponent extends Component {
     @action onDateChange(event) {
         const dateStr = event.target.value;
         if (dateStr) {
-            // Parse manually để tránh timezone offset khi dùng new Date('yyyy-mm-dd')
             const [year, month, day] = dateStr.split('-').map(Number);
-            this.issue.set('car_repair_date', new Date(year, month - 1, day));
+            this.issue.set('car_repair_date', new Date(Date.UTC(year, month - 1, day)));
         } else {
             this.issue.set('car_repair_date', null);
         }

@@ -104,9 +104,10 @@ export default class FuelReportFormPanelComponent extends Component {
      */
     @action onFueledAtChange(event) {
         if (event.target.value) {
-            this.fuelReport.fueled_at = new Date(event.target.value);
+            const [year, month, day] = event.target.value.split('-').map(Number);
+            this.fuelReport.set('fueled_at', new Date(Date.UTC(year, month - 1, day)));
         } else {
-            this.fuelReport.fueled_at = null;
+            this.fuelReport.set('fueled_at', null);
         }
     }
 

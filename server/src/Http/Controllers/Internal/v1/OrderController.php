@@ -942,11 +942,11 @@ class OrderController extends FleetOpsController
             }
 
             if($request->filled('start_date')){
-                $query->whereDate('started_at', '>=', $request->input('start_date'));
+                $query->whereDate('scheduled_at', '>=', $request->input('start_date'));
             }
 
             if($request->filled('end_date')){
-                $query->whereDate('started_at', '<=', $request->input('end_date'));
+                $query->whereDate('scheduled_at', '<=', $request->input('end_date'));
             }
         });
 
@@ -963,8 +963,8 @@ class OrderController extends FleetOpsController
         $orders = Order::where('company_uuid', session('company'))
             ->where('is_finish', 1)
             ->when($vehicleId, fn($q) => $q->where('vehicle_assigned_uuid', $vehicleId))
-            ->when($startDate,  fn($q) => $q->whereDate('started_at', '>=', $startDate))
-            ->when($endDate,    fn($q) => $q->whereDate('started_at', '<=', $endDate))
+            ->when($startDate,  fn($q) => $q->whereDate('scheduled_at', '>=', $startDate))
+            ->when($endDate,    fn($q) => $q->whereDate('scheduled_at', '<=', $endDate))
             ->with(['vehicleAssigned', 'payload.pickup', 'payload.dropoff', 'payload.entities', 'customer'])
             ->get();
 

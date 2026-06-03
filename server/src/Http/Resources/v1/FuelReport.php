@@ -58,7 +58,7 @@ class FuelReport extends FleetbaseResource
             'type'              => $this->type,
             'status'            => $this->status,
             'location'          => $this->location ?? new Point(0, 0),
-            'fueled_at'         => $this->fueled_at,
+            'fueled_at'         => $this->fueled_at ? \Carbon\Carbon::parse($this->fueled_at)->toDateString() : null,
             'updated_at'        => $this->updated_at,
             'created_at'        => $this->created_at,
         ];

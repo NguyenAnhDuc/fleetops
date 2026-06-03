@@ -87,7 +87,7 @@ class FuelReport extends Model
         'unit_price'   => 'decimal:2',
         'amount_extra' => 'decimal:2',
         'volume_extra' => 'decimal:2',
-        'fueled_at'    => 'date:Y-m-d',
+        'fueled_at'    => 'datetime',
     ];
 
     /**

@@ -51,7 +51,13 @@ export default class ManagementIssuesIndexNewController extends BaseController {
      *
      * @var {issueModel}
      */
-    @tracked issue = this.store.createRecord('issue', { reporter: this.currentUser.user, status: 'pending', priority: 'low', type: 'operational' });
+    @tracked issue = this.store.createRecord('issue', {
+        reporter: this.currentUser.user,
+        status: 'pending',
+        priority: 'low',
+        type: 'operational',
+        car_repair_date: new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())),
+    });
 
     /**
      * Set the overlay component context object.
@@ -97,6 +103,12 @@ export default class ManagementIssuesIndexNewController extends BaseController {
      * @memberof ManagementissuesIndexNewController
      */
     resetForm() {
-        this.issue = this.store.createRecord('issue', { reporter: this.currentUser.user, status: 'pending', priority: 'low', type: 'operational' });
+        this.issue = this.store.createRecord('issue', {
+            reporter: this.currentUser.user,
+            status: 'pending',
+            priority: 'low',
+            type: 'operational',
+            car_repair_date: new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())),
+        });
     }
 }

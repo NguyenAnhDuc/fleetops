@@ -52,7 +52,7 @@ class Issue extends FleetbaseResource
             'currency'                   => $this->currency,
             'total_money'                => (float)$this->total_money,
             'items'                      => $this->items ?? [],
-            'car_repair_date'            => $this->car_repair_date,
+            'car_repair_date'            => $this->car_repair_date ? \Carbon\Carbon::parse($this->car_repair_date)->toDateString() : null,
             'image_uuid'                 => $this->image_uuid,
             'photo_url'                  => $this->photo_url
         ];

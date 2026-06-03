@@ -438,7 +438,7 @@ export default class ManagementFinanceController extends BaseController {
             issues = issues?.data ?? [];
             orders.forEach((order) => {
                 results.push({
-                    date: formatDate(new Date(order.started_at), 'yyyy-MM-dd'),
+                    date: order.scheduled_at ? formatDate(new Date(order.scheduled_at), 'yyyy-MM-dd') : '',
                     type: order.is_receive_cash_fees ? 'thu_tienmat' : 'thu_congno',
                     record_type: 'order',
                     record_public_id: order.public_id,
@@ -470,7 +470,7 @@ export default class ManagementFinanceController extends BaseController {
 
             fuelReports.forEach((fuel) => {
                 results.push({
-                    date: formatDate(new Date(fuel.created_at), 'yyyy-MM-dd'),
+                    date: fuel.fueled_at ? formatDate(new Date(fuel.fueled_at), 'yyyy-MM-dd') : '',
                     type: 'chi',
                     record_type: 'fuel-report',
                     record_public_id: fuel.public_id,
@@ -490,7 +490,7 @@ export default class ManagementFinanceController extends BaseController {
 
             issues.forEach((issue) => {
                 results.push({
-                    date: formatDate(new Date(issue.created_at), 'yyyy-MM-dd'),
+                    date: issue.car_repair_date ? formatDate(new Date(issue.car_repair_date), 'yyyy-MM-dd') : '',
                     type: 'chi',
                     record_type: 'issue',
                     record_public_id: issue.public_id,

@@ -51,7 +51,10 @@ export default class ManagementFuelReportsIndexNewController extends BaseControl
      *
      * @var {FuelReportModel}
      */
-    @tracked fuelReport = this.store.createRecord('fuelReport', { reporter: this.currentUser.user });
+    @tracked fuelReport = this.store.createRecord('fuelReport', {
+        reporter: this.currentUser.user,
+        fueled_at: new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())),
+    });
 
     /**
      * Set the overlay component context object.
@@ -97,6 +100,9 @@ export default class ManagementFuelReportsIndexNewController extends BaseControl
      * @memberof ManagementFuelReportsIndexNewController
      */
     resetForm() {
-        this.fuelReport = this.store.createRecord('fuelReport', { reporter: this.currentUser.user });
+        this.fuelReport = this.store.createRecord('fuelReport', {
+            reporter: this.currentUser.user,
+            fueled_at: new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())),
+        });
     }
 }
