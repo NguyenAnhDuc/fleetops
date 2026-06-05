@@ -593,6 +593,14 @@ export default class OperationsOrdersIndexController extends BaseController {
             filterable: false,
         },
         {
+            label: 'Lái xe',
+            cellComponent: 'table/cell/order-driver-cash',
+            width: '150px',
+            resizable: true,
+            sortable: false,
+            filterable: false,
+        },
+        {
             label: this.intl.t('fleet-ops.common.status'),
             valuePath: 'DisplayStatus',
             cellComponent: 'table/cell/order-status',
