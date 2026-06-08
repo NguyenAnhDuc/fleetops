@@ -161,6 +161,15 @@ export default class ManagementFuelReportsIndexController extends BaseController
             modelNamePath: 'displayName',
         },
         {
+            label: 'Định Mức',
+            valuePath: 'dmDisplay',
+            width: '120px',
+            resizable: true,
+            sortable: false,
+            filterable: false,
+            hidden: false,
+        },
+        {
             label: 'Công tơ mét',
             valuePath: 'odometer',
             sortParam: 'odometer',

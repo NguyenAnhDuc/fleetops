@@ -54,6 +54,15 @@ export default class OrderApprovalBillingFormComponent extends Component {
                 return acc;
             }, {});
         }
+
+        // Đồng bộ giá trị khởi tạo vào shared state NGAY từ đầu.
+        // Trước đây state chỉ được ghi khi admin chỉnh sửa (updateFee), nên khi admin
+        // không sửa gì thì state.approvedFees vẫn là null → confirm gửi lên toàn 0.
+        const state = this.args.options?.state;
+        if (state) {
+            state.approvedFees = { ...this.approvedFees };
+            state.total = this.totalApproved;
+        }
     }
 
     get totalApproved() {
