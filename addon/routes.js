@@ -92,6 +92,9 @@ export default buildRoutes(function () {
                 this.route('edit', { path: '/edit/:public_id' });
             });
         });
+        this.route('vehicle-transfers', function () {
+            this.route('index', { path: '/' });
+        });
         this.route('settings', function () {});
         this.route('finances', function () {
             this.route('index', { path: '/' });

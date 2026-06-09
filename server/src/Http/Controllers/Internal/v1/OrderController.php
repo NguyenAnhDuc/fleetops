@@ -984,9 +984,40 @@ class OrderController extends FleetOpsController
             ->with(['vehicle'])
             ->get();
 
+        // Query các lệnh chuyển tiền ĐÃ DUYỆT để điền cột "chuyển xe" (O).
+        // Mỗi lệnh ảnh hưởng 2 xe: xe chuyển (−approved_amount), xe nhận (+approved_amount).
+        $transfers = \Fleetbase\FleetOps\Models\VehicleMoneyTransfer::where('company_uuid', session('company'))
+            ->where('status', 'approved')
+            ->when($vehicleId, fn($q) => $q->where(fn($w) => $w->where('from_vehicle_uuid', $vehicleId)->orWhere('to_vehicle_uuid', $vehicleId)))
+            ->when($startDate, fn($q) => $q->whereDate('transferred_at', '>=', $startDate))
+            ->when($endDate,   fn($q) => $q->whereDate('transferred_at', '<=', $endDate))
+            ->with(['fromVehicle', 'toVehicle'])
+            ->get();
+
+        // Chuẩn hoá thành các dòng theo từng xe (controller biết vehicleId để lọc đúng phía).
+        $transferEntries = [];
+        foreach ($transfers as $t) {
+            $amount = (float) ($t->approved_amount ?? 0);
+            $date   = $t->transferred_at;
+            if (!$date || $amount <= 0) {
+                continue;
+            }
+            $fromPlate = data_get($t, 'fromVehicle.plate_number');
+            $toPlate   = data_get($t, 'toVehicle.plate_number');
+
+            // Xe chuyển đi → cột O âm
+            if ($fromPlate && (!$vehicleId || $t->from_vehicle_uuid === $vehicleId)) {
+                $transferEntries[] = ['plate' => $fromPlate, 'date' => $date, 'amount' => -$amount, 'counterpart' => $toPlate, 'dir' => 'out'];
+            }
+            // Xe nhận về → cột O dương
+            if ($toPlate && (!$vehicleId || $t->to_vehicle_uuid === $vehicleId)) {
+                $transferEntries[] = ['plate' => $toPlate, 'date' => $date, 'amount' => $amount, 'counterpart' => $fromPlate, 'dir' => 'in'];
+            }
+        }
+
         $fileName = 'Bao_cao_thu_chi_' . ($startDate ?? '') . '_' . ($endDate ?? '') . '.xlsx';
 
-        return Excel::download(new FinanceExport($orders, $fuelReports, $issues), $fileName);
+        return Excel::download(new FinanceExport($orders, $fuelReports, $issues, $transferEntries), $fileName);
     }
 
     public function finishOrder(string $id)

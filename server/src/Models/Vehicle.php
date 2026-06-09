@@ -217,6 +217,18 @@ class Vehicle extends Model
         return $this->hasMany(FuelReport::class, 'vehicle_uuid', 'uuid');
     }
 
+    /** Các lần xe này chuyển tiền đi */
+    public function moneyTransfersOut(): HasMany
+    {
+        return $this->hasMany(VehicleMoneyTransfer::class, 'from_vehicle_uuid', 'uuid');
+    }
+
+    /** Các lần xe này nhận tiền vào */
+    public function moneyTransfersIn(): HasMany
+    {
+        return $this->hasMany(VehicleMoneyTransfer::class, 'to_vehicle_uuid', 'uuid');
+    }
+
     public function getOutstandingBalanceAttribute(): string
     {
         // Tổng = advance_fee + earnings - approval_fees - remittance
@@ -240,8 +252,16 @@ class Vehicle extends Model
                 ->value('total');
         }
 
-        // Trả về dạng chuỗi tiền tệ: 1.234.567 VNĐ
-        return number_format((float) $total, 0, ',', '.');
+        // Cộng/trừ các khoản chuyển tiền giữa các xe — CHỈ tính bản ghi đã được admin duyệt,
+        // và dùng approved_amount (số admin phê duyệt) chứ không phải số tài xế yêu cầu.
+        // Nhận vào (to_vehicle) cộng thêm, chuyển đi (from_vehicle) trừ bớt.
+        // SoftDeletes tự loại các bản ghi đã huỷ.
+        $transfersIn  = (float) $this->moneyTransfersIn()->where('status', 'approved')->sum('approved_amount');
+        $transfersOut = (float) $this->moneyTransfersOut()->where('status', 'approved')->sum('approved_amount');
+        $total        = (float) $total + $transfersIn - $transfersOut;
+
+        // Trả về dạng chuỗi tiền tệ VND đồng nhất với các màn khác: "1.234.567 đ"
+        return number_format((float) $total, 0, ',', '.') . ' đ';
     }
 
     public function getFuelReportStatusAttribute(): ?string

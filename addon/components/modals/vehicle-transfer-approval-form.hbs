@@ -1,0 +1,58 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container space-y-4">
+
+        <ContentPanel @title="Thông tin lệnh chuyển" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <div class="grid grid-cols-2 gap-3 text-xs">
+                <div>
+                    <div class="text-gray-400">Xe chuyển</div>
+                    <div class="text-sm font-medium text-white">{{this.transfer.from_vehicle_name}}</div>
+                </div>
+                <div>
+                    <div class="text-gray-400">Xe nhận</div>
+                    <div class="text-sm font-medium text-white">{{this.transfer.to_vehicle_name}}</div>
+                </div>
+                <div>
+                    <div class="text-gray-400">Người tạo</div>
+                    <div class="text-sm font-medium text-white">{{this.transfer.created_by_name}}</div>
+                </div>
+                <div>
+                    <div class="text-gray-400">Số tiền yêu cầu</div>
+                    <div class="text-sm font-semibold text-white">{{this.requestedAmountFormatted}}</div>
+                </div>
+            </div>
+
+            {{#if this.transfer.note}}
+                <div class="mt-3 pt-3 border-t border-gray-700 text-xs">
+                    <div class="text-gray-400">Ghi chú của tài xế</div>
+                    <div class="text-sm text-white">{{this.transfer.note}}</div>
+                </div>
+            {{/if}}
+        </ContentPanel>
+
+        <ContentPanel @title="Phê duyệt" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <div class="space-y-3">
+                <InputGroup @name="Số tiền phê duyệt">
+                    <input
+                        type="text" inputmode="numeric"
+                        class="form-input w-full"
+                        value={{this.approvedAmount}}
+                        {{on "input" this.updateApprovedAmount}}
+                        placeholder="0"
+                    />
+                    <div class="text-blue-400 text-xs mt-1">{{this.approvedAmountFormatted}}</div>
+                </InputGroup>
+
+                <InputGroup @name="Ghi chú duyệt">
+                    <Textarea
+                        @value={{this.approvalNote}}
+                        class="form-input w-full text-xs"
+                        {{on "input" this.updateApprovalNote}}
+                        placeholder="Nhập ghi chú phê duyệt (không bắt buộc)..."
+                        rows={{3}}
+                    />
+                </InputGroup>
+            </div>
+        </ContentPanel>
+
+    </div>
+</Modal::Default>

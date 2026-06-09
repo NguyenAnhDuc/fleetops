@@ -157,6 +157,13 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
                 permission: 'fleet-ops list issue',
                 visible: this.abilities.can('fleet-ops see issue'),
             },
+            {
+                title: 'Lịch sử chuyển tiền',
+                icon: 'money-bill-wave',
+                route: 'management.vehicle-transfers',
+                permission: 'fleet-ops list vehicle',
+                visible: this.abilities.can('fleet-ops see vehicle'),
+            },
         ];
 
         // const settingsItems = [

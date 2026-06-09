@@ -9,12 +9,14 @@ class FinanceExport implements WithMultipleSheets
     protected $orders;
     protected $fuelReports;
     protected $issues;
+    protected $transferEntries;
 
-    public function __construct($orders, $fuelReports, $issues)
+    public function __construct($orders, $fuelReports, $issues, $transferEntries = [])
     {
-        $this->orders      = $orders;
-        $this->fuelReports = $fuelReports;
-        $this->issues      = $issues;
+        $this->orders          = $orders;
+        $this->fuelReports     = $fuelReports;
+        $this->issues          = $issues;
+        $this->transferEntries = $transferEntries;
     }
 
     public function sheets(): array
@@ -141,6 +143,39 @@ class FinanceExport implements WithMultipleSheets
                 '',                    // P
                 '',                    // Q
                 '', '', '', '',        // R,S,T,U
+            ];
+        }
+
+        // ── Các lệnh chuyển tiền giữa xe (cột O "chuyển xe") ─────────
+        foreach ($this->transferEntries as $entry) {
+            $plate = $entry['plate'] ?: 'Chua_xac_dinh';
+            $date  = $entry['date'];
+            if (!$date) continue;
+
+            $month    = (int) $date->format('n');
+            $year     = (int) $date->format('Y');
+            $monthKey = "{$year}_{$month}";
+
+            $this->initSlot($byPlate, $plate, $monthKey, $month, $year);
+
+            $label = ($entry['dir'] ?? '') === 'in'
+                ? 'Nhận tiền từ ' . ($entry['counterpart'] ?? '')
+                : 'Chuyển tiền cho ' . ($entry['counterpart'] ?? '');
+
+            $byPlate[$plate][$monthKey]['data'][] = [
+                '',                          // A: STT
+                $date->format('d/m/y'),      // B: Ngày
+                $label,                      // C: mô tả (Hàng)
+                '',                          // D: nhà xe
+                '',                          // E: Nơi Nhận
+                '',                          // F: Nơi trả
+                '', '', '',                  // G,H,I
+                '', '', '', '',              // J,K,L,M
+                '',                          // N
+                (float) $entry['amount'] ?: '', // O: chuyển xe (đã có dấu +/-)
+                '',                          // P
+                '',                          // Q
+                '', '', '', '',              // R,S,T,U
             ];
         }
 

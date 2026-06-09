@@ -86,6 +86,14 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                     $router->put('{id}', 'ContactDebtController@update');
                     $router->delete('{id}', 'ContactDebtController@delete');
                 });
+
+                // vehicle money transfer routes (App tài xế tạo lệnh + xem lịch sử)
+                $router->group(['prefix' => 'vehicle-money-transfers'], function () use ($router) {
+                    $router->post('/', 'VehicleMoneyTransferController@create');
+                    $router->get('/', 'VehicleMoneyTransferController@query');
+                    $router->get('{id}', 'VehicleMoneyTransferController@find');
+                    $router->delete('{id}', 'VehicleMoneyTransferController@destroy');
+                });
                 // orders routes
                 $router->group(['prefix' => 'orders', 'middleware' => [Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]], function () use ($router) {
                     $router->post('/', 'OrderController@create');
@@ -372,6 +380,15 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                             function ($router, $controller) {
                                 $router->get('get', $controller('get'));
                                 $router->get('debt-export', $controller('debtExport'))->middleware([Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]);
+                            }
+                        );
+
+                        // chuyển tiền giữa các xe (admin web tracking + phê duyệt)
+                        $router->fleetbaseRoutes(
+                            'vehicle-money-transfers',
+                            function ($router, $controller) {
+                                $router->match(['post', 'patch'], '{id}/approve', $controller('approve'));
+                                $router->match(['post', 'patch'], '{id}/reject', $controller('reject'));
                             }
                         );
 

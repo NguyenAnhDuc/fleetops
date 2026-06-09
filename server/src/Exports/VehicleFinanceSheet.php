@@ -17,8 +17,8 @@ class VehicleFinanceSheet implements FromArray, WithTitle, WithStyles
     const NCOLS           = 21; // A–U
     const LAST_COL        = 'U';
 
-    // Column letters for numeric (sum) columns: I, K–Q
-    const SUM_COLS = ['I', 'K', 'L', 'M', 'N', 'Q'];
+    // Column letters for numeric (sum) columns: I, K–Q (gồm O "chuyển xe")
+    const SUM_COLS = ['I', 'K', 'L', 'M', 'N', 'O', 'Q'];
 
     protected string $plate;
     protected array  $monthBlocks; // [['month'=>1,'year'=>2024,'data'=>[...]], ...]
@@ -82,8 +82,8 @@ class VehicleFinanceSheet implements FromArray, WithTitle, WithStyles
             $totalsRow = array_fill(0, self::NCOLS, '');
             $totalsRow[4] = 'Tổng'; // column E (index 4)
             if ($ds <= $de) {
-                // I=8, K=10, L=11, M=12, N=13, Q=16 (0-based)
-                foreach ([8, 10, 11, 12, 13, 16] as $ci) {
+                // I=8, K=10, L=11, M=12, N=13, O=14, Q=16 (0-based)
+                foreach ([8, 10, 11, 12, 13, 14, 16] as $ci) {
                     $col             = chr(65 + $ci);
                     $totalsRow[$ci]  = "=SUM({$col}{$ds}:{$col}{$de})";
                 }
@@ -161,8 +161,8 @@ class VehicleFinanceSheet implements FromArray, WithTitle, WithStyles
                     'borders' => $allBorders,
                 ]);
 
-                // Right-align + number format for numeric columns
-                foreach ([6, 7, 8, 10, 11, 12, 13, 16, 17, 18, 19, 20] as $ci) {
+                // Right-align + number format for numeric columns (gồm O=14)
+                foreach ([6, 7, 8, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20] as $ci) {
                     $col = chr(65 + $ci);
                     $sheet->getStyle("{$col}{$ds}:{$col}{$de}")
                           ->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
@@ -184,7 +184,7 @@ class VehicleFinanceSheet implements FromArray, WithTitle, WithStyles
             ]);
             $sheet->getStyle("E{$rT}")->getAlignment()
                   ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            foreach ([8, 10, 11, 12, 13, 16, 17, 18, 19, 20] as $ci) {
+            foreach ([8, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20] as $ci) {
                 $col = chr(65 + $ci);
                 $sheet->getStyle("{$col}{$rT}")
                       ->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);

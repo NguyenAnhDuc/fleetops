@@ -1,0 +1,28 @@
+<Layout::Section::Header @title="Lịch sử chuyển tiền" @searchQuery={{this.query}} @onSearch={{perform this.search}} @searchPlaceholder="Tìm kiếm...">
+    <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "fleet-ops.common.reload-data"}} class="mr-2" />
+    <FiltersPicker
+        @columns={{this.columns}}
+        @onApply={{fn this.filters.apply this}}
+        @onClear={{fn this.filters.reset this}}
+        @onFilterClear={{this.filters.clear}}
+        @onChange={{this.filters.set}}
+        @buttonWrapperClass="mr-2"
+    />
+    <VisibleColumnPicker @columns={{this.columns}} @onChange={{fn (mut this.columns)}} class="mr-2" />
+</Layout::Section::Header>
+
+<Layout::Section::Body @pagination={{true}}>
+    <Table
+        @rows={{@model}}
+        @columns={{this.columns}}
+        @selectable={{false}}
+        @canSelectAll={{false}}
+        @onSetup={{fn (mut this.table)}}
+        @pagination={{true}}
+        @paginationMeta={{@model.meta}}
+        @page={{this.page}}
+        @onPageChange={{fn (mut this.page)}}
+    />
+</Layout::Section::Body>
+
+{{outlet}}
