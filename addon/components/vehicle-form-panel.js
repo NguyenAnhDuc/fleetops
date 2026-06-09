@@ -65,6 +65,24 @@ export default class VehicleFormPanelComponent extends Component {
     }
 
     /**
+     * Lưu Hạn đăng kiểm dạng date-only, chống lệch ngày do múi giờ.
+     * Lấy Y/M/D theo local rồi tạo midnight UTC → backend lưu đúng ngày (giống màn Đơn hàng).
+     *
+     * @action
+     * @param {Date} dateInstance
+     */
+    @action setInspectionExpireDate(dateInstance) {
+        if (!dateInstance) {
+            this.vehicle.set('inspection_expire_date', null);
+            return;
+        }
+        const d = new Date(dateInstance);
+        if (isNaN(d)) return;
+        const dateOnly = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        this.vehicle.set('inspection_expire_date', dateOnly);
+    }
+
+    /**
      * Updates the avatar URL based on the provided option.
      *
      * @action
