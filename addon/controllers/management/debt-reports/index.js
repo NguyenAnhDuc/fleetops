@@ -5,7 +5,6 @@ import { action } from '@ember/object';
 import { computed } from '@ember/object';
 import { htmlSafe } from '@ember/template';
 import { format as formatDate } from 'date-fns';
-import { isEmpty } from '@ember/utils';
 
 // Helper: format VND – "19.829.000 đ"
 const fmtVND = (amount) => {
@@ -20,6 +19,7 @@ export default class ManagementDebtReportController extends BaseController {
     @service fetch;
     @service intl;
     @service notifications;
+    @service modalsManager;
 
     @tracked customers = [];
     @tracked selectedCustomer = null;
@@ -251,6 +251,64 @@ export default class ManagementDebtReportController extends BaseController {
         }
     }
 
+    /**
+     * Mở form sửa một khoản công nợ đã nhận (tạo tay).
+     * Load record trước rồi truyền thẳng model sang route edit (giống màn Issues).
+     */
+    @action
+    async editDebt(record) {
+        if (!record?.debt_public_id) return;
+
+        const loadingNotice = this.notifications.info('Đang tải công nợ...', { autoClear: false });
+        try {
+            const debt = await this.store.queryRecord('contact-debt', {
+                public_id: record.debt_public_id,
+                single: true,
+                with: ['contact'],
+            });
+            this.notifications.removeNotification(loadingNotice);
+            if (!debt) {
+                this.notifications.error('Không tìm thấy công nợ để sửa.');
+                return;
+            }
+            return this.transitionToRoute('management.debt-reports.index.edit', debt);
+        } catch (error) {
+            this.notifications.removeNotification(loadingNotice);
+            this.notifications.serverError(error);
+        }
+    }
+
+    /**
+     * Xoá một khoản công nợ đã nhận (tạo tay) sau khi xác nhận.
+     */
+    @action
+    deleteDebt(record) {
+        if (!record?.debt_public_id) return;
+
+        this.modalsManager.confirm({
+            title: 'Xoá công nợ',
+            body: 'Bạn có chắc muốn xoá khoản đã nhận này? Hành động không thể hoàn tác.',
+            acceptButtonText: 'Xoá',
+            acceptButtonScheme: 'danger',
+            confirm: async (modal) => {
+                modal.startLoading();
+                try {
+                    const debt = await this.store.queryRecord('contact-debt', {
+                        public_id: record.debt_public_id,
+                        single: true,
+                    });
+                    await debt.destroyRecord();
+                    this.notifications.success('Đã xoá công nợ.');
+                    modal.done();
+                    this.doSearch();
+                } catch (error) {
+                    this.notifications.serverError(error);
+                    modal.stopLoading();
+                }
+            },
+        });
+    }
+
     @action
     async exportExcel() {
         if (!this.results || this.results.length === 0) {
@@ -329,14 +387,10 @@ export default class ManagementDebtReportController extends BaseController {
                     sku_name: order.payload.entities?.length > 0 ? order.payload.entities[0].name : '',
                     customerName: order.customer ? order.customer.name : '',
                     pickup: order.payload.pickup
-                        ? isEmpty(order.payload.pickup.city)
-                            ? order.payload.pickup.address
-                            : ''
+                        ? order.payload.pickup.name ?? order.payload.pickup.street1 ?? order.payload.pickup.address ?? ''
                         : '',
                     dropoff: order.payload.dropoff
-                        ? isEmpty(order.payload.dropoff.city)
-                            ? order.payload.dropoff.address
-                            : ''
+                        ? order.payload.dropoff.name ?? order.payload.dropoff.street1 ?? order.payload.dropoff.address ?? ''
                         : '',
                     quantity_fees: order.quantity_fees,
                     unit_price_fees_display: fmtVND(order.unit_price_fees),
@@ -351,11 +405,14 @@ export default class ManagementDebtReportController extends BaseController {
             contactDebts.forEach((debt) => {
                 // Map contact_uuid → tên khách hàng từ danh sách đã load
                 const matchedCustomer = (this.customers || []).find((c) => c.uuid === debt.contact_uuid || c.id === debt.contact_uuid);
-                const customerName = matchedCustomer?.name || this.selectedCustomer?.name || '';
+                const customerName = debt.contact_name || matchedCustomer?.name || this.selectedCustomer?.name || '';
 
                 results.push({
                     date: formatDate(new Date(debt.received_at), 'yyyy-MM-dd'),
                     type: 'debt_received',
+                    record_type: 'contact-debt',
+                    debt_public_id: debt.public_id,
+                    debt_uuid: debt.uuid,
                     plate_number: '',
                     sku_name: '',
                     customerName,

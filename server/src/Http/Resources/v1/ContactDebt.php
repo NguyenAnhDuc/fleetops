@@ -22,6 +22,8 @@ class ContactDebt extends FleetbaseResource
             'uuid'              => $this->when(Http::isInternalRequest(), $this->uuid),
             'public_id'         => $this->when(Http::isInternalRequest(), $this->public_id),
             'contact_uuid'       => $this->contact_uuid,
+            'contact_name'       => $this->contact?->name,
+            'contact'            => $this->whenLoaded('contact', fn () => new Contact($this->contact)),
             'amount'             => (float)$this->amount,
             'note'               => $this->note,
             'received_at'        => $this->received_at,

@@ -47,11 +47,11 @@ class DebtReportExport implements WithMultipleSheets
             $pickup  = '';
             $dropoff = '';
             if ($order->payload) {
-                if ($order->payload->pickup && empty($order->payload->pickup->city)) {
-                    $pickup = $order->payload->pickup->address ?? '';
+                if ($order->payload->pickup) {
+                    $pickup = $order->payload->pickup->name ?: ($order->payload->pickup->street1 ?: ($order->payload->pickup->address ?? ''));
                 }
-                if ($order->payload->dropoff && empty($order->payload->dropoff->city)) {
-                    $dropoff = $order->payload->dropoff->address ?? '';
+                if ($order->payload->dropoff) {
+                    $dropoff = $order->payload->dropoff->name ?: ($order->payload->dropoff->street1 ?: ($order->payload->dropoff->address ?? ''));
                 }
             }
 

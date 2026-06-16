@@ -12,7 +12,7 @@
     <Overlay::Header
         @title={{if
             this.contactDebt.public_id
-            (concat (t "fleet-ops.component.contact-debt-form-panel.form-title") " : " (format-date this.contactDebt.created_at "MMM dd, yyyy HH:mm"))
+            (concat (t "fleet-ops.component.contact-debt-form-panel.edit-form-title") " : " (format-date this.contactDebt.created_at "MMM dd, yyyy HH:mm"))
             (t "fleet-ops.component.contact-debt-form-panel.new-form-title")
         }}
         @hideStatusDot={{true}}
@@ -59,31 +59,41 @@
                             @triggerClass="form-select form-input"
                             @infiniteScroll={{false}}
                             @renderInPlace={{true}}
-                            @onChange={{fn (mut this.contactDebt.contact)}}
+                            @onChange={{this.onSelectContact}}
                             @disabled={{unauthorized}}
                             as |model|
                         >
                             {{model.name}}
                         </ModelSelect>
+                        {{#if this.validationErrors.contact}}
+                            <span class="text-red-500 text-xs mt-1">{{this.validationErrors.contact}}</span>
+                        {{/if}}
                     </InputGroup>
 
                     <InputGroup @name={{t "fleet-ops.component.contact-debt-form-panel.received-at"}} @wrapperClass="col-span-1">
-                        <input
-                            type="date"
+                        <DateTimeInput
                             class="form-input w-full"
-                            value={{this.receivedAtDate}}
-                            disabled={{unauthorized}}
-                            {{on "change" this.updateReceivedAt}}
+                            @value={{this.contactDebt.received_at}}
+                            @onlyDate={{true}}
+                            @onUpdate={{this.updateReceivedAt}}
+                            @disabled={{unauthorized}}
                         />
+                        {{#if this.validationErrors.received_at}}
+                            <span class="text-red-500 text-xs mt-1">{{this.validationErrors.received_at}}</span>
+                        {{/if}}
                     </InputGroup>
-                    
+
                     <InputGroup @name={{t "fleet-ops.component.contact-debt-form-panel.amount"}} @wrapperClass="col-span-1">
                         <MoneyInput
                             class="w-full"
                             @value={{this.contactDebt.amount}}
                             @currency="VND"
                             @canSelectCurrency={{false}}
+                            @onChange={{this.onAmountChange}}
                         />
+                        {{#if this.validationErrors.amount}}
+                            <span class="text-red-500 text-xs mt-1">{{this.validationErrors.amount}}</span>
+                        {{/if}}
                     </InputGroup>
 
                     <InputGroup @name={{t "fleet-ops.component.contact-debt-form-panel.note"}} @wrapperClass="col-span-2">

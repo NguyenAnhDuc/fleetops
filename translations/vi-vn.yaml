@@ -943,6 +943,7 @@ fleet-ops:
     contact-debt-form-panel:
       new-form-title: Tạo mới Công nợ
       form-title: Công nợ
+      edit-form-title: Chỉnh sửa Công nợ
       button-save: Lưu
       button-create: Tạo mới
       button-detail: Chi tiết
@@ -953,6 +954,10 @@ fleet-ops:
       received-at: Ngày nhận tiền
       amount: Số tiền
       note: Ghi Chú
+      validation-contact-required: Vui lòng chọn Khách hàng.
+      validation-received-at-required: Vui lòng chọn Ngày nhận tiền.
+      validation-amount-required: Vui lòng nhập Số tiền hợp lệ.
+      success-message: Tạo công nợ thành công.
     issue-panel:
       details:
         assigned: Được Gán Cho

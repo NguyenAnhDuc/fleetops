@@ -24,6 +24,8 @@ class ContactDebtController extends FleetOpsController
     
     public function get( Request $request){
         $results = ContactDebt::queryWithRequest($request,  function (&$query, $request) {
+            $query->with('contact');
+
             if($request->filled('contact_uuid')){
                 $query->where('contact_uuid', $request->input('contact_uuid'));
             }

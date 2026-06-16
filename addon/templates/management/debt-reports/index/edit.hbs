@@ -1,0 +1,7 @@
+<ContactDebtFormPanel
+    @contactDebt={{@model}}
+    @controller={{this}}
+    @onPressCancel={{this.transitionBack}}
+    @onAfterSave={{this.onAfterSave}}
+    @onLoad={{this.setOverlayContext}}
+/>

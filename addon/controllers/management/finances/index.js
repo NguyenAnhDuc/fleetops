@@ -6,7 +6,6 @@ import { computed } from '@ember/object';
 import { htmlSafe } from '@ember/template';
 import { format as formatDate, isValid as isValidDate, formatDistanceToNow } from 'date-fns';
 import formatCurrency from '@fleetbase/ember-ui/utils/format-currency';
-import { isEmpty } from '@ember/utils';
 
 // Helper: format VND – "19.829.000 đ" (dấu chấm ngăn nghìn, ký hiệu đ sau)
 const fmtVND = (amount) => {
@@ -445,8 +444,8 @@ export default class ManagementFinanceController extends BaseController {
                     plate_number: order.vehicle_assigned ? (order.vehicle_assigned.plate_number || '') : "",
                     sku_name: order.payload.entities ? (order.payload.entities.length > 0 ? order.payload.entities[0].name : "") : "",
                     customerName: order.customer? order.customer.name : "",
-                    pickup: order.payload.pickup? (isEmpty(order.payload.pickup.city)? order.payload.pickup.address : "") : "",
-                    dropoff: order.payload.dropoff? (isEmpty(order.payload.dropoff.city)?  order.payload.dropoff.address : "") : "",
+                    pickup: order.payload.pickup ? (order.payload.pickup.name ?? order.payload.pickup.street1 ?? order.payload.pickup.address ?? "") : "",
+                    dropoff: order.payload.dropoff ? (order.payload.dropoff.name ?? order.payload.dropoff.street1 ?? order.payload.dropoff.address ?? "") : "",
                     weight_unit: order.payload.entities ? (order.payload.entities.length > 0 ? order.payload.entities[0].weight_unit : "") : "",
                     quantity_fees: order.quantity_fees,
                     unit_price_fees: order.unit_price_fees,

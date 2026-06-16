@@ -4,6 +4,12 @@ import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { getOwner } from '@ember/application';
 
+// Trả về midnight UTC của ngày hôm nay (theo local) → không lệch ngày khi lưu/đọc
+function todayUtcMidnight() {
+    const n = new Date();
+    return new Date(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()));
+}
+
 export default class ManagementContactDebtIndexNewController extends BaseController {
     /**
      * Inject the `store` service
@@ -52,10 +58,10 @@ export default class ManagementContactDebtIndexNewController extends BaseControl
      *
      * @var {ContactDebtModel}
      */
-    @tracked contactDebt = this.store.createRecord('contactDebt', { 
+    @tracked contactDebt = this.store.createRecord('contactDebt', {
         contact_uuid: null,
         amount: '',
-        received_at: new Date(),
+        received_at: todayUtcMidnight(),
         note: ''
      });
 
@@ -87,6 +93,7 @@ export default class ManagementContactDebtIndexNewController extends BaseControl
      * @memberof ManagementContactDebtIndexNewController
      */
     @action onAfterSave() {
+        // Đóng popup
         if (this.overlay) {
             this.overlay.close();
         }
@@ -94,13 +101,12 @@ export default class ManagementContactDebtIndexNewController extends BaseControl
         // Reset form ngay lập tức để lần mở tiếp theo sạch data
         this.resetForm();
 
-        // Quay về màn hình list
+        // Quay về màn hình list và LUÔN reload lại kết quả tìm kiếm
         this.transitionToRoute('management.debt-reports.index').then(() => {
-            // Re-trigger search để load lại list với filter đang nhập
             try {
                 const owner = getOwner(this);
                 const indexController = owner.lookup('controller:management/debt-reports/index');
-                if (indexController && indexController.results.length > 0) {
+                if (indexController && typeof indexController.doSearch === 'function') {
                     indexController.doSearch();
                 }
             } catch (_) {
@@ -115,11 +121,11 @@ export default class ManagementContactDebtIndexNewController extends BaseControl
      * @memberof ManagementContactDebtIndexNewController
      */
     resetForm() {
-        this.contactDebt = this.store.createRecord('contactDebt', { 
+        this.contactDebt = this.store.createRecord('contactDebt', {
             contact_uuid: null,
             amount: 0,
-            received_at: new Date(),
-            note: ''    
+            received_at: todayUtcMidnight(),
+            note: ''
         });
     }
 }

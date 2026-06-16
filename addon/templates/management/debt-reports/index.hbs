@@ -239,6 +239,24 @@
                                             <FaIcon @icon="arrow-up-right-from-square" @prefix="fas" @size="xs" />
                                         </button>
                                     {{/if}}
+                                    {{#if (eq item.record_type "contact-debt")}}
+                                        <button
+                                            type="button"
+                                            class="finance-detail-btn finance-edit-btn mr-1"
+                                            title="Sửa công nợ"
+                                            {{on "click" (fn this.editDebt item)}}
+                                        >
+                                            <FaIcon @icon="pen-to-square" @prefix="fas" @size="xs" />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="finance-detail-btn finance-delete-btn mr-1"
+                                            title="Xoá công nợ"
+                                            {{on "click" (fn this.deleteDebt item)}}
+                                        >
+                                            <FaIcon @icon="trash" @prefix="fas" @size="xs" />
+                                        </button>
+                                    {{/if}}
                                     {{item.note}}
                                 </td>
                             </tr>
@@ -344,6 +362,14 @@
     .finance-management .finance-detail-btn:hover {
         color: #3b82f6;
         background: rgba(59, 130, 246, 0.1);
+    }
+    .finance-management .finance-delete-btn:hover {
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.12);
+    }
+    .finance-management .finance-edit-btn:hover {
+        color: #f59e0b;
+        background: rgba(245, 158, 11, 0.12);
     }
 
     /* ---------- Dropdown "Hiển thị N dòng/trang" ---------- */
